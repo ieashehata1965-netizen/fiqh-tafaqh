@@ -510,3 +510,495 @@ body {
 .share-btn.fb { background: #1877f2; }
 .share-btn.x { background: #000000; }
 .share-btn.link { background: var(--primary); }
+
+/* ===================== FOOTER ===================== */
+.footer {
+  background: var(--bg-dark);
+  color: rgba(255,255,255,0.8);
+  padding: 60px 24px 24px;
+}
+
+.footer-inner {
+  max-width: 1000px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.footer-col h4 {
+  color: white;
+  font-size: 16px;
+  margin-bottom: 16px;
+}
+
+.footer-col a, .footer-col p {
+  display: block;
+  color: rgba(255,255,255,0.6);
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 10px;
+  transition: var(--transition);
+}
+
+.footer-col a:hover {
+  color: var(--primary-light);
+}
+
+.footer-bottom {
+  text-align: center;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+}
+
+/* ===================== MODAL ===================== */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(5px);
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal {
+  background: white;
+  border-radius: var(--radius);
+  padding: 32px;
+  max-width: 450px;
+  width: 100%;
+  box-shadow: var(--shadow-lg);
+  animation: fadeInUp 0.3s ease;
+  text-align: center;
+}
+
+.modal h3 {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: var(--primary-dark);
+}
+
+.modal p {
+  color: var(--text-light);
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.modal input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 16px;
+  font-family: inherit;
+  margin-bottom: 16px;
+  text-align: center;
+  transition: var(--transition);
+}
+
+.modal input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(26, 95, 60, 0.1);
+}
+
+.modal .btn {
+  width: 100%;
+  justify-content: center;
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: var(--text-light);
+}
+
+/* ===================== MOBILE ===================== */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 70px;
+    left: 0;
+    right: 0;
+    background: white;
+    padding: 16px;
+    box-shadow: var(--shadow);
+    gap: 4px;
+  }
+  .mobile-menu-btn { display: block; }
+  .hero { padding-top: 80px; }
+  .hero h1 { font-size: 28px; }
+  .section { padding: 60px 16px; }
+  .stats-inner { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* ===================== SCROLLBAR ===================== */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #ccc; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #aaa; }
+</style>
+
+<base target="_blank">
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<nav class="navbar" id="navbar">
+  <div class="navbar-inner">
+    <a href="#" class="logo">
+      <div class="logo-icon">📖</div>
+      <span>أكاديمية الفقه والتفقه</span>
+    </a>
+
+    <div class="nav-links" id="navLinks">
+      <a href="#features" class="nav-link">المميزات</a>
+      <a href="#vision" class="nav-link">عن المنصة</a>
+      <a href="#" class="nav-link nav-btn" onclick="openTrainingModal(); return false;">🎯 ابدأ التدريب</a>
+    </div>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+  </div>
+</nav>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-badge animate">
+      <span>🌟</span>
+      <span>منصة تعليمية شرعية غير ربحية</span>
+    </div>
+
+    <h1 class="animate animate-delay-1">
+      تعلم <span>الفقه</span> والتفقه<br>
+      في الإسلام
+    </h1>
+
+    <p class="animate animate-delay-2">
+      منصة علمية شرعية تهدف إلى تعليم المسلمين، المراجعة المستمرة، 
+      والتعلم بالممارسة من خلال اختبارات تفاعلية مع الشرح
+    </p>
+
+    <div class="hero-buttons animate animate-delay-3">
+      <a href="index.html" class="btn btn-primary" id="heroStartBtn">
+        🎯 ابدأ التدريب الآن
+      </a>
+      <a href="#features" class="btn btn-secondary">
+        📚 استكشف المميزات
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== STATS BAR ===================== -->
+<section class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item animate">
+      <h4 id="statQuestions">0</h4>
+      <p>سؤال شرعي</p>
+    </div>
+    <div class="stat-item animate animate-delay-1">
+      <h4 id="statCategories">0</h4>
+      <p>تصنيف علمي</p>
+    </div>
+    <div class="stat-item animate animate-delay-2">
+      <h4 id="statExams">0</h4>
+      <p>اختبار منجز</p>
+    </div>
+    <div class="stat-item animate animate-delay-3">
+      <h4 id="statCerts">0</h4>
+      <p>شهادة مصدقة</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FEATURES ===================== -->
+<section class="section" id="features">
+  <div class="section-header animate">
+    <h2>🚀 مميزات المنصة</h2>
+    <p>كل ما تحتاجه للمراجعة والتعلم الشرعي في مكان واحد</p>
+  </div>
+
+  <div class="features-grid">
+    <div class="feature-card animate animate-delay-1">
+      <div class="feature-icon green">🎯</div>
+      <h3>التدريب التفاعلي</h3>
+      <p>اختبارات تفاعلية في الفقه والعقيدة والحديث والتفسير مع إظهار الإجابة الصحيحة والشرح</p>
+      <a href="index.html" class="btn-link">ابدأ الآن ←</a>
+    </div>
+
+    <div class="feature-card animate animate-delay-2">
+      <div class="feature-icon blue">🎓</div>
+      <h3>الشهادات الذكية</h3>
+      <p>احصل على شهادة PDF مصدقة عند حل 20+ سؤال بنسبة 60%+ مع QR للتحقق</p>
+      <a href="index.html" class="btn-link">احصل على شهادتك ←</a>
+    </div>
+
+    <div class="feature-card animate animate-delay-3">
+      <div class="feature-icon orange">🎧</div>
+      <h3>المكتبة الصوتية</h3>
+      <p>استمع للدروس الشرعية والمحاضرات الصوتية مباشرة من المتصفح</p>
+      <span class="btn-link" style="color:#999;cursor:default;">قريباً ←</span>
+    </div>
+
+    <div class="feature-card animate animate-delay-1">
+      <div class="feature-icon purple">🎬</div>
+      <h3>الفيديوهات التعليمية</h3>
+      <p>شاهد دروساً مرئية في العلوم الشرعية من مصادر موثوقة</p>
+      <span class="btn-link" style="color:#999;cursor:default;">قريباً ←</span>
+    </div>
+
+    <div class="feature-card animate animate-delay-2">
+      <div class="feature-icon red">📊</div>
+      <h3>تحليل الأداء</h3>
+      <p>تعرف على نقاط قوتك وضعفك مع تقرير مفصل لكل اختبار</p>
+      <a href="index.html" class="btn-link">اختبر نفسك ←</a>
+    </div>
+
+    <div class="feature-card animate animate-delay-3">
+      <div class="feature-icon teal">🔄</div>
+      <h3>مراجعة مستمرة</h3>
+      <p>نظام ذكي يساعدك على عدم نسيان المعلومات الشرعية بالتكرار المناسب</p>
+      <a href="index.html" class="btn-link">راجع الآن ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== VISION & MESSAGE ===================== -->
+<section class="vision-section" id="vision">
+  <div class="vision-inner">
+    <div class="vision-box animate">
+      <h3>📜 رسالتنا</h3>
+      <p>منصة علمية شرعية إسلامية غير ربحية تهدف إلى:</p>
+      <ul>
+        <li>تعليم المسلمين علوم الشريعة</li>
+        <li>المراجعة المستمرة للعلوم الشرعية</li>
+        <li>عدم نسيان المعلومات الشرعية</li>
+        <li>التعلم بالممارسة والتدريب</li>
+        <li>إظهار الإجابة الصحيحة مع الشرح</li>
+      </ul>
+    </div>
+
+    <div class="vision-box animate animate-delay-1">
+      <h3>👁️ رؤيتنا</h3>
+      <p>أن نكون المنصة التعليمية الشرعية الرائدة في تعليم الفقه والعلوم الإسلامية، وأن نسهم في إعداد جيل واعٍ بعلوم الشريعة، ملتزم بالكتاب والسنة على فهم السلف الصالح.</p>
+    </div>
+
+    <div class="vision-box animate animate-delay-2">
+      <h3>🎯 أهدافنا</h3>
+      <ul>
+        <li>نشر العلوم الشرعية بطريقة عصرية</li>
+        <li>تسهيل المراجعة والحفظ للطلاب</li>
+        <li>ربط النظر بالتطبيق من خلال الاختبارات</li>
+        <li>تشجيع التنافس العلمي الشريف</li>
+        <li>بناء مجتمع تعليمي تفاعلي</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SHARE ===================== -->
+<section class="share-section">
+  <h3>📢 شارك المنصة مع الآخرين</h3>
+  <div class="share-buttons">
+    <a href="#" class="share-btn wa" onclick="share('whatsapp'); return false;" title="WhatsApp">📱</a>
+    <a href="#" class="share-btn tg" onclick="share('telegram'); return false;" title="Telegram">✈️</a>
+    <a href="#" class="share-btn fb" onclick="share('facebook'); return false;" title="Facebook">📘</a>
+    <a href="#" class="share-btn x" onclick="share('twitter'); return false;" title="X">𝕏</a>
+    <button class="share-btn link" onclick="copyLink()" title="نسخ الرابط">🔗</button>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h4>📖 عن المنصة</h4>
+      <p>أكاديمية الفقه والتفقه الإسلامي منصة تعليمية شرعية غير ربحية</p>
+    </div>
+    <div class="footer-col">
+      <h4>🔗 روابط سريعة</h4>
+      <a href="index.html">🎯 التدريب</a>
+      <a href="admin.html">⚙️ لوحة الإدارة</a>
+      <a href="add-question.html">📝 إدارة الأسئلة</a>
+    </div>
+    <div class="footer-col">
+      <h4>📋 معلومات</h4>
+      <a href="#" onclick="alert('سياسة الخصوصية: لا نقوم بجمع أي بيانات شخصية. اسم المتدرب يُستخدم فقط لإصدار الشهادة.'); return false;">سياسة الخصوصية</a>
+      <a href="#" onclick="alert('سياسة الاستخدام: المنصة مخصصة للتعليم الشرعي فقط. يُحظر استخدامها لأي غرض آخر.'); return false;">سياسة الاستخدام</a>
+    </div>
+    <div class="footer-col">
+      <h4>📞 تواصل معنا</h4>
+      <a href="mailto:info@fiqh-academy.org">📧 البريد الإلكتروني</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 أكاديمية الفقه والتفقه الإسلامي — جميع الحقوق محفوظة</p>
+  </div>
+</footer>
+
+<!-- ===================== TRAINING MODAL ===================== -->
+<div class="modal-overlay" id="trainingModal">
+  <div class="modal" style="position:relative;">
+    <button class="modal-close" onclick="closeTrainingModal()">✕</button>
+    <h3>🎯 ابدأ التدريب</h3>
+    <p>اكتب اسمك فقط للبدء — لا يحتاج تسجيل</p>
+    <input type="text" id="traineeName" placeholder="اسم المتدرب" maxlength="50">
+    <a href="index.html" class="btn btn-primary" onclick="saveNameAndGo()">
+      🚀 ابدأ الاختبار
+    </a>
+  </div>
+</div>
+
+<!-- ===================== SCRIPTS ===================== -->
+<script>
+"use strict";
+
+const SITE_URL = 'https://ieashehata1965-netizen.github.io/Shariah-Training/';
+const GITHUB_JSON_URL = 'https://ieashehata1965-netizen.github.io/Shariah-Training/fiqh-questions.json';
+
+/* ===================== NAVBAR SCROLL ===================== */
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+/* ===================== MOBILE MENU ===================== */
+function toggleMobileMenu() {
+  document.getElementById('navLinks').classList.toggle('open');
+}
+
+/* ===================== LOAD STATS ===================== */
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load question stats from GitHub
+  try {
+    const res = await fetch(GITHUB_JSON_URL + '?v=' + Date.now());
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data)) {
+        animateNumber('statQuestions', data.length);
+        const cats = new Set(data.map(q => q.category).filter(Boolean));
+        animateNumber('statCategories', cats.size);
+      }
+    }
+  } catch (e) {
+    animateNumber('statQuestions', 124); // fallback
+    animateNumber('statCategories', 10);
+  }
+
+  // Load local stats
+  const exams = parseInt(localStorage.getItem('total_exams') || '0');
+  const certs = parseInt(localStorage.getItem('total_certs') || '0');
+  animateNumber('statExams', exams);
+  animateNumber('statCerts', certs);
+});
+
+function animateNumber(id, target) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let current = 0;
+  const increment = Math.ceil(target / 30);
+  const timer = setInterval(() => {
+    current += increment;
+    if (current >= target) {
+      current = target;
+      clearInterval(timer);
+    }
+    el.textContent = current.toLocaleString('ar-SA');
+  }, 30);
+}
+
+/* ===================== TRAINING MODAL ===================== */
+function openTrainingModal() {
+  document.getElementById('trainingModal').classList.add('active');
+  setTimeout(() => document.getElementById('traineeName').focus(), 100);
+}
+
+function closeTrainingModal() {
+  document.getElementById('trainingModal').classList.remove('active');
+}
+
+function saveNameAndGo() {
+  const name = document.getElementById('traineeName').value.trim();
+  if (!name) {
+    alert('⚠️ الرجاء إدخال اسمك');
+    return false;
+  }
+  localStorage.setItem('trainee_name', name);
+  // Let the link proceed to index.html
+  return true;
+}
+
+// Close modal on overlay click
+document.getElementById('trainingModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) closeTrainingModal();
+});
+
+// Enter key in modal
+ document.getElementById('traineeName').addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') {
+    const link = document.querySelector('#trainingModal .btn-primary');
+    if (saveNameAndGo()) link.click();
+  }
+});
+
+/* ===================== SHARE ===================== */
+function share(platform) {
+  const text = 'أكاديمية الفقه والتفقه الإسلامي - منصة تعليمية شرعية غير ربحية';
+  const url = encodeURIComponent(SITE_URL);
+  const encodedText = encodeURIComponent(text);
+
+  const urls = {
+    whatsapp: `https://wa.me/?text=${encodedText}%20${url}`,
+    telegram: `https://t.me/share/url?url=${url}&text=${encodedText}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${url}`,
+    twitter: `https://twitter.com/intent/tweet?text=${encodedText}&url=${url}`
+  };
+
+  window.open(urls[platform], '_blank', 'width=600,height=400');
+}
+
+function copyLink() {
+  navigator.clipboard.writeText(SITE_URL).then(() => {
+    alert('✅ تم نسخ الرابط!');
+  }).catch(() => {
+    // Fallback
+    const input = document.createElement('input');
+    input.value = SITE_URL;
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand('copy');
+    document.body.removeChild(input);
+    alert('✅ تم نسخ الرابط!');
+  });
+}
+
+/* ===================== INTERSECTION OBSERVER ===================== */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.style.animationPlayState = 'running';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.animate').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
