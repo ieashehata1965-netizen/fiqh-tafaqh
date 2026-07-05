@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إضافة سؤال</title>
+
+<style>
+body{
+    font-family:Tahoma, Arial;
+    background:#f0fdf4;
+    max-width:850px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#fff;
+    padding:22px;
+    border-radius:16px;
+    border:1px solid #d1fae5;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+h2{
+    color:#14532d;
+}
+
+input, select, button{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:10px;
+    border:1px solid #d1d5db;
+    font-size:15px;
+}
+
+button{
+    background:#16a34a;
+    color:#fff;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button.secondary{
+    background:#6b7280;
+}
+
+.counter{
+    margin-top:10px;
+    font-weight:bold;
+    color:#065f46;
+}
+</style>
+
+</head>
+
+<body>
+
+<script>
+if(sessionStorage.getItem("admin_access") !== "granted"){
+    document.body.innerHTML = "<h2 style='text-align:center'>غير مصرح بالدخول</h2>";
+    throw new Error("Access Denied");
+}
+</script>
+    
+    font-family:Tahoma, Arial;
+    background:#f0fdf4;
+    max-width:850px;
+    margin:auto;
+    padding:20px;
+}
+
+.card{
+    background:#fff;
+    padding:22px;
+    border-radius:16px;
+    border:1px solid #d1fae5;
+    box-shadow:0 6px 18px rgba(0,0,0,.08);
+}
+
+h2{ color:#14532d; }
+
+input, select, button{
+    width:100%;
+    padding:12px;
+    margin:8px 0;
+    border-radius:10px;
+    border:1px solid #d1d5db;
+    font-size:15px;
+}
+
+button{
+    background:#16a34a;
+    color:#fff;
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+button.secondary{
+    background:#6b7280;
+}
+
+.counter{
+    margin-top:10px;
+    font-weight:bold;
+    color:#065f46;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+    <h2>إضافة سؤال جديد</h2>
+
+    <select id="category">
+        <option value="">اختر التصنيف</option>
+        <option value="فقه">فقه</option>
+        <option value="عقيدة">عقيدة</option>
+        <option value="توحيد">توحيد</option>
+        <option value="تفسير">تفسير</option>
+        <option value="حديث">حديث</option>
+        <option value="أصول فقه">أصول فقه</option>
+        <option value="لغة عربية">لغة عربية</option>
+        <option value="سيرة">سيرة</option>
+    </select>
+
+    <select id="level">
+        <option value="">اختر المستوى</option>
+        <option value="سهل">سهل</option>
+        <option value="متوسط">متوسط</option>
+        <option value="صعب">صعب</option>
+    </select>
+
+    <input id="source" placeholder="المصدر (اختياري)">
+    <input id="q" placeholder="السؤال">
+
+    <input id="a1" placeholder="الخيار 1">
+    <input id="a2" placeholder="الخيار 2">
+    <input id="a3" placeholder="الخيار 3">
+    <input id="a4" placeholder="الخيار 4">
+
+    <input id="c" type="number" min="0" max="3" placeholder="رقم الإجابة الصحيحة (0-3)">
+
+    <button onclick="addQuestion()">إضافة السؤال</button>
+    <button onclick="downloadJSON()">تحميل JSON</button>
+    <button class="secondary" onclick="clearForm()">مسح</button>
+    
+    <button onclick="addQuestion()">إضافة السؤال</button>
+<button onclick="downloadJSON()">تحميل JSON</button>
+<button class="secondary" onclick="clearForm()">مسح</button>
+
+<!-- ⬇️ أضف هذا هنا -->
+    
+<button onclick="window.open('add-question.html')">
+فتح إضافة الأسئلة (احتياطي)
+</button>
+
+<div id="counter" class="counter">جارٍ التحميل...</div>
+
+    
+    <div id="counter" class="counter">جارٍ التحميل...</div>
+</div>
+
+<script>
+let data = [];
+let nextId = 1;
+let loaded = false;
+
+document.addEventListener("DOMContentLoaded", loadData);
+
+async function loadData(){
+    try{
+        const res = await fetch("fiqh-questions.json", { cache:"no-store" });
+        const raw = await res.json();
+
+        data = Array.isArray(raw) ? raw.map(normalize).filter(Boolean) : [];
+
+        nextId = data.length
+            ? Math.max(...data.map(x => Number(x.id) || 0)) + 1
+            : 1;
+
+        loaded = true;
+        updateCounter();
+    }catch(e){
+        console.error(e);
+        data = [];
+        loaded = true;
+        updateCounter();
+    }
+}
+
+function normalize(item){
+    if(!item) return null;
+
+    const q = String(item.q ?? item.question ?? "").trim();
+
+    const aRaw = Array.isArray(item.a)
+        ? item.a
+        : (Array.isArray(item.options) ? item.options : []);
+
+    const a = aRaw.map(x => String(x ?? "").trim());
+
+    const c = Number(item.c ?? item.correct);
+
+    if(
+        !q ||
+        a.length !== 4 ||
+        a.some(x => !x) ||
+        !Number.isInteger(c) ||
+        c < 0 || c > 3
+    ){
+        return null;
+    }
+
+    return {
+        id: Number(item.id) || 0,
+        category: item.category || "غير مصنف",
+        level: item.level || "غير محدد",
+        source: item.source || "غير محدد",
+        q,
+        a,
+        c
+    };
+}
+
+function addQuestion(){
+    if(!loaded){
+        alert("جارٍ تحميل البيانات...");
+        return;
+    }
+
+    const category = document.getElementById("category").value.trim();
+    const level = document.getElementById("level").value.trim();
+    const source = document.getElementById("source").value.trim() || "غير محدد";
+
+    const q = document.getElementById("q").value.trim();
+    const a1 = document.getElementById("a1").value.trim();
+    const a2 = document.getElementById("a2").value.trim();
+    const a3 = document.getElementById("a3").value.trim();
+    const a4 = document.getElementById("a4").value.trim();
+    const c = parseInt(document.getElementById("c").value,10);
+
+    if(!category || !level || !q || !a1 || !a2 || !a3 || !a4 || isNaN(c)){
+        alert("أكمل البيانات");
+        return;
+    }
+
+    if(c < 0 || c > 3){
+        alert("الإجابة الصحيحة بين 0 و 3");
+        return;
+    }
+
+    const normalizedQ = q.toLowerCase().replace(/\s+/g," ").trim();
+
+    const duplicate = data.some(x =>
+        String(x.q).toLowerCase().replace(/\s+/g," ").trim() === normalizedQ
+    );
+
+    if(duplicate){
+        alert("السؤال موجود مسبقاً");
+        return;
+    }
+
+    data.push({
+        id: nextId++,
+        category,
+        level,
+        source,
+        q,
+        a:[a1,a2,a3,a4],
+        c
+    });
+
+    updateCounter();
+    clearForm();
+    alert("تمت الإضافة بنجاح");
+}
+
+    function validateData(){
+    const broken = data.find(x =>
+        !x.q ||
+        !Array.isArray(x.a) ||
+        x.a.length !== 4 ||
+        x.a.some(v => !v || v.trim() === "")
+    );
+
+    if(broken){
+        alert("يوجد سؤال غير مكتمل — لا يمكن التصدير");
+        console.error("Broken question:", broken);
+        return false;
+    }
+
+    return true;
+}
+
+function downloadJSON(){
+
+    if(!validateData()) return;
+
+    if(!data.length){
+        alert("لا توجد بيانات");
+        return;
+    }
+
+    const blob = new Blob(
+        [JSON.stringify(data, null, 2)],
+        {type:"application/json"}
+    );
+
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "fiqh-questions.json";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+function clearForm(){
+    document.querySelectorAll("input").forEach(i => i.value = "");
+    document.querySelectorAll("select").forEach(s => s.value = "");
+}
+
+function updateCounter(){
+    document.getElementById("counter").textContent =
+        "إجمالي الأسئلة: " + data.length;
+}
+
+    
+</script>
+
+</body>
+</html>
