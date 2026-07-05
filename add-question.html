@@ -1,1 +1,2641 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إضافة أسئلة - بنك الأسئلة الشرعية</title>
+<style>
+  :root {
+    --primary: #1a1a2e; --secondary: #16213e; --accent: #0f3460;
+    --highlight: #e94560; --success: #2ecc71; --warning: #f39c12;
+    --danger: #e74c3c; --light: #f8f9fa; --gray: #6c757d;
+    --border: #dee2e6; --shadow: 0 4px 20px rgba(0,0,0,0.1);
+    --radius: 12px; --font: 'Segoe UI', Tahoma, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%); min-height: 100vh; color: var(--primary); }
+  .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+  .header { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); color: white; padding: 24px; border-radius: var(--radius); margin-bottom: 20px; box-shadow: var(--shadow); text-align: center; }
+  .header h1 { font-size: 24px; margin-bottom: 6px; }
+  .header p { opacity: 0.85; font-size: 13px; }
+  .nav-links { display: flex; justify-content: center; gap: 12px; margin-top: 12px; flex-wrap: wrap; }
+  .nav-links a { color: white; text-decoration: none; padding: 6px 14px; background: rgba(255,255,255,0.15); border-radius: 20px; font-size: 12px; transition: 0.2s; }
+  .nav-links a:hover { background: rgba(255,255,255,0.25); }
+  .token-bar { background: white; padding: 14px 18px; border-radius: var(--radius); margin-bottom: 16px; box-shadow: var(--shadow); display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .token-bar label { font-weight: 600; font-size: 13px; color: var(--accent); }
+  .token-bar input { flex: 1; min-width: 200px; padding: 8px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 12px; font-family: monospace; }
+  .token-bar input:focus { outline: none; border-color: var(--accent); }
+  .token-badge { font-size: 11px; padding: 4px 10px; border-radius: 12px; font-weight: 600; }
+  .tb-ok { background: #d4edda; color: #155724; }
+  .tb-off { background: #f8d7da; color: #721c24; }
+  .card { background: white; border-radius: var(--radius); padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .card h2 { font-size: 16px; color: var(--accent); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .fg { margin-bottom: 12px; }
+  .fg.full { grid-column: 1 / -1; }
+  .fg label { display: block; font-size: 12px; font-weight: 600; color: var(--gray); margin-bottom: 4px; }
+  .fg input, .fg select, .fg textarea { width: 100%; padding: 10px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 13px; font-family: inherit; transition: border-color 0.2s; }
+  .fg input:focus, .fg select:focus, .fg textarea:focus { outline: none; border-color: var(--accent); }
+  .fg textarea { min-height: 60px; resize: vertical; }
+  .answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+  .ans-row { display: flex; align-items: center; gap: 8px; }
+  .ans-row input[type="radio"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--success); }
+  .ans-row input[type="text"] { flex: 1; }
+  .ans-row label { font-size: 12px; font-weight: 700; color: var(--gray); min-width: 20px; }
+  .btn { padding: 10px 20px; border: none; border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .btn-primary { background: linear-gradient(135deg, var(--accent), var(--secondary)); color: white; }
+  .btn-success { background: linear-gradient(135deg, var(--success), #27ae60); color: white; }
+  .btn-danger { background: linear-gradient(135deg, var(--danger), #c0392b); color: white; }
+  .btn-outline { background: white; border: 2px solid var(--border); color: var(--gray); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-group { display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .bulk-area { background: #f8f9fa; padding: 14px; border-radius: 10px; border: 1px dashed var(--border); }
+  .bulk-area textarea { width: 100%; min-height: 180px; padding: 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 12px; font-family: 'Courier New', monospace; direction: ltr; text-align: left; resize: vertical; }
+  .bulk-hint { font-size: 11px; color: var(--gray); margin-bottom: 8px; line-height: 1.5; }
+  .search-filter { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
+  .search-filter input, .search-filter select { padding: 8px 12px; border: 2px solid var(--border); border-radius: 8px; font-size: 13px; font-family: inherit; }
+  .search-filter input { flex: 1; min-width: 200px; }
+  .search-filter input:focus, .search-filter select:focus { outline: none; border-color: var(--accent); }
+  .q-list { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; max-height: 500px; overflow-y: auto; }
+  .q-item { padding: 12px 14px; border-bottom: 1px solid #f0f0f0; display: flex; gap: 10px; align-items: flex-start; }
+  .q-item:hover { background: #fafbfc; }
+  .q-item:last-child { border-bottom: none; }
+  .q-chk { width: 16px; height: 16px; margin-top: 2px; cursor: pointer; accent-color: var(--accent); }
+  .q-body { flex: 1; min-width: 0; }
+  .q-meta { display: flex; gap: 6px; margin-bottom: 4px; flex-wrap: wrap; }
+  .q-tag { font-size: 10px; padding: 2px 8px; border-radius: 12px; font-weight: 600; }
+  .tg-cat { background: #e3f2fd; color: #1565c0; }
+  .tg-ez { background: #e8f5e9; color: #2e7d32; }
+  .tg-md { background: #fff3e0; color: #ef6c00; }
+  .tg-hd { background: #ffebee; color: #c62828; }
+  .q-txt { font-size: 13px; line-height: 1.5; color: var(--primary); margin-bottom: 6px; }
+  .q-ans { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+  .q-ans > div { font-size: 11px; padding: 4px 8px; border-radius: 6px; background: #f5f5f5; color: var(--gray); }
+  .q-ans > div.ok { background: #e8f5e9; color: #2e7d32; font-weight: 600; }
+  .q-acts { display: flex; gap: 4px; flex-direction: column; }
+  .ibtn { width: 26px; height: 26px; border: none; background: transparent; border-radius: 6px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center; color: var(--gray); }
+  .ibtn:hover { background: #f0f0f0; color: var(--primary); }
+  .ibtn.del:hover { color: var(--danger); background: #ffebee; }
+  .stats-bar { display: flex; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+  .stat-box { background: white; padding: 10px 16px; border-radius: 10px; box-shadow: var(--shadow); text-align: center; min-width: 100px; }
+  .stat-box .num { font-size: 20px; font-weight: 700; color: var(--accent); }
+  .stat-box .lbl { font-size: 11px; color: var(--gray); }
+  .toast-wrap { position: fixed; top: 16px; left: 16px; z-index: 2000; display: flex; flex-direction: column; gap: 6px; }
+  .toast { padding: 10px 16px; border-radius: 8px; color: white; font-size: 13px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,0.2); animation: tIn 0.25s ease; }
+  @keyframes tIn { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+  .toast.ok { background: var(--success); }
+  .toast.err { background: var(--danger); }
+  .toast.inf { background: var(--accent); }
+  .empty { text-align: center; padding: 40px 20px; color: var(--gray); }
+  .empty .ic { font-size: 40px; margin-bottom: 8px; opacity: 0.3; }
+  @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .answers-grid { grid-template-columns: 1fr; } .q-ans { grid-template-columns: 1fr; } }
+</style>
+<base target="_blank">
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>📚 لوحة إدارة بنك الأسئلة</h1>
+    <p>نظام متكامل لإدارة أسئلة الاختبارات الشرعية</p>
+    <div class="nav-links">
+      <a href="index.html">🏠 الرئيسية</a>
+      <a href="admin.html">⚙️ الإدارة</a>
+      <a href="https://ieashehata1965-netizen.github.io/Shariah-Training/fiqh-questions.json" target="_blank">📄 ملف JSON</a>
+    </div>
+    <!-- Connection Status Indicator -->
+    <div id="connectionStatus" style="margin-top:12px;padding:8px 16px;border-radius:20px;display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;background:rgba(255,255,255,0.2);backdrop-filter:blur(10px);">
+      <span id="connDot" style="width:10px;height:10px;border-radius:50%;background:#f39c12;display:inline-block;"></span>
+      <span id="connText">جاري التحقق من الاتصال...</span>
+    </div>
+  </div>
 
+  <div class="token-bar">
+    <label>🔐 GitHub Token:</label>
+    <input type="password" id="githubToken" placeholder="ghp_xxxxxxxxxxxx" oninput="checkToken()">
+    <span class="token-badge tb-off" id="tokenStatus">⚪ غير متصل</span>
+    <button class="btn btn-outline" onclick="testConnection()" style="padding:6px 12px;font-size:12px;">🔄 اختبار</button>
+  </div>
+
+  <div class="stats-bar">
+    <div class="stat-box"><div class="num" id="stTotal">0</div><div class="lbl">إجمالي الأسئلة</div></div>
+    <div class="stat-box"><div class="num" id="stCats">0</div><div class="lbl">الفئات</div></div>
+    <div class="stat-box"><div class="num" id="stSelected">0</div><div class="lbl">المحدد</div></div>
+  </div>
+
+  <div class="card">
+    <h2>➕ إضافة سؤال جديد</h2>
+    <form id="addForm" onsubmit="addQuestion(event)">
+      <div class="form-grid">
+        <div class="fg full"><label>نص السؤال</label><textarea id="inQ" required placeholder="اكتب نص السؤال هنا..."></textarea></div>
+        <div class="fg"><label>الفئة</label>
+          <select id="inCat" required>
+            <option value="فقه">فقه</option>
+            <option value="عقيدة">عقيدة</option>
+            <option value="حديث">حديث</option>
+            <option value="تفسير">تفسير</option>
+            <option value="أصول فقه">أصول فقه</option>
+            <option value="سيرة">سيرة</option>
+            <option value="لغة عربية">لغة عربية</option>
+            <option value="ثقافة إسلامية">ثقافة إسلامية</option>
+            <option value="منوعات إسلامية">منوعات إسلامية</option>
+            <option value="عام">عام</option>
+          </select>
+        </div>
+        <div class="fg"><label>المستوى</label>
+          <select id="inLvl" required>
+            <option value="سهل">🟢 سهل</option>
+            <option value="متوسط">🟡 متوسط</option>
+            <option value="صعب">🔴 صعب</option>
+          </select>
+        </div>
+        <div class="fg"><label>المصدر</label><input type="text" id="inSrc" required placeholder="مثال: زاد المستقنع"></div>
+      </div>
+      <div style="margin-top:10px;"><label style="font-size:12px;font-weight:600;color:var(--gray);">الإجابات (حدد الصحيحة):</label></div>
+      <div class="answers-grid">
+        <div class="ans-row"><input type="radio" name="correct" value="0" id="r0" required><label>أ</label><input type="text" id="a0" placeholder="الإجابة الأولى" required></div>
+        <div class="ans-row"><input type="radio" name="correct" value="1" id="r1"><label>ب</label><input type="text" id="a1" placeholder="الإجابة الثانية" required></div>
+        <div class="ans-row"><input type="radio" name="correct" value="2" id="r2"><label>ج</label><input type="text" id="a2" placeholder="الإجابة الثالثة" required></div>
+        <div class="ans-row"><input type="radio" name="correct" value="3" id="r3"><label>د</label><input type="text" id="a3" placeholder="الإجابة الرابعة" required></div>
+      </div>
+      <div class="btn-group">
+        <button type="button" class="btn btn-outline" onclick="clearForm()">🔄 مسح</button>
+        <button type="submit" class="btn btn-primary">💾 إضافة السؤال</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="card">
+    <h2>📋 إضافة مجموعة أسئلة (JSON)</h2>
+    <div class="bulk-hint">أدخل الأسئلة بتنسيق JSON كمصفوفة. سيتم دمجها تلقائياً مع إعادة ترقيم المعرفات.</div>
+    <div class="bulk-area">
+      <textarea id="bulkInput" placeholder='[
+  {
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مصدر",
+    "q": "نص السؤال",
+    "a": ["أ","ب","ج","د"],
+    "c": 0
+  }
+]'></textarea>
+    </div>
+    <div class="btn-group">
+      <button class="btn btn-outline" onclick="document.getElementById('bulkInput').value=''">🗑️ مسح</button>
+      <button class="btn btn-success" onclick="addBulk()">📥 استيراد الأسئلة</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>🔍 البحث والفلاتر</h2>
+    <div class="search-filter">
+      <input type="text" id="searchQ" placeholder="ابحث في الأسئلة..." oninput="renderList()">
+      <select id="filterCat" onchange="renderList()"><option value="">جميع الفئات</option></select>
+      <select id="filterLvl" onchange="renderList()"><option value="">جميع المستويات</option><option value="سهل">سهل</option><option value="متوسط">متوسط</option><option value="صعب">صعب</option></select>
+      <select id="filterSrc" onchange="renderList()"><option value="">جميع المصادر</option></select>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 قائمة الأسئلة <span id="listCount" style="font-size:12px;color:var(--gray)"></span></h2>
+    <div style="display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="selectAll()">☑️ تحديد الكل</button>
+      <button class="btn btn-outline" onclick="deselectAll()">⬜ إلغاء التحديد</button>
+      <button class="btn btn-danger" onclick="deleteSelected()" id="delBtn" style="display:none">🗑️ حذف المحدد</button>
+      <button class="btn btn-success" onclick="exportJSON()">📥 تصدير JSON</button>
+      <button class="btn btn-primary" onclick="pushToGitHub()" id="pushBtn" style="display:none">🚀 رفع إلى GitHub</button>
+    </div>
+    <div class="q-list" id="qList"></div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<script>
+// =====================
+// CONFIG
+// =====================
+const REPO_OWNER = 'ieashehata1965-netizen';
+const REPO_NAME = 'Shariah-Training';
+const FILE_PATH = 'fiqh-questions.json';
+const BRANCH = 'main';
+const GITHUB_JSON_URL = 'https://ieashehata1965-netizen.github.io/Shariah-Training/fiqh-questions.json';
+
+// =====================
+// EMBEDDED INITIAL DATA (works immediately without fetch)
+// =====================
+const EMBEDDED_QUESTIONS = [
+  {
+    "id": 1,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "غير محدد",
+    "q": "من ترك الصلاة جاحداً لوجوبها وهو يعلم أنها فرض، فما حكمه عند جمهور العلماء؟",
+    "a": [
+      "فاسق مرتكب لكبيرة",
+      "كافر",
+      "مكروه فعله",
+      "عاصٍ فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 2,
+    "category": "عام",
+    "level": "متوسط",
+    "source": "غير محدد",
+    "q": "أي العبادات التالية لا تجب إلا عند تحقق النصاب؟ اختبار2",
+    "a": [
+      "الصلاة",
+      "الصيام",
+      "الزكاة",
+      "بر الوالدين"
+    ],
+    "c": 2
+  },
+  {
+    "id": 3,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "غير محدد",
+    "q": "ما الركن الذي لا يصح الوضوء بدونه؟",
+    "a": [
+      "التسمية",
+      "غسل الوجه",
+      "السواك",
+      "دعاء الوضوء"
+    ],
+    "c": 1
+  },
+  {
+    "id": 4,
+    "category": "فقه",
+    "level": "متوسط",
+    "source": "غير محدد",
+    "q": "إذا شك المصلي هل صلى ثلاث ركعات أم أربعاً ولم يترجح لديه شيء، فماذا يفعل؟",
+    "a": [
+      "يبني على اليقين وهو الأقل",
+      "يعيد الصلاة مباشرة",
+      "يبني على الأكثر",
+      "يقطع الصلاة"
+    ],
+    "c": 0
+  },
+  {
+    "id": 5,
+    "category": "أصول فقه",
+    "level": "صعب",
+    "source": "غير محدد",
+    "q": "ما الحكم الشرعي للأمر إذا ورد في القرآن أو السنة مجرداً من القرائن عند جمهور الأصوليين؟",
+    "a": [
+      "الاستحباب",
+      "الإباحة",
+      "الوجوب",
+      "الكراهة"
+    ],
+    "c": 2
+  },
+  {
+    "id": 6,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "غير محدد",
+    "q": "أي الأصناف التالية تجب فيه زكاة بهيمة الأنعام إذا بلغ النصاب؟",
+    "a": [
+      "الخيل المعدة للركوب فقط",
+      "الإبل",
+      "الحمير",
+      "الطيور"
+    ],
+    "c": 1
+  },
+  {
+    "id": 7,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "غير محدد",
+    "q": "ما حكم صيام يوم عيد الفطر؟",
+    "a": [
+      "واجب",
+      "مستحب",
+      "مكروه",
+      "محرم"
+    ],
+    "c": 3
+  },
+  {
+    "id": 8,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "غير محدد",
+    "q": "من شروط وجوب الحج على المسلم أن يكون:",
+    "a": [
+      "حافظاً للقرآن",
+      "مستطيعاً",
+      "متزوجاً",
+      "مقيماً في مكة"
+    ],
+    "c": 1
+  },
+  {
+    "id": 9,
+    "category": "فقه",
+    "level": "متوسط",
+    "source": "غير محدد",
+    "q": "إذا دخل وقت الصلاة وكان الماء موجوداً ويستطيع استعماله، فهل يجوز له التيمم؟",
+    "a": [
+      "يجوز مطلقاً",
+      "يجوز في السفر فقط",
+      "لا يجوز",
+      "يجوز إذا كان مستعجلاً"
+    ],
+    "c": 2
+  },
+  {
+    "id": 10,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "غير محدد",
+    "q": "أي الآتي من نواقض الوضوء باتفاق العلماء؟",
+    "a": [
+      "لمس المصحف",
+      "النوم اليسير",
+      "خروج البول",
+      "الابتسام في الصلاة"
+    ],
+    "c": 2
+  },
+  {
+    "id": 11,
+    "category": "ثقافة إسلامية",
+    "level": "متوسط",
+    "source": "غير محدد",
+    "q": "ما اسم أول مسجد بني في الإسلام؟",
+    "a": [
+      "المسجد الحرام",
+      "المسجد النبوي",
+      "مسجد قباء",
+      "المسجد الأقصى"
+    ],
+    "c": 2
+  },
+  {
+    "id": 12,
+    "category": "عقيدة",
+    "level": "سهل",
+    "source": "غير محدد",
+    "q": "ما عدد أركان الإيمان؟",
+    "a": [
+      "ثلاثة",
+      "أربعة",
+      "ستة",
+      "سبعة"
+    ],
+    "c": 2
+  },
+  {
+    "id": 13,
+    "category": "عقيدة",
+    "level": "متوسط",
+    "source": "غير محدد",
+    "q": "من أركان الإيمان بالله تعالى الإيمان بـ:",
+    "a": [
+      "أسماؤه الحسنى وصفاته العليا فقط",
+      "توحيده وربوبيته وألوهيته",
+      "قدره الخير والشر فقط",
+      "ملائكته فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 14,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما الأصل الأول من الأصول الثلاثة التي يجب على الإنسان معرفتها؟",
+    "a": [
+      "معرفة النبي صلى الله عليه وسلم",
+      "معرفة دين الإسلام بالأدلة",
+      "معرفة العبد ربه",
+      "معرفة اليوم الآخر"
+    ],
+    "c": 2
+  },
+  {
+    "id": 15,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "بم عرّف الشيخ رحمه الله العبادة؟",
+    "a": [
+      "كل عمل صالح فقط",
+      "اسم جامع لكل ما يحبه الله ويرضاه من الأقوال والأعمال الظاهرة والباطنة",
+      "الصلاة والزكاة والصيام فقط",
+      "كل ما اعتاده الناس من الطاعات"
+    ],
+    "c": 1
+  },
+  {
+    "id": 16,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما الدليل الذي استدل به الشيخ على أن الدعاء من أنواع العبادة؟",
+    "a": [
+      "وقوله تعالى: وأقيموا الصلاة",
+      "وقوله تعالى: فاعبد الله مخلصاً له الدين",
+      "وقوله تعالى: وأن المساجد لله فلا تدعوا مع الله أحداً",
+      "وقوله تعالى: وقل رب زدني علماً"
+    ],
+    "c": 2
+  },
+  {
+    "id": 17,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما معنى الكفر بالطاغوت كما قرره الشيخ؟",
+    "a": [
+      "بغض العصاة فقط",
+      "ترك المعاصي كلها",
+      "أن تكفر بكل ما يعبد من دون الله وتتبرأ منه",
+      "عدم التعامل مع غير المسلمين"
+    ],
+    "c": 2
+  },
+  {
+    "id": 18,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما هي شروط لا إله إلا الله كما بيّنها الشيخ في الأصول الثلاثة؟",
+    "a": [
+      "الإخلاص لله وحده دون شروط",
+      "العلم بمعناها ونفي ما يُعبد من دون الله وإثبات العبادة لله",
+      "النطق باللسان فقط دون علم",
+      "العمل بالصلاة والصيام فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 19,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "أي مما يلي يُعد من أركان الإحسان؟",
+    "a": [
+      "أن تعبد الله كأنك تراه فإن لم تكن تراه فإنه يراك",
+      "الإيمان بالملائكة",
+      "إقام الصلاة",
+      "الحج إلى بيت الله"
+    ],
+    "c": 0
+  },
+  {
+    "id": 20,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما أول ما فرض الله على بني آدم كما ذكر الشيخ؟",
+    "a": [
+      "الصلاة",
+      "الصيام",
+      "الكفر بالطاغوت والإيمان بالله",
+      "الحج"
+    ],
+    "c": 2
+  },
+  {
+    "id": 21,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "بم أجاب الشيخ عن السؤال: من نبيك؟",
+    "a": [
+      "هو محمد بن عبد الله بن عبد المطلب بن هاشم",
+      "هو خاتم الأنبياء فقط",
+      "هو نبي العرب فقط",
+      "هو صاحب المعجزات"
+    ],
+    "c": 0
+  },
+  {
+    "id": 22,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما معنى الحنيفية التي وصفها الشيخ بأنها ملة إبراهيم؟",
+    "a": [
+      "الزهد في الدنيا",
+      "عبادة الله وحده مخلصاً له الدين",
+      "كثرة النوافل",
+      "ترك المباحات"
+    ],
+    "c": 1
+  },
+  {
+    "id": 23,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما المراد بمعرفة النبي ﷺ كما قررها المؤلف في الأصول الثلاثة؟",
+    "a": [
+      "معرفة نسبه وأسرته فقط",
+      "معرفة سيرته وأخلاقه دون رسالته",
+      "معرفة اسمه ونسبه وما أُرسل به من التوحيد وطاعته",
+      "معرفة حروبه وغزواته فقط"
+    ],
+    "c": 2
+  },
+  {
+    "id": 24,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما الدليل الذي استدل به المؤلف على وجوب عبادة الله وحده؟",
+    "a": [
+      "قوله تعالى: قل هو الله أحد",
+      "قوله تعالى: وما خلقت الجن والإنس إلا ليعبدون",
+      "حديث جبريل عليه السلام",
+      "آية الكرسي"
+    ],
+    "c": 1
+  },
+  {
+    "id": 25,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "أي مما يلي يدخل في مفهوم العبادة التي لا تصرف إلا لله؟",
+    "a": [
+      "الخوف من المخلوق فيما يقدر عليه",
+      "الرجاء فيما يملك الإنسان",
+      "الدعاء والاستغاثة والتوكل",
+      "العمل الدنيوي المباح"
+    ],
+    "c": 2
+  },
+  {
+    "id": 26,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما حكم من صرف نوعاً من أنواع العبادة لغير الله؟",
+    "a": [
+      "معصية دون أثر على العقيدة",
+      "بدعة في العمل فقط",
+      "شرك أكبر يناقض أصل التوحيد",
+      "خلاف فقهي لا يترتب عليه شيء"
+    ],
+    "c": 2
+  },
+  {
+    "id": 27,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما معنى الإسلام عند المؤلف في سياق مراتب الدين؟",
+    "a": [
+      "الاستسلام الظاهري بالأعمال فقط",
+      "الاستسلام لله بالتوحيد والانقياد له بالطاعة والبراءة من الشرك",
+      "الالتزام بالأخلاق العامة",
+      "معرفة الأحكام الشرعية فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 28,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما الفرق بين الإسلام والإيمان كما ورد في حديث جبريل؟",
+    "a": [
+      "لا فرق بينهما مطلقاً",
+      "الإسلام أعمال ظاهرة والإيمان اعتقاد باطن",
+      "الإسلام خاص بالأنبياء والإيمان بالعلماء",
+      "الإيمان أقل مرتبة من الإسلام"
+    ],
+    "c": 1
+  },
+  {
+    "id": 29,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما المقصود بالإيمان باليوم الآخر؟",
+    "a": [
+      "الإيمان بوجود الزمن فقط",
+      "الإيمان بالموت دون بعث",
+      "الإيمان بالبعث والحساب والجنة والنار",
+      "الإيمان بالأحداث الدنيوية المستقبلية"
+    ],
+    "c": 2
+  },
+  {
+    "id": 30,
+    "category": "عقيدة",
+    "level": "صعب",
+    "source": "الأصول الثلاثة",
+    "q": "ما الحكم الشرعي في دعاء غير الله فيما لا يقدر عليه إلا الله؟",
+    "a": [
+      "جائز إذا كان من باب التوسل",
+      "مكروه فقط",
+      "شرك أكبر مخرج من الملة",
+      "خلاف فقهي معتبر"
+    ],
+    "c": 2
+  },
+  {
+    "id": 31,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما الحكم إذا انقطع تيقن الطهارة عند المتوضئ أثناء الصلاة ثم شك هل أحدث قبلها؟",
+    "a": [
+      "تبطل صلاته ويجب الإعادة مطلقًا",
+      "يبني على اليقين وهو الطهارة السابقة ولا يلتفت للشك",
+      "يقطع الصلاة ويتوضأ فورًا",
+      "يكمل الصلاة ثم يعيدها احتياطًا"
+    ],
+    "c": 1
+  },
+  {
+    "id": 32,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما الحكم فيمن توضأ ومسح على الخفين ثم خلعهما قبل انتقاض وضوئه؟",
+    "a": [
+      "ينتقض وضوؤه فورًا",
+      "لا ينتقض وضوؤه ما دام لم يحدث",
+      "يجب عليه إعادة المسح فقط",
+      "تبطل الصلاة فقط دون الوضوء"
+    ],
+    "c": 1
+  },
+  {
+    "id": 33,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "إذا شك في وصول الماء إلى عضو من أعضاء الوضوء بعد الفراغ منه، فما الحكم؟",
+    "a": [
+      "يعيد الوضوء كاملًا",
+      "يبني على صحة الوضوء ولا يلتفت للشك",
+      "يغسل العضو فقط",
+      "يعيد الصلاة فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 34,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما الحكم إذا مسح على الجبيرة مع وجود ضرر من نزعها؟",
+    "a": [
+      "لا يجوز المسح ويجب الغسل",
+      "يمسح عليها ويجزئ ذلك",
+      "يتيمم فقط دون مسح",
+      "يجمع بين الغسل والتيمم دائمًا"
+    ],
+    "c": 1
+  },
+  {
+    "id": 35,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما الحكم إذا توضأ ثم خرج منه دم يسير لا ينقض عند الحنابلة؟",
+    "a": [
+      "ينتقض الوضوء مطلقًا",
+      "لا ينقض الوضوء",
+      "ينقض إذا كان كثيرًا فقط",
+      "ينقض في الصلاة فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 36,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "إذا بدأ المتوضئ باليد اليسرى قبل اليمنى عمدًا، فما الحكم؟",
+    "a": [
+      "يبطل الوضوء",
+      "يصح الوضوء مع الكراهة عند المخالفة",
+      "يجب إعادة الوضوء",
+      "لا أثر لذلك مطلقًا"
+    ],
+    "c": 1
+  },
+  {
+    "id": 37,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما الحكم إذا زال ماء الوضوء قبل تمام الأعضاء بسبب تبخر أو جفاف شديد؟",
+    "a": [
+      "يستأنف الوضوء من البداية",
+      "يبني على ما سبق",
+      "يكمل بلا ماء",
+      "يكتفي بالتيمم دائمًا"
+    ],
+    "c": 0
+  },
+  {
+    "id": 38,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "إذا توضأ بماء طاهر ثم تبين أنه كان نجسًا بعد الصلاة، فما الحكم؟",
+    "a": [
+      "لا إعادة عليه مطلقًا",
+      "يعيد الوضوء والصلاة",
+      "يعيد الصلاة فقط دون الوضوء",
+      "يكفيه التوبة فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 39,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما الحكم فيمن لم يرتب أعضاء الوضوء عمدًا؟",
+    "a": [
+      "يصح الوضوء بلا ترتيب",
+      "يبطل الوضوء عند الحنابلة",
+      "يصح مع الكراهة",
+      "يعيد غسل الوجه فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 40,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "إذا توضأ ثم نام نوماً خفيفًا دون استغراق، فما الحكم؟",
+    "a": [
+      "ينتقض الوضوء مطلقًا",
+      "لا ينقض الوضوء ما لم يتيقن الحدث",
+      "ينقض في جميع الحالات",
+      "يبطل الوضوء إذا طال النوم"
+    ],
+    "c": 1
+  },
+  {
+    "id": 41,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما الحكم إذا ترك المصلي تكبيرة الإحرام عمداً ثم دخل في الصلاة؟",
+    "a": [
+      "تصح صلاته مع سجود السهو",
+      "لا تنعقد صلاته أصلًا",
+      "تصح الصلاة إذا نوى الدخول",
+      "يُعذر بالجهل فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 42,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "إذا سبق المأموم إمامه بركعة كاملة سهواً، فما الحكم؟",
+    "a": [
+      "تبطل صلاته مطلقًا",
+      "تصح مع الإثم فقط",
+      "يلزمه الرجوع لمتابعة الإمام وتدارك ما سبق",
+      "لا شيء عليه مطلقًا"
+    ],
+    "c": 2
+  },
+  {
+    "id": 43,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما الحكم فيمن تعمد ترك ركن من أركان الصلاة غير تكبيرة الإحرام؟",
+    "a": [
+      "تصح الصلاة مع السهو",
+      "تبطل الصلاة ويجب الإعادة",
+      "يُجبر بسجود السهو فقط",
+      "تصح إذا كان جاهلًا"
+    ],
+    "c": 1
+  },
+  {
+    "id": 44,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "إذا نسي المصلي التشهد الأول وقام للركعة الثالثة، ثم تذكر أثناء القيام، فما الحكم عند الحنابلة؟",
+    "a": [
+      "يرجع للتشهد ما لم يستتم قائمًا",
+      "يكمل الصلاة ولا يرجع مطلقًا",
+      "تبطل الصلاة",
+      "يُعيد الصلاة كاملة"
+    ],
+    "c": 0
+  },
+  {
+    "id": 45,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما حكم ترك الطمأنينة في الركوع أو السجود؟",
+    "a": [
+      "مكروه فقط",
+      "لا يؤثر على صحة الصلاة",
+      "ركن تبطل الصلاة بتركه",
+      "سنة مستحبة"
+    ],
+    "c": 2
+  },
+  {
+    "id": 46,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "إذا شك المصلي في عدد الركعات أثناء الصلاة، فما الذي يبني عليه عند الحنابلة؟",
+    "a": [
+      "يبني على الأقل المتيقن",
+      "يبني على الأكثر",
+      "يعيد الصلاة",
+      "يستمر بلا اعتبار للشك"
+    ],
+    "c": 0
+  },
+  {
+    "id": 47,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما الحكم إذا أحدث الإمام أثناء الصلاة ولم يستخلف أحداً؟",
+    "a": [
+      "تتم صلاة المأمومين منفردين",
+      "تبطل صلاة الجميع",
+      "تستمر الصلاة بلا إمام",
+      "تُعاد الصلاة فقط للإمام"
+    ],
+    "c": 1
+  },
+  {
+    "id": 48,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "إذا زاد المصلي ركعة عمداً في الصلاة، فما الحكم؟",
+    "a": [
+      "تصح مع سجود السهو",
+      "تبطل الصلاة",
+      "تصح إذا كان جاهلاً",
+      "تجبر بسجود السهو فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 49,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "ما الحكم فيمن ترك قراءة الفاتحة عمداً في الصلاة؟",
+    "a": [
+      "تصح الصلاة مع الإثم",
+      "تبطل الصلاة",
+      "تجبر بسجود السهو",
+      "تصح إذا قرأ غيرها"
+    ],
+    "c": 1
+  },
+  {
+    "id": 50,
+    "category": "فقه",
+    "level": "صعب",
+    "source": "زاد المستقنع",
+    "q": "إذا دخل وقت الصلاة ثم نام الشخص حتى خرج الوقت دون عذر، فما الحكم؟",
+    "a": [
+      "قضاء الصلاة فقط دون إثم",
+      "إثم مع وجوب القضاء",
+      "لا قضاء عليه",
+      "تصح الصلاة إذا نواها قبل النوم"
+    ],
+    "c": 1
+  },
+  {
+    "id": 51,
+    "category": "حديث",
+    "level": "صعب",
+    "source": "صحيح البخاري ومسلم",
+    "q": "ما حكم من تعمد الكذب على النبي ﷺ في الحديث؟",
+    "a": [
+      "يُقبل حديثه إذا كان مشهورًا بالصدق وحسن الحفظ",
+      "يأثم إثمًا شديدًا ويُتوعد بالنار، ولا يُقبل حديثه ولو وافق الصواب",
+      "يُعذر إذا كان يقصد الترغيب في الخير دون قصد الإضرار",
+      "يُقبل في فضائل الأعمال إذا لم يخالف أصلًا شرعيًا"
+    ],
+    "c": 1
+  },
+  {
+    "id": 52,
+    "category": "حديث",
+    "level": "صعب",
+    "source": "صحيح مسلم",
+    "q": "ما المقصود بحديث «من غشنا فليس منا»؟",
+    "a": [
+      "نفي الإسلام عن كل من وقع في الغش مطلقًا",
+      "خاص بالغش في المعاملات المالية دون غيرها",
+      "نفي الكمال الإيماني عمن وقع في الغش مع بقاء أصل الإسلام",
+      "الغش مكروه فقط ولا يقدح في الإيمان"
+    ],
+    "c": 2
+  },
+  {
+    "id": 53,
+    "category": "حديث",
+    "level": "صعب",
+    "source": "صحيح البخاري",
+    "q": "كيف يُفهم قول النبي ﷺ «الدين النصيحة» في عمومه؟",
+    "a": [
+      "خاص بين العالم وطالب العلم دون غيرهم",
+      "يشمل حقوق الله ورسوله وأئمة المسلمين وعامتهم على وجه الاستمرار",
+      "يقتصر على النصح في المسائل العلمية فقط",
+      "مرتبط بالأوامر الأخلاقية دون العبادات"
+    ],
+    "c": 1
+  },
+  {
+    "id": 54,
+    "category": "حديث",
+    "level": "صعب",
+    "source": "صحيح مسلم",
+    "q": "ما الدلالة العقدية لحديث «لا يؤمن أحدكم حتى يحب لأخيه ما يحب لنفسه»؟",
+    "a": [
+      "خاص بحقوق الأقارب فقط دون عموم المسلمين",
+      "الإيمان يتحقق بمجرد النطق بالشهادتين دون أثر قلبي",
+      "هو من آداب المستحب وليس له علاقة بالإيمان",
+      "كمال الإيمان الواجب مرتبط بسلامة القلب من الحسد وإرادة الخير للغير"
+    ],
+    "c": 3
+  },
+  {
+    "id": 55,
+    "category": "حديث",
+    "level": "صعب",
+    "source": "متفق عليه",
+    "q": "ما الحكم الشرعي في إماطة الأذى عن الطريق من جهة التصنيف الإيماني؟",
+    "a": [
+      "عمل مباح لا يترتب عليه ثواب أو إثم",
+      "واجب كفائي على أهل البلد فقط",
+      "مستحب في حال وجود أذى كبير فقط",
+      "من شعب الإيمان وتعد صدقة ويترتب عليها أجر"
+    ],
+    "c": 3
+  },
+  {
+    "id": 56,
+    "category": "أصول فقه",
+    "level": "صعب",
+    "source": "أصول الفقه",
+    "q": "ما دلالة الأمر عند الأصوليين إذا ورد مجردًا عن القرائن؟",
+    "a": [
+      "يفيد الندب ما لم توجد قرينة تصرفه",
+      "يفيد الإباحة الأصلية في جميع الأحوال",
+      "يفيد الوجوب ما لم توجد قرينة تصرفه",
+      "يفيد الكراهة إلا إذا اقترن بنهي"
+    ],
+    "c": 2
+  },
+  {
+    "id": 57,
+    "category": "أصول فقه",
+    "level": "صعب",
+    "source": "أصول الفقه",
+    "q": "ما المراد بالعام عند الأصوليين؟",
+    "a": [
+      "اللفظ الموضوع لمعنى واحد محتمل لعدة أفراد على وجه الشمول",
+      "اللفظ الذي لا يحتمل إلا معنى واحدًا فقط",
+      "اللفظ الذي يدل على حكم شرعي بدون دليل",
+      "اللفظ الذي يختص بالأحكام الجزئية دون الكلية"
+    ],
+    "c": 0
+  },
+  {
+    "id": 58,
+    "category": "أصول فقه",
+    "level": "صعب",
+    "source": "أصول الفقه",
+    "q": "ما حكم تخصيص العام بدليل منفصل عند جمهور الأصوليين؟",
+    "a": [
+      "غير جائز مطلقًا لأنه يوقع في التعارض",
+      "جائز إذا كان الدليل المنفصل صحيحًا وثابتًا",
+      "جائز فقط في النصوص القرآنية دون السنة",
+      "مكروه إلا إذا تعذر الجمع بين الأدلة"
+    ],
+    "c": 1
+  },
+  {
+    "id": 59,
+    "category": "أصول فقه",
+    "level": "صعب",
+    "source": "أصول الفقه",
+    "q": "ما معنى النسخ في اصطلاح الأصوليين؟",
+    "a": [
+      "رفع الحكم الشرعي بدليل شرعي متأخر عنه",
+      "تفسير النصوص الشرعية بما يوافق اللغة",
+      "تقييد المطلق بالقيود اللغوية فقط",
+      "بيان المجمل دون تغيير الحكم"
+    ],
+    "c": 0
+  },
+  {
+    "id": 60,
+    "category": "أصول فقه",
+    "level": "صعب",
+    "source": "أصول الفقه",
+    "q": "ما حكم الاستصحاب عند الأصوليين؟",
+    "a": [
+      "لا يُعمل به إلا في العبادات فقط",
+      "يُعمل به مطلقًا بلا شرط",
+      "حجة عند عدم الدليل المخالف",
+      "مرفوض عند وجود أي قياس"
+    ],
+    "c": 2
+  },
+  {
+    "id": 61,
+    "category": "تفسير",
+    "level": "صعب",
+    "source": "تفسير ابن كثير",
+    "q": "ما المقصود بقوله تعالى: {اهدنا الصراط المستقيم} عند ابن كثير؟",
+    "a": [
+      "الدعاء بالثبات على الدين دون سؤال زيادة الهداية",
+      "طلب معرفة الحق دون لزوم اتباعه والعمل به",
+      "الثبات على الإسلام وطلب الهداية إليه في كل حال",
+      "الاقتصار على الفرائض دون طلب الكمال في الطاعة"
+    ],
+    "c": 2
+  },
+  {
+    "id": 62,
+    "category": "تفسير",
+    "level": "صعب",
+    "source": "تفسير ابن كثير",
+    "q": "كيف فسر ابن كثير قوله تعالى: {غير المغضوب عليهم ولا الضالين}؟",
+    "a": [
+      "المغضوب عليهم أهل الكبائر، والضالون أهل الصغائر",
+      "من عرف الحق وتركه فهو المغضوب عليه، ومن جهله فهو الضال",
+      "المغضوب عليهم المنافقون فقط، والضالون الفساق فقط",
+      "المغضوب عليهم العصاة، والضالون الكفار عمومًا بلا تفصيل"
+    ],
+    "c": 1
+  },
+  {
+    "id": 63,
+    "category": "تفسير",
+    "level": "صعب",
+    "source": "تفسير ابن كثير",
+    "q": "ما معنى قوله تعالى: {مالك يوم الدين} عند ابن كثير؟",
+    "a": [
+      "الملك التشريعي دون الجزائي في يوم القيامة",
+      "التصرف في الخلق في الدنيا دون اختصاص بالآخرة",
+      "الملك العام في الدنيا والآخرة على السواء",
+      "الملك التام في يوم الجزاء والحساب لله وحده"
+    ],
+    "c": 3
+  },
+  {
+    "id": 64,
+    "category": "تفسير",
+    "level": "صعب",
+    "source": "تفسير ابن كثير",
+    "q": "ما المراد بقوله تعالى: {إياك نعبد وإياك نستعين}؟",
+    "a": [
+      "العبادة لله مع طلب العون من الصالحين",
+      "عبادة الله مع جواز طلب العون من غيره استقلالًا",
+      "إفراد العبادة مع الاعتماد على الأسباب في الاستعانة",
+      "إفراد الله بالعبادة والاستعانة به وحده دون سواه"
+    ],
+    "c": 3
+  },
+  {
+    "id": 65,
+    "category": "تفسير",
+    "level": "صعب",
+    "source": "تفسير ابن كثير",
+    "q": "ما المقصود بقوله تعالى: {الحمد لله رب العالمين} عند ابن كثير؟",
+    "a": [
+      "الشكر على النعم دون إثبات صفات الكمال",
+      "مدح الله في حال الرخاء دون الابتلاء",
+      "ذكر الله عند النعم فقط دون العموم",
+      "الثناء على الله بصفات الكمال مع المحبة والتعظيم"
+    ],
+    "c": 3
+  },
+  {
+    "id": 66,
+    "category": "لغة عربية",
+    "level": "صعب",
+    "source": "النحو العربي",
+    "q": "ما الحكم الإعرابي لكلمة (طلابًا) في جملة: (جاء الطلابُ طلابًا مجتهدين)؟",
+    "a": [
+      "تمييز يوضح النسبة",
+      "حال منصوبة تبين هيئة الفاعل",
+      "خبر كان منصوب",
+      "مفعول به ثانٍ"
+    ],
+    "c": 1
+  },
+  {
+    "id": 67,
+    "category": "لغة عربية",
+    "level": "صعب",
+    "source": "النحو العربي",
+    "q": "ما إعراب كلمة (مجتهدًا) في جملة: (عاد الطالبُ مجتهدًا)؟",
+    "a": [
+      "حال منصوبة تبين هيئة الفاعل عند العودة",
+      "صفة للطالب مرفوعة تتبعه في الإعراب",
+      "تمييز يوضح نوع الطالب",
+      "خبر إن منصوب"
+    ],
+    "c": 0
+  },
+  {
+    "id": 68,
+    "category": "لغة عربية",
+    "level": "صعب",
+    "source": "النحو العربي",
+    "q": "ما إعراب كلمة (كريمٌ) في جملة: (إنَّ الرجلَ كريمٌ)؟",
+    "a": [
+      "اسم إن مرفوع وعلامة رفعه الضمة",
+      "خبر إن مرفوع وعلامة رفعه الضمة",
+      "حال منصوب يبين الهيئة",
+      "تمييز منصوب يوضح المعنى"
+    ],
+    "c": 1
+  },
+  {
+    "id": 69,
+    "category": "لغة عربية",
+    "level": "صعب",
+    "source": "النحو العربي",
+    "q": "ما إعراب كلمة (مخلصًا) في جملة: (كان الطالبُ مخلصًا في عمله)؟",
+    "a": [
+      "خبر كان منصوب يبين الحالة العامة",
+      "حال منصوبة تبين هيئة الطالب",
+      "اسم كان مرفوع",
+      "صفة لـ (الطالب) مرفوعة"
+    ],
+    "c": 1
+  },
+  {
+    "id": 70,
+    "category": "لغة عربية",
+    "level": "صعب",
+    "source": "النحو العربي",
+    "q": "ما نوع التمييز في جملة: (اشتريتُ عشرين كتابًا)؟",
+    "a": [
+      "تمييز ذات يوضح نوع العدد",
+      "حال يبين هيئة المشتري",
+      "خبر لمبتدأ محذوف",
+      "صفة للكتب"
+    ],
+    "c": 0
+  },
+  {
+    "id": 71,
+    "category": "سيرة",
+    "level": "صعب",
+    "source": "السيرة النبوية",
+    "q": "في أي سنة هجرية وقعت غزوة بدر الكبرى؟",
+    "a": [
+      "في السنة الثانية للهجرة في شهر رمضان",
+      "في السنة الثالثة للهجرة في شوال",
+      "في السنة الأولى للهجرة في ربيع الأول",
+      "في السنة الخامسة للهجرة في رمضان"
+    ],
+    "c": 0
+  },
+  {
+    "id": 72,
+    "category": "سيرة",
+    "level": "صعب",
+    "source": "السيرة النبوية",
+    "q": "ما سبب خروج النبي ﷺ إلى غزوة حمراء الأسد؟",
+    "a": [
+      "ملاحقة قريش بعد غزوة أحد لإظهار القوة وردعهم",
+      "الدفاع عن المدينة بعد تهديد اليهود",
+      "طلب الصلح مع قريش بعد صلح الحديبية",
+      "تأمين طريق التجارة إلى الشام"
+    ],
+    "c": 0
+  },
+  {
+    "id": 73,
+    "category": "سيرة",
+    "level": "صعب",
+    "source": "السيرة النبوية",
+    "q": "ما الحدث الذي وقع في غزوة أُحد من حيث نتيجة المعركة؟",
+    "a": [
+      "انتصار المسلمين الكامل على قريش",
+      "هزيمة المسلمين مع بقاء المدينة تحت السيطرة",
+      "انتهاء المعركة بدون قتال",
+      "انتصار حاسم للمشركين مع دخول المدينة"
+    ],
+    "c": 1
+  },
+  {
+    "id": 74,
+    "category": "سيرة",
+    "level": "صعب",
+    "source": "السيرة النبوية",
+    "q": "ما الذي يميز غزوة الأحزاب (الخندق) من حيث طبيعة القتال؟",
+    "a": [
+      "لم يحدث قتال مباشر بسبب حفر الخندق وحصار المدينة",
+      "وقعت فيها مواجهة مباشرة انتهت بانتصار المسلمين السريع",
+      "كانت أول غزوة يخوضها المسلمون خارج المدينة",
+      "انتهت بصلح بين المسلمين وقريش"
+    ],
+    "c": 0
+  },
+  {
+    "id": 75,
+    "category": "سيرة",
+    "level": "صعب",
+    "source": "السيرة النبوية",
+    "q": "ما الهدف الأساسي من غزوة تبوك؟",
+    "a": [
+      "القتال مع قريش في مكة",
+      "مواجهة الروم بعد ورود أخبار استعدادهم لغزو المسلمين",
+      "الدفاع عن المدينة ضد هجوم داخلي",
+      "تأمين قوافل التجارة في الجزيرة العربية"
+    ],
+    "c": 1
+  },
+  {
+    "id": 76,
+    "category": "منوعات إسلامية",
+    "level": "صعب",
+    "source": "علوم شرعية عامة",
+    "q": "ما المقصود بالإيمان عند أهل السنة والجماعة؟",
+    "a": [
+      "تصديق بالقلب فقط دون أثر عملي",
+      "الإقرار باللسان فقط دون اشتراط العمل",
+      "تصديق بالقلب وإقرار باللسان وعمل بالجوارح يزيد بالطاعة وينقص بالمعصية",
+      "معرفة الله بالقلب دون التزام بالأوامر"
+    ],
+    "c": 2
+  },
+  {
+    "id": 77,
+    "category": "منوعات إسلامية",
+    "level": "صعب",
+    "source": "حديث جبريل",
+    "q": "ما معنى الإحسان كما ورد في حديث جبريل عليه السلام؟",
+    "a": [
+      "الاجتهاد في الطاعات دون استحضار مراقبة الله",
+      "أن تعبد الله كأنك تراه فإن لم تكن تراه فإنه يراك",
+      "تحسين الأخلاق مع الناس فقط دون العبادة",
+      "الإكثار من الصدقة فقط دون بقية العبادات"
+    ],
+    "c": 1
+  },
+  {
+    "id": 78,
+    "category": "منوعات إسلامية",
+    "level": "صعب",
+    "source": "أصول العلم الشرعي",
+    "q": "ما حكم طلب العلم الشرعي في الإسلام؟",
+    "a": [
+      "خاص بالعبادات دون المعاملات",
+      "مستحب فقط ولا إثم في تركه",
+      "فرض كفاية في الجملة وقد يتعين في بعض المسائل",
+      "واجب على العلماء دون عامة الناس"
+    ],
+    "c": 2
+  },
+  {
+    "id": 79,
+    "category": "منوعات إسلامية",
+    "level": "صعب",
+    "source": "عقيدة أهل السنة",
+    "q": "ما معنى العقيدة عند أهل السنة؟",
+    "a": [
+      "مجرد المعرفة النظرية بأسماء الله وصفاته",
+      "ما ينعقد عليه القلب من إيمان جازم بالله وملائكته وكتبه ورسله واليوم الآخر",
+      "الالتزام بالأحكام الفقهية فقط دون الاعتقاد",
+      "العبادات العملية دون التصديق القلبي"
+    ],
+    "c": 1
+  },
+  {
+    "id": 80,
+    "category": "منوعات إسلامية",
+    "level": "صعب",
+    "source": "أركان الإسلام",
+    "q": "ما المقصود بأركان الإسلام؟",
+    "a": [
+      "السنن المؤكدة في العبادات فقط",
+      "الأحكام الفقهية المتعلقة بالمعاملات",
+      "أصول العبادات الخمسة التي يقوم عليها بناء الإسلام",
+      "جميع أعمال الخير المستحبة في الدين"
+    ],
+    "c": 2
+  },
+  {
+    "id": 81,
+    "category": "منوعات إسلامية",
+    "level": "صعب",
+    "source": "علوم القرآن",
+    "q": "ما المقصود بالمحكم والمتشابه في القرآن الكريم؟",
+    "a": [
+      "المحكم هو المنسوخ والمتشابه هو الناسخ",
+      "المحكم ما اتضح معناه والمتشابه ما استأثر الله بعلمه أو احتمل أكثر من معنى",
+      "المحكم خاص بالعبادات والمتشابه خاص بالمعاملات",
+      "المحكم آيات مكية والمتشابه آيات مدنية"
+    ],
+    "c": 1
+  },
+  {
+    "id": 82,
+    "category": "منوعات إسلامية",
+    "level": "صعب",
+    "source": "مصطلح الحديث",
+    "q": "ما تعريف الحديث المرسل عند علماء الحديث؟",
+    "a": [
+      "ما رواه الصحابي عن النبي مباشرة",
+      "ما سقط من إسناده راوٍ في أوله بعد التابعي",
+      "ما اتصل سنده إلى النبي بلا انقطاع",
+      "ما رواه التابعي عن تابعي آخر عن النبي"
+    ],
+    "c": 1
+  },
+  {
+    "id": 83,
+    "category": "منوعات إسلامية",
+    "level": "صعب",
+    "source": "الفقه الإسلامي",
+    "q": "ما المقصود بالقياس في أصول الفقه؟",
+    "a": [
+      "إلغاء الحكم الشرعي عند عدم وجود دليل",
+      "إلحاق فرع بأصل في الحكم لعلة مشتركة بينهما",
+      "الاعتماد على النصوص الظاهرة فقط",
+      "تقديم رأي الإمام على النص"
+    ],
+    "c": 1
+  },
+  {
+    "id": 84,
+    "category": "منوعات إسلامية",
+    "level": "صعب",
+    "source": "العقيدة",
+    "q": "ما معنى الإيمان بالقدر خيره وشره؟",
+    "a": [
+      "إنكار أن الشر من خلق الله",
+      "الإيمان بأن كل ما يقع في الكون بعلم الله وكتابته ومشيئته وخلقه",
+      "الاعتقاد بأن الإنسان يخلق أفعاله استقلالًا عن الله",
+      "حصر القدر في الأمور الجبرية فقط"
+    ],
+    "c": 1
+  },
+  {
+    "id": 85,
+    "category": "منوعات إسلامية",
+    "level": "صعب",
+    "source": "السيرة النبوية",
+    "q": "ما المقصود ببيعة العقبة الثانية؟",
+    "a": [
+      "بيعة تمت بين النبي وأهل مكة في الحديبية",
+      "بيعة تمت بين النبي وبعض أهل يثرب قبل الهجرة تتضمن النصرة والحماية",
+      "بيعة خاصة بالأنصار بعد فتح مكة",
+      "بيعة بين الصحابة في غزوة بدر"
+    ],
+    "c": 1
+  },
+  {
+    "id": 86,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "من العقود الجائزة من الطرفين:",
+    "a": [
+      "عقد الوكالة و عقد الشراكة",
+      "عقد البيع",
+      "عقد الاجارة",
+      "عقد الرهن"
+    ],
+    "c": 0
+  },
+  {
+    "id": 87,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "الرهن عقد:",
+    "a": [
+      "لازم من الطرفين",
+      "جائز من طرف ولازم من طرف",
+      "باطل",
+      "غير مشروع"
+    ],
+    "c": 1
+  },
+  {
+    "id": 88,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "اثر العقد في الغالب هو :",
+    "a": [
+      "الملك",
+      "الالتزام",
+      "الإباحة",
+      "التحريم"
+    ],
+    "c": 1
+  },
+  {
+    "id": 89,
+    "category": "فقه",
+    "level": "متوسط",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "من موجبات الالتزام:",
+    "a": [
+      "العقد",
+      "الإرادة المنفردة",
+      "الإثراء بلا سبب",
+      "كل ما سبق"
+    ],
+    "c": 3
+  },
+  {
+    "id": 90,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "الوصية التزام سببه:",
+    "a": [
+      "عقد",
+      "فعل ضار",
+      "إرادة منفردة",
+      "قضاء شرعي"
+    ],
+    "c": 2
+  },
+  {
+    "id": 91,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "سبب الالتزام في المال المحول بالخطأ:",
+    "a": [
+      "عقد",
+      "فعل ضار",
+      "إثراء بلا سبب",
+      "هبة"
+    ],
+    "c": 2
+  },
+  {
+    "id": 92,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "موجبات الالتزام هي:",
+    "a": [
+      "ثلاثة",
+      "أربعة",
+      "خمسة",
+      "ستة"
+    ],
+    "c": 2
+  },
+  {
+    "id": 93,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "عدد أركان العقد عند الفقهاء:",
+    "a": [
+      "ركن واحد",
+      "ركنان",
+      "ثلاثة أركان",
+      "أربعة أركان"
+    ],
+    "c": 2
+  },
+  {
+    "id": 94,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "الصيغة في العقد تشمل:",
+    "a": [
+      "الإيجاب",
+      "القبول",
+      "الإيجاب والقبول",
+      "النية فقط"
+    ],
+    "c": 2
+  },
+  {
+    "id": 95,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "قد يكون المعقود عليه:",
+    "a": [
+      "سيارة",
+      "امرأة",
+      "بيت",
+      "كل ما سبق"
+    ],
+    "c": 3
+  },
+  {
+    "id": 96,
+    "category": "فقه",
+    "level": "متوسط",
+    "source": "مدارسات السنة الرابعة - ابن قدامة",
+    "q": "ترتيب كتب الفقه عند ابن قدامة يبدأ بـ:",
+    "a": [
+      "عمدة الفقه ثم المقنع ثم الكافي ثم المغني",
+      "المغني ثم الكافي ثم المقنع ثم العمدة",
+      "الكافي ثم العمدة ثم المقنع ثم المغني",
+      "المقنع ثم المغني ثم الكافي ثم العمدة"
+    ],
+    "c": 0
+  },
+  {
+    "id": 97,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "جواز البيع ثابت بـ:",
+    "a": [
+      "الكتاب",
+      "السنة",
+      "  الاجماع و النظر الصحيح",
+      "كل ما سبق"
+    ],
+    "c": 3
+  },
+  {
+    "id": 98,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "البيع لغة هو:",
+    "a": [
+      "تمليك عين بعوض",
+      "أخذ وإعطاء",
+      "مبادلة مالية",
+      "عقد معاوضة"
+    ],
+    "c": 1
+  },
+  {
+    "id": 99,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "سمي البيع بيعًا لأنه مأخوذ من:",
+    "a": [
+      "البذل",
+      "الباع",
+      "البيعان",
+      "المال"
+    ],
+    "c": 1
+  },
+  {
+    "id": 100,
+    "category": "فقه",
+    "level": "متوسط",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "تعريف البيع اصطلاحًا هو:",
+    "a": [
+      "مبادلة مال بمال على التأقيت",
+      " علي التاقيت مبادلة منفعة بمنفعة",
+      "مبادلة مال ولو في الذمة أو منفعة مباحة بمثل أحدهما على التأبيد غير ربا وقرض",
+      "عقد إرفاق فقط"
+    ],
+    "c": 2
+  },
+  {
+    "id": 101,
+    "category": "فقه",
+    "level": "متوسط",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "إذا اشترط الشريكان أن ضمان الغصب يكون على الشركة فإن:",
+    "a": [
+      "الشركة فاسدة",
+      "الشركة صحيحة",
+      "الشرط جائز",
+      "لا أثر له"
+    ],
+    "c": 0
+  },
+  {
+    "id": 102,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "أكثر الشركات استعمالًا اليوم:",
+    "a": [
+      "شركة العنان",
+      "شركة المضاربة",
+      "شركة الأبدان",
+      "شركة الوجوه"
+    ],
+    "c": 1
+  },
+  {
+    "id": 103,
+    "category": "فقه",
+    "level": "متوسط",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "اختيار شيخ الإسلام ابن تيمية في الجوائح:",
+    "a": [
+      "لا أثر لها في الإجارة",
+      "يسقط من الأجرة بقدر الضرر",
+      "تلزم الأجرة كاملة دائمًا",
+      "لا حكم لها"
+    ],
+    "c": 1
+  },
+  {
+    "id": 104,
+    "category": "فقه",
+    "level": "متوسط",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "الحكم المشهور في المذهب بشأن عقد الإجارة إذا مات أحد المتعاقدين:",
+    "a": [
+      "تنفسخ الإجارة مطلقًا",
+      "تبقى الإجارة ولا تنفسخ",
+      "تتوقف على رضا الورثة",
+      "تنفسخ دائمًا"
+    ],
+    "c": 1
+  },
+  {
+    "id": 105,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "الأجير الخاص هو:",
+    "a": [
+      "من قُدّر نفعه بالعمل",
+      "من قُدّر نفعه بالزمن",
+      "من يعمل بلا أجر",
+      "من يعمل بالتجارة"
+    ],
+    "c": 1
+  },
+  {
+    "id": 106,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "الأصل في يد الراعي على الماشية أنها:",
+    "a": [
+      "يد ضمان",
+      "يد أمانة",
+      "يد عدوان",
+      "يد ملك"
+    ],
+    "c": 1
+  },
+  {
+    "id": 107,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "يضمن الراعي ما تلف من الماشية إذا:",
+    "a": [
+      "لم يتعد ولم يفرط",
+      "تعدى أو فرط",
+      "كان جاهلًا",
+      "في جميع الأحوال"
+    ],
+    "c": 1
+  },
+  {
+    "id": 108,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "معنى التعدي:",
+    "a": [
+      "ترك ما يجب",
+      "فعل ما لا يجوز",
+      "ترك العمل كله",
+      "الجهل بالحكم"
+    ],
+    "c": 1
+  },
+  {
+    "id": 109,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "ترتيب كتب الفقه عند الحنابلة يبدأ بـ:",
+    "a": [
+      "الطهارة",
+      "البيوع",
+      "النكاح",
+      "الجنايات"
+    ],
+    "c": 0
+  },
+  {
+    "id": 110,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "قُدِّمت الصلاة على بقية العبادات لأنها:",
+    "a": [
+      "أكثر مسائل",
+      "آكد أركان الإسلام",
+      "أول عبادة شرعت",
+      "لأنها قرينة الزكاة"
+    ],
+    "c": 1
+  },
+  {
+    "id": 111,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "سبب تقديم العبادات على المعاملات:",
+    "a": [
+      "لكثرتها",
+      "لمصلحة البدن",
+      "لمصلحة القلب",
+      "لمصلحة المال"
+    ],
+    "c": 2
+  },
+  {
+    "id": 112,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "قسم فقهاء الحنابلة الذين ألفوا في الفقه إلى:",
+    "a": [
+      "ربعين",
+      "ثلاثة أرباع",
+      "أربعة أرباع",
+      "خمسة أرباع"
+    ],
+    "c": 2
+  },
+  {
+    "id": 113,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "الربع الثاني من أرباع الفقه عند الحنابلة هو ربع:",
+    "a": [
+      "المعاملات",
+      "النكاح",
+      "الجنايات والأقضية",
+      "الإقرار"
+    ],
+    "c": 0
+  },
+  {
+    "id": 114,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "تميز الشرح الممتع بـ:",
+    "a": [
+      "وضوح العبارة وكثرة الأمثلة",
+      "الاقتصار على المذهب فقط",
+      "الاختصار الشديد",
+      "التوسع في المذاهب الأربعة"
+    ],
+    "c": 0
+  },
+  {
+    "id": 115,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "المقرر الذي بين أيدينا هو اختصار لكتاب الشرح الممتع شرح زاد المستقنع:",
+    "a": [
+      "للإمام الحجاوي رحمه الله",
+      "للإمام البهوتي رحمه الله",
+      "للشيخ ابن عثيمين رحمه الله",
+      "للإمام ابن قدامة المقدسي رحمه الله"
+    ],
+    "c": 2
+  },
+  {
+    "id": 116,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "التعريف الجامع للعقد:",
+    "a": [
+      "التزام مالي بين شخصين",
+      "اتفاق مكتوب بين طرفين",
+      "ربط إيجاب بقبول لإحداث أثر",
+      "تمليك عين بعوض"
+    ],
+    "c": 2
+  },
+  {
+    "id": 117,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "الإيجاب في العقد هو:",
+    "a": [
+      "اللفظ الصادر من المشتري أو من يقوم مقامه",
+      "اللفظ الصادر من المالك أو من يقوم مقامه",
+      "أي تصرف يدل على الرضا",
+      "واجبات العقد بين البائع والمشتري"
+    ],
+    "c": 1
+  },
+  {
+    "id": 118,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "من العقود التي يُقصد بها التوثيق:",
+    "a": [
+      "البيع",
+      "الإجارة",
+      "الرهن",
+      "القرض"
+    ],
+    "c": 2
+  },
+  {
+    "id": 119,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "الكفالة والرهن من:",
+    "a": [
+      "عقود المعاوضات",
+      "عقود التبرعات",
+      "عقود التوثيقات",
+      "عقود المضاربات"
+    ],
+    "c": 2
+  },
+  {
+    "id": 120,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "عقد البيع من حيث اللزوم:",
+    "a": [
+      "لازم من الطرفين",
+      "جائز من الطرفين",
+      "جائز من البائع فقط",
+      "جائز من المشتري فقط"
+    ],
+    "c": 0
+  },
+  {
+    "id": 121,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "من العقود الجائزة من الطرفين:",
+    "a": [
+      "عقد الوكالة - عقد الشراكة",
+      "عقد الإجارة",
+      "عقد الرهن",
+      "كل ما سبق ما عدا الأخير"
+    ],
+    "c": 0
+  },
+  {
+    "id": 122,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "الرهن عقد جائز من طرف ولازم من الطرف الآخر:",
+    "a": [
+      "صح",
+      "خطأ",
+      "صح في بعض المذاهب فقط",
+      "خطأ في جميع المذاهب"
+    ],
+    "c": 0
+  },
+  {
+    "id": 123,
+    "category": "فقه",
+    "level": "سهل",
+    "source": "مدارسات السنة الرابعة - ابن عثيمين",
+    "q": "أثر العقد في الغالب هو:",
+    "a": [
+      "الملك فقط",
+      "الالتزام",
+      "الإباحة",
+      "البيع"
+    ],
+    "c": 1
+  },
+  {
+    "id": 124,
+    "category": "منوعات إسلامية",
+    "level": "متوسط",
+    "source": "دروس البلاغة",
+    "q": "فصاحة المتكلم هي:",
+    "a": [
+      "ا - سلامة الكلام من التعقيد",
+      "ب - مطابقة الكلام لمقتضى الحال",
+      "ج - ملكة يقتدر بها على التعبير عن المقصود بكلام فصيح في أي غرض",
+      "د - سلامة الألفاظ من تنافر الحروف"
+    ],
+    "c": 2
+  }
+];
+
+// =====================
+// STATE
+// =====================
+let questions = [];
+let selected = new Set();
+let githubToken = localStorage.getItem('githubToken') || '';
+
+// =====================
+// LOAD DATA (embedded first, then try fetch)
+// =====================
+function init() {
+  // Check for localStorage backup first (from previous session)
+  const backup = localStorage.getItem('questions_backup');
+  if (backup) {
+    try {
+      const backupData = JSON.parse(backup);
+      if (Array.isArray(backupData) && backupData.length > 0) {
+        questions = backupData;
+        toast('📂 تم استعادة ' + backupData.length + ' سؤال من النسخة الاحتياطية', 'inf');
+      }
+    } catch (e) {
+      questions = JSON.parse(JSON.stringify(EMBEDDED_QUESTIONS));
+    }
+  } else {
+    // Start with embedded data
+    questions = JSON.parse(JSON.stringify(EMBEDDED_QUESTIONS));
+  }
+
+  // Then try to fetch latest from GitHub
+  fetchLatest();
+
+  // Setup UI
+  if (githubToken) {
+    document.getElementById('githubToken').value = '••••••••••••••••••••';
+    updateTokenUI();
+  }
+
+  updateStats();
+  updateFilters();
+  renderList();
+}
+
+async function fetchLatest() {
+  try {
+    updateConnectionStatus('checking');
+    const res = await fetch(GITHUB_JSON_URL + '?v=' + Date.now());
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length > 0) {
+        questions = data.filter(q => q && q.q && q.a && q.a.length === 4);
+        updateStats();
+        updateFilters();
+        renderList();
+        updateConnectionStatus('connected', questions.length);
+        toast('✅ متصل بـ GitHub - ' + questions.length + ' سؤال محمل', 'ok');
+      }
+    } else {
+      updateConnectionStatus('error', 'خطأ ' + res.status);
+    }
+  } catch (e) {
+    console.log('Fetch failed, using embedded data:', e);
+    updateConnectionStatus('offline');
+    // Already using embedded data, no need to do anything
+  }
+}
+
+function updateConnectionStatus(status, count) {
+  const dot = document.getElementById('connDot');
+  const text = document.getElementById('connText');
+  const bar = document.getElementById('connectionStatus');
+
+  if (!dot || !text) return;
+
+  switch(status) {
+    case 'checking':
+      dot.style.background = '#f39c12';
+      dot.style.animation = 'pulse 1.5s infinite';
+      text.textContent = 'جاري التحقق من الاتصال...';
+      bar.style.background = 'rgba(243, 156, 18, 0.3)';
+      break;
+    case 'connected':
+      dot.style.background = '#2ecc71';
+      dot.style.animation = 'none';
+      text.textContent = '✅ متصل بـ GitHub | ' + (count || questions.length) + ' سؤال في البنك';
+      bar.style.background = 'rgba(46, 204, 113, 0.3)';
+      break;
+    case 'offline':
+      dot.style.background = '#e74c3c';
+      dot.style.animation = 'none';
+      text.textContent = '❌ غير متصل - يعمل بالنسخة المحلية (' + questions.length + ' سؤال)';
+      bar.style.background = 'rgba(231, 76, 60, 0.3)';
+      break;
+    case 'error':
+      dot.style.background = '#e74c3c';
+      dot.style.animation = 'none';
+      text.textContent = '❌ خطأ: ' + (count || 'غير معروف');
+      bar.style.background = 'rgba(231, 76, 60, 0.3)';
+      break;
+    case 'synced':
+      dot.style.background = '#3498db';
+      dot.style.animation = 'none';
+      text.textContent = '📤 تم المزامنة - ' + (count || questions.length) + ' سؤال';
+      bar.style.background = 'rgba(52, 152, 219, 0.3)';
+      break;
+  }
+}
+
+// Add pulse animation
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.2); }
+  }
+`;
+document.head.appendChild(style);
+
+// =====================
+// STATS & FILTERS
+// =====================
+function updateStats() {
+  document.getElementById('stTotal').textContent = questions.length;
+  const cats = new Set(questions.map(q => q.category));
+  document.getElementById('stCats').textContent = cats.size;
+  document.getElementById('stSelected').textContent = selected.size;
+  document.getElementById('delBtn').style.display = selected.size > 0 ? 'inline-block' : 'none';
+  document.getElementById('pushBtn').style.display = (selected.size > 0 || questions.length > 0) && githubToken.length > 10 ? 'inline-block' : 'none';
+}
+
+function updateFilters() {
+  const cats = [...new Set(questions.map(q => q.category))].sort();
+  const srcs = [...new Set(questions.map(q => q.source))].sort();
+  document.getElementById('filterCat').innerHTML = '<option value="">جميع الفئات</option>' + cats.map(c => `<option value="${c}">${c}</option>`).join('');
+  document.getElementById('filterSrc').innerHTML = '<option value="">جميع المصادر</option>' + srcs.map(s => `<option value="${s}">${s}</option>`).join('');
+}
+
+// =====================
+// ADD SINGLE QUESTION
+// =====================
+function addQuestion(e) {
+  e.preventDefault();
+
+  const submitBtn = document.querySelector('#addForm button[type="submit"]');
+
+  if (editingId !== null) {
+    // We're editing an existing question - find and update it
+    const idx = questions.findIndex(q => q.id === editingId);
+    if (idx > -1) {
+      questions[idx] = {
+        id: editingId,
+        category: document.getElementById('inCat').value,
+        level: document.getElementById('inLvl').value,
+        source: document.getElementById('inSrc').value,
+        q: document.getElementById('inQ').value,
+        a: [
+          document.getElementById('a0').value,
+          document.getElementById('a1').value,
+          document.getElementById('a2').value,
+          document.getElementById('a3').value
+        ],
+        c: parseInt(document.querySelector('input[name="correct"]:checked').value)
+      };
+      toast('✅ تم حفظ التعديل على السؤال #' + editingId, 'ok');
+    }
+    editingId = null;
+    // Reset button
+    submitBtn.textContent = '💾 إضافة السؤال';
+    submitBtn.style.background = '';
+  } else {
+    // Adding new question
+    const newQ = {
+      id: questions.length > 0 ? Math.max(...questions.map(q => q.id)) + 1 : 1,
+      category: document.getElementById('inCat').value,
+      level: document.getElementById('inLvl').value,
+      source: document.getElementById('inSrc').value,
+      q: document.getElementById('inQ').value,
+      a: [
+        document.getElementById('a0').value,
+        document.getElementById('a1').value,
+        document.getElementById('a2').value,
+        document.getElementById('a3').value
+      ],
+      c: parseInt(document.querySelector('input[name="correct"]:checked').value)
+    };
+    questions.push(newQ);
+    toast('✅ تم إضافة السؤال #' + newQ.id, 'ok');
+  }
+
+  clearForm();
+  updateStats();
+  updateFilters();
+  renderList();
+
+  // Auto-save to localStorage as backup
+  localStorage.setItem('questions_backup', JSON.stringify(questions));
+  checkUnsaved();
+
+  // Show quick-save button if token is available
+  if (githubToken && githubToken.length > 10) {
+    showQuickPush();
+  }
+}
+
+function clearForm() {
+  document.getElementById('addForm').reset();
+  document.getElementById('r0').checked = true;
+  editingId = null;
+  const submitBtn = document.querySelector('#addForm button[type="submit"]');
+  submitBtn.textContent = '💾 إضافة السؤال';
+  submitBtn.style.background = '';
+}
+
+// =====================
+// BULK ADD
+// =====================
+function addBulk() {
+  try {
+    const input = document.getElementById('bulkInput').value.trim();
+    if (!input) { toast('❌ الرجاء إدخال بيانات', 'err'); return; }
+    let newQs = JSON.parse(input);
+    if (!Array.isArray(newQs)) newQs = [newQs];
+    let maxId = questions.length > 0 ? Math.max(...questions.map(q => q.id)) : 0;
+    let added = 0;
+    newQs.forEach(q => {
+      if (!q.q || !q.a || q.a.length !== 4) return;
+      maxId++;
+      questions.push({
+        id: maxId,
+        category: q.category || 'عام',
+        level: q.level || 'متوسط',
+        source: q.source || 'غير محدد',
+        q: q.q,
+        a: q.a,
+        c: typeof q.c === 'number' ? q.c : 0
+      });
+      added++;
+    });
+    document.getElementById('bulkInput').value = '';
+    updateStats();
+    updateFilters();
+    renderList();
+    toast('✅ تم استيراد ' + added + ' سؤال', 'ok');
+    checkUnsaved();
+  } catch (err) {
+    toast('❌ خطأ JSON: ' + err.message, 'err');
+  }
+}
+
+// =====================
+// RENDER LIST
+// =====================
+function renderList() {
+  const search = document.getElementById('searchQ').value.toLowerCase();
+  const cat = document.getElementById('filterCat').value;
+  const lvl = document.getElementById('filterLvl').value;
+  const src = document.getElementById('filterSrc').value;
+
+  const filtered = questions.filter(q => {
+    if (cat && q.category !== cat) return false;
+    if (lvl && q.level !== lvl) return false;
+    if (src && q.source !== src) return false;
+    if (search) {
+      const text = (q.q + ' ' + q.category + ' ' + q.source + ' ' + q.a.join(' ')).toLowerCase();
+      if (!text.includes(search)) return false;
+    }
+    return true;
+  });
+
+  document.getElementById('listCount').textContent = '(' + filtered.length + ' سؤال)';
+  const list = document.getElementById('qList');
+
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty"><div class="ic">📭</div><p>لا توجد أسئلة مطابقة</p></div>';
+    return;
+  }
+
+  list.innerHTML = filtered.map(q => `
+    <div class="q-item">
+      <input type="checkbox" class="q-chk" ${selected.has(q.id) ? 'checked' : ''} onchange="toggleSelect(${q.id})">
+      <div class="q-body">
+        <div class="q-meta">
+          <span class="q-tag tg-cat">${q.category}</span>
+          <span class="q-tag tg-${q.level === 'سهل' ? 'ez' : q.level === 'متوسط' ? 'md' : 'hd'}">${q.level}</span>
+          <span class="q-tag" style="background:#f3e5f5;color:#6a1b9a;">${q.source}</span>
+          <span style="font-size:10px;color:#999">#${q.id}</span>
+        </div>
+        <div class="q-txt">${esc(q.q)}</div>
+        <div class="q-ans">
+          ${q.a.map((ans, i) => `<div class="${i === q.c ? 'ok' : ''}">${['أ','ب','ج','د'][i]}. ${esc(ans)} ${i === q.c ? '✓' : ''}</div>`).join('')}
+        </div>
+      </div>
+      <div class="q-acts">
+        <button class="ibtn" onclick="editQ(${q.id})" title="تعديل">✏️</button>
+        <button class="ibtn del" onclick="deleteQ(${q.id})" title="حذف">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleSelect(id) {
+  selected.has(id) ? selected.delete(id) : selected.add(id);
+  updateStats();
+}
+
+function selectAll() {
+  const search = document.getElementById('searchQ').value.toLowerCase();
+  const cat = document.getElementById('filterCat').value;
+  const lvl = document.getElementById('filterLvl').value;
+  const src = document.getElementById('filterSrc').value;
+  questions.forEach(q => {
+    if (cat && q.category !== cat) return;
+    if (lvl && q.level !== lvl) return;
+    if (src && q.source !== src) return;
+    if (search) {
+      const text = (q.q + ' ' + q.category + ' ' + q.source + ' ' + q.a.join(' ')).toLowerCase();
+      if (!text.includes(search)) return;
+    }
+    selected.add(q.id);
+  });
+  renderList();
+  updateStats();
+}
+
+function deselectAll() {
+  selected.clear();
+  renderList();
+  updateStats();
+}
+
+// =====================
+// EDIT & DELETE
+// =====================
+// Track editing state
+let editingId = null;
+
+function editQ(id) {
+  const q = questions.find(x => x.id === id);
+  if (!q) return;
+
+  // Save the ID we're editing
+  editingId = id;
+
+  // Load question data into form
+  document.getElementById('inQ').value = q.q;
+  document.getElementById('inCat').value = q.category;
+  document.getElementById('inLvl').value = q.level;
+  document.getElementById('inSrc').value = q.source;
+  document.getElementById('a0').value = q.a[0];
+  document.getElementById('a1').value = q.a[1];
+  document.getElementById('a2').value = q.a[2];
+  document.getElementById('a3').value = q.a[3];
+  document.getElementById('r' + q.c).checked = true;
+
+  // Change button text to show we're editing
+  const submitBtn = document.querySelector('#addForm button[type="submit"]');
+  submitBtn.textContent = '💾 حفظ التعديل';
+  submitBtn.style.background = 'linear-gradient(135deg, #f39c12, #e67e22)';
+
+  // Scroll to form
+  window.scrollTo(0, 0);
+  toast('✏️ تم تحميل السؤال #' + id + ' للتعديل', 'inf');
+}
+
+function deleteQ(id) {
+  if (!confirm('حذف السؤال #' + id + '؟')) return;
+  questions = questions.filter(q => q.id !== id);
+  selected.delete(id);
+  updateStats();
+  updateFilters();
+  renderList();
+  toast('🗑️ تم الحذف', 'inf');
+  checkUnsaved();
+}
+
+function deleteSelected() {
+  if (!confirm('حذف ' + selected.size + ' سؤال؟')) return;
+  questions = questions.filter(q => !selected.has(q.id));
+  selected.clear();
+  updateStats();
+  updateFilters();
+  renderList();
+  toast('🗑️ تم حذف المحدد', 'inf');
+  checkUnsaved();
+}
+
+// =====================
+// EXPORT
+// =====================
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(questions, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'fiqh-questions.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('📥 تم التصدير', 'ok');
+}
+
+// =====================
+// TOKEN & GITHUB
+// =====================
+function checkToken() {
+  const t = document.getElementById('githubToken').value.trim();
+  githubToken = t;
+  if (t.length > 10) localStorage.setItem('githubToken', t);
+  updateTokenUI();
+  updateStats();
+}
+
+function updateTokenUI() {
+  const s = document.getElementById('tokenStatus');
+  if (githubToken && githubToken.length > 10) {
+    s.textContent = '🟢 جاهز';
+    s.className = 'token-badge tb-ok';
+  } else {
+    s.textContent = '⚪ غير متصل';
+    s.className = 'token-badge tb-off';
+  }
+}
+
+async function testConnection() {
+  if (!githubToken || githubToken.length < 10) {
+    toast('❌ أدخل GitHub Token أولاً', 'err');
+    return;
+  }
+  toast('🔄 جاري الاختبار...', 'inf');
+  try {
+    const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
+      headers: { 'Authorization': 'token ' + githubToken, 'Accept': 'application/vnd.github.v3+json' }
+    });
+    if (res.ok) {
+      const data = await res.json();
+      updateConnectionStatus('connected');
+      toast('✅ متصل! المستودع: ' + data.name, 'ok');
+    } else {
+      const err = await res.json();
+      toast('❌ فشل: ' + (err.message || 'Token غير صالح'), 'err');
+    }
+  } catch (e) {
+    toast('❌ خطأ: ' + e.message, 'err');
+  }
+}
+
+let hasUnsavedChanges = false;
+let originalQuestionsHash = '';
+
+function getQuestionsHash() {
+  return JSON.stringify(questions).length.toString();
+}
+
+function initHash() {
+  originalQuestionsHash = getQuestionsHash();
+}
+
+function checkUnsaved() {
+  const currentHash = getQuestionsHash();
+  hasUnsavedChanges = currentHash !== originalQuestionsHash;
+
+  if (hasUnsavedChanges) {
+    document.getElementById('unsavedWarning').style.display = 'block';
+    if (githubToken && githubToken.length > 10) {
+      showQuickPush();
+    }
+  } else {
+    document.getElementById('unsavedWarning').style.display = 'none';
+    hideQuickPush();
+  }
+}
+
+function showQuickPush() {
+  const bar = document.getElementById('quickPushBar');
+  bar.style.display = 'flex';
+  document.getElementById('pendingCount').textContent = questions.length;
+}
+
+function hideQuickPush() {
+  document.getElementById('quickPushBar').style.display = 'none';
+}
+
+function dismissWarning() {
+  document.getElementById('unsavedWarning').style.display = 'none';
+}
+
+async function quickPushToGitHub() {
+  if (!githubToken || githubToken.length < 10) {
+    toast('❌ أدخل GitHub Token أولاً', 'err');
+    document.getElementById('githubToken').focus();
+    return;
+  }
+
+  // Validate
+  const bad = questions.filter(q => !q || !q.q || !q.a || !Array.isArray(q.a) || q.a.length !== 4 || typeof q.c !== 'number' || q.c < 0 || q.c > 3);
+  if (bad.length > 0) {
+    toast('❌ يوجد ' + bad.length + ' سؤال غير صالح', 'err');
+    return;
+  }
+
+  toast('🔄 جاري الرفع...', 'inf');
+  hideQuickPush();
+
+  try {
+    const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`, {
+      headers: { 'Authorization': 'token ' + githubToken, 'Accept': 'application/vnd.github.v3+json' }
+    });
+
+    if (!getRes.ok) {
+      if (getRes.status === 404) {
+        await createFile();
+        initHash();
+        return;
+      }
+      throw new Error('فشل الوصول للمستودع');
+    }
+
+    const fileData = await getRes.json();
+    const jsonStr = JSON.stringify(questions, null, 2);
+    const content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+    const updateRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+      method: 'PUT',
+      headers: { 'Authorization': 'token ' + githubToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'Auto-update via admin panel - ' + questions.length + ' questions',
+        content: content,
+        sha: fileData.sha,
+        branch: BRANCH
+      })
+    });
+
+    if (updateRes.ok) {
+      const result = await updateRes.json();
+      initHash();
+      document.getElementById('unsavedWarning').style.display = 'none';
+      updateConnectionStatus('synced', questions.length);
+      toast('✅ تم الرفع! ' + result.content.html_url, 'ok');
+      // Re-check connection after 3 seconds to show green
+      setTimeout(() => updateConnectionStatus('connected', questions.length), 3000);
+    } else {
+      const err = await updateRes.json();
+      throw new Error(err.message || 'فشل الرفع');
+    }
+  } catch (err) {
+    toast('❌ ' + err.message, 'err');
+    showQuickPush();
+  }
+}
+
+async function pushToGitHub() {
+  if (!githubToken || githubToken.length < 10) {
+    toast('❌ أدخل GitHub Token أولاً', 'err');
+    return;
+  }
+
+  // Validate before push
+  const bad = questions.filter(q => !q || !q.q || !q.a || !Array.isArray(q.a) || q.a.length !== 4 || typeof q.c !== 'number' || q.c < 0 || q.c > 3);
+  if (bad.length > 0) {
+    toast('❌ يوجد ' + bad.length + ' سؤال غير صالح', 'err');
+    return;
+  }
+
+  if (!confirm('رفع ' + questions.length + ' سؤال إلى GitHub؟')) return;
+
+  toast('🔄 جاري الرفع...', 'inf');
+  try {
+    const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}?ref=${BRANCH}`, {
+      headers: { 'Authorization': 'token ' + githubToken, 'Accept': 'application/vnd.github.v3+json' }
+    });
+
+    if (!getRes.ok) {
+      if (getRes.status === 404) {
+        toast('📄 إنشاء ملف جديد...', 'inf');
+        await createFile();
+        return;
+      }
+      throw new Error('فشل الوصول للمستودع');
+    }
+
+    const fileData = await getRes.json();
+    const jsonStr = JSON.stringify(questions, null, 2);
+    const content = btoa(unescape(encodeURIComponent(jsonStr)));
+
+    const updateRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+      method: 'PUT',
+      headers: { 'Authorization': 'token ' + githubToken, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: 'Update via admin panel - ' + new Date().toLocaleString('ar-SA'),
+        content: content,
+        sha: fileData.sha,
+        branch: BRANCH
+      })
+    });
+
+    if (updateRes.ok) {
+      const result = await updateRes.json();
+      toast('✅ تم الرفع! ' + result.content.html_url, 'ok');
+    } else {
+      const err = await updateRes.json();
+      throw new Error(err.message || 'فشل الرفع');
+    }
+  } catch (err) {
+    toast('❌ ' + err.message, 'err');
+    console.error('Push error:', err);
+  }
+}
+
+async function createFile() {
+  const jsonStr = JSON.stringify(questions, null, 2);
+  const content = btoa(unescape(encodeURIComponent(jsonStr)));
+  const res = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+    method: 'PUT',
+    headers: { 'Authorization': 'token ' + githubToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      message: 'Create fiqh-questions.json via admin panel',
+      content: content,
+      branch: BRANCH
+    })
+  });
+  if (res.ok) {
+    toast('✅ تم الإنشاء!', 'ok');
+  } else {
+    const err = await res.json();
+    throw new Error(err.message || 'فشل الإنشاء');
+  }
+}
+
+// =====================
+// UTILS
+// =====================
+function toast(msg, type) {
+  const c = document.getElementById('toastWrap');
+  const d = document.createElement('div');
+  d.className = 'toast ' + type;
+  d.textContent = msg;
+  c.appendChild(d);
+  setTimeout(() => d.remove(), 3500);
+}
+
+function esc(t) {
+  const d = document.createElement('div');
+  d.textContent = t;
+  return d.innerHTML;
+}
+
+// =====================
+// BEFORE UNLOAD WARNING
+// =====================
+window.addEventListener('beforeunload', function(e) {
+  if (hasUnsavedChanges) {
+    e.preventDefault();
+    e.returnValue = 'يوجد تعديلات غير محفوظة. هل تريد المغادرة؟';
+    return 'يوجد تعديلات غير محفوظة. هل تريد المغادرة؟';
+  }
+});
+
+// =====================
+// INIT
+// =====================
+init();
+initHash();
+</script>
+
+<!-- Quick Push Button -->
+<div id="quickPushBar" style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#e94560,#c0392b);color:white;padding:14px 28px;border-radius:50px;box-shadow:0 8px 30px rgba(233,69,96,0.4);display:none;align-items:center;gap:12px;z-index:3000;cursor:pointer;transition:all 0.3s;font-weight:600;" onclick="quickPushToGitHub()">
+  <span style="font-size:20px;">🚀</span>
+  <span>رفع التعديلات إلى GitHub</span>
+  <span id="pendingCount" style="background:rgba(255,255,255,0.2);padding:2px 10px;border-radius:20px;font-size:12px;">0</span>
+</div>
+
+<!-- Unsaved Changes Warning -->
+<div id="unsavedWarning" style="position:fixed;top:0;left:0;right:0;background:#e74c3c;color:white;padding:10px;text-align:center;font-weight:600;display:none;z-index:4000;">
+  ⚠️ يوجد تعديلات غير محفوظة! <button onclick="quickPushToGitHub()" style="background:white;color:#e74c3c;border:none;padding:4px 12px;border-radius:4px;margin-right:10px;cursor:pointer;font-weight:600;">رفع الآن</button> <button onclick="dismissWarning()" style="background:transparent;color:white;border:1px solid white;padding:4px 12px;border-radius:4px;cursor:pointer;">تجاهل</button>
+</div>
+
+</body>
+</html>
