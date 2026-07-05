@@ -178,3 +178,175 @@ button:disabled{
 </select>
 
 </div>
+<button onclick="startExam()" id="startBtn">ابدأ الاختبار</button>
+
+<div id="quiz"></div>
+
+<div id="certificate" style="display:none; margin-top:20px; padding:25px; border:8px double #166534; border-radius:18px; background:linear-gradient(135deg,#ecfdf5,#ffffff);">
+
+    <h2 style="color:#166534;">شهادة إتمام الاختبار</h2>
+
+    <p>اسم المتدرب: <span id="certName"></span></p>
+    <p>النتيجة: <span id="score"></span> / <span id="total"></span></p>
+    <p>نسبة النجاح: <span id="percent"></span>%</p>
+
+    <p>رقم الشهادة: <span id="id"></span></p>
+
+    <div id="qr"></div>
+
+    <p>ختم واعتماد المدير التنفيذي للمنصة</p>
+</div>
+
+<script>
+"use strict";
+
+/* =========================
+   STATE
+========================= */
+let allQuestions = [];
+let questions = [];
+let current = 0;
+let score = 0;
+let candidateName = "";
+let selectedCount = 5;
+let answered = false;
+let userAnswers = [];
+
+const MIN_CERT_QUESTIONS = 20;
+const JSON_URL = "https://raw.githubusercontent.com/ieashehata1965-netizen/fiqh-tafaqh/main/fiqh-questions.json";
+
+/* =========================
+   LOAD NAME FROM HOME PAGE
+========================= */
+(function(){
+    const savedName = localStorage.getItem('trainee_name');
+    if(savedName){
+        document.getElementById("candidateName").value = savedName;
+    }
+})();
+
+/* =========================
+   LOAD QUESTIONS
+========================= */
+async function loadQuestions() {
+    try {
+        const res = await fetch(JSON_URL, { cache: "no-store" });
+
+        if (!res.ok) throw new Error("HTTP Error: " + res.status);
+
+        const raw = await res.json();
+
+        if (!Array.isArray(raw)) throw new Error("Data not array");
+
+        allQuestions = raw.map(normalize).filter(Boolean);
+
+        // Populate source filter dynamically
+        const sources = [...new Set(allQuestions.map(q => q.source).filter(Boolean))].sort();
+        const sourceFilter = document.getElementById("sourceFilter");
+        // Keep the first option (all)
+        sourceFilter.innerHTML = '<option value="all">كل المصادر</option>';
+        sources.forEach(src => {
+            const opt = document.createElement("option");
+            opt.value = src;
+            opt.textContent = src;
+            sourceFilter.appendChild(opt);
+        });
+
+        return true;
+
+    } catch (e) {
+        console.error(e);
+        document.getElementById("quiz").innerHTML = '<div class="error-msg">❌ فشل تحميل الأسئلة. تأكد من اتصالك بالإنترنت.</div>';
+        document.getElementById("startBtn").disabled = false;
+        document.getElementById("startBtn").textContent = "ابدأ الاختبار";
+        return false;
+    }
+}
+
+/* =========================
+   NORMALIZE
+========================= */
+function normalize(item){
+    if(!item) return null;
+
+    const q = String(item.q ?? "").trim();
+    const a = Array.isArray(item.a) ? item.a : [];
+    const c = Number(item.c);
+
+    if(!q || a.length < 2) return null;
+
+    return {
+        id: item.id,
+        category: item.category || "غير مصنف",
+        level: item.level || "غير محدد",
+        source: item.source || "غير محدد",
+        q,
+        a,
+        c: (c >= 0 && c < a.length) ? c : 0
+    };
+}
+
+/* =========================
+   SHUFFLE
+========================= */
+function shuffle(arr){
+    const a = [...arr];
+    for(let i = a.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+}
+
+/* =========================
+   START EXAM
+========================= */
+window.startExam = async function () {
+
+    candidateName = document.getElementById("candidateName").value.trim();
+
+    if(!candidateName){
+        alert("⚠️ أدخل اسمك");
+        document.getElementById("candidateName").focus();
+        return;
+    }
+
+    selectedCount = parseInt(document.getElementById("questionCount").value, 10) || 5;
+
+    const btn = document.getElementById("startBtn");
+    btn.disabled = true;
+    btn.textContent = "جاري التحميل...";
+
+    document.getElementById("quiz").innerHTML = '<div class="success-msg">⏳ جاري تحميل الأسئلة...</div>';
+
+    const ok = await loadQuestions();
+    if(!ok) return;
+
+    const cat = document.getElementById("categoryFilter").value;
+    const lvl = document.getElementById("levelFilter").value;
+    const src = document.getElementById("sourceFilter").value;
+
+    let pool = allQuestions.filter(q =>
+        (cat === "all" || q.category === cat) &&
+        (lvl === "all" || q.level === lvl) &&
+        (src === "all" || q.source === src)
+    );
+
+    if(pool.length === 0){
+        document.getElementById("quiz").innerHTML = '<div class="error-msg">❌ لا توجد أسئلة تطابق الفلاتر المحددة.</div>';
+        btn.disabled = false;
+        btn.textContent = "ابدأ الاختبار";
+        return;
+    }
+
+    // Adjust selectedCount if pool is smaller
+    selectedCount = Math.min(selectedCount, pool.length);
+
+    questions = shuffle(pool).slice(0, selectedCount);
+
+    current = 0;
+    score = 0;
+    userAnswers = new Array(selectedCount).fill(null);
+
+    btn.style.display = "none";
+    document.querySelector('.main-card').style.display = 'none';
