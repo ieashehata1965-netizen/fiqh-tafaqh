@@ -3,930 +3,267 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة الإدارة - أكاديمية الفقه والتفقه</title>
-
+<title>لوحة الإدارة - أكاديمية الفقه</title>
 <style>
-:root {
-  --primary: #1a1a2e;
-  --secondary: #16213e;
-  --accent: #0f3460;
-  --success: #2ecc71;
-  --warning: #f39c12;
-  --danger: #e74c3c;
-  --info: #3498db;
-  --light: #f8f9fa;
-  --gray: #6c757d;
-  --border: #dee2e6;
-  --shadow: 0 4px 20px rgba(0,0,0,0.1);
-  --radius: 12px;
-  --font: 'Segoe UI', Tahoma, Arial, sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fa;min-height:100vh;color:#1a1a2e}
+a{text-decoration:none;color:inherit}
 
-* { box-sizing: border-box; margin: 0; padding: 0; }
+/* Sidebar */
+.side{position:fixed;right:0;top:0;width:250px;height:100vh;background:linear-gradient(180deg,#1a1a2e,#16213e);color:#fff;padding:20px 15px;overflow-y:auto;z-index:1000}
+.side h1{font-size:16px;text-align:center;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:15px}
+.side h1 p{font-size:11px;opacity:.7;margin-top:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;margin-bottom:3px;cursor:pointer;transition:.2s;color:rgba(255,255,255,.85);font-size:14px}
+.nav-item:hover,.nav-item.on{background:rgba(255,255,255,.1);color:#fff}
+.nav-item .icon{font-size:16px;width:20px;text-align:center}
+.nav-sec{font-size:10px;text-transform:uppercase;opacity:.5;margin:15px 0 8px;padding-right:12px}
 
-body {
-  font-family: var(--font);
-  background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
-  min-height: 100vh;
-  color: var(--primary);
-}
+/* Main */
+.main{margin-right:250px;padding:20px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.top h2{font-size:20px}
+.user{display:flex;align-items:center;gap:8px;background:#fff;padding:6px 14px;border-radius:50px;box-shadow:0 2px 10px rgba(0,0,0,.08);font-size:13px}
+.user .role{background:#0f3460;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px}
 
-/* ===== SIDEBAR ===== */
-.sidebar {
-  position: fixed;
-  right: 0;
-  top: 0;
-  width: 260px;
-  height: 100vh;
-  background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
-  color: white;
-  padding: 24px 16px;
-  overflow-y: auto;
-  z-index: 1000;
-  transition: transform 0.3s;
-}
+/* Stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:20px}
+.stat{background:#fff;padding:18px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);display:flex;align-items:center;gap:14px}
+.stat .ic{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.stat h3{font-size:22px;color:#1a1a2e}
+.stat p{font-size:12px;color:#6c757d}
 
-.sidebar-header {
-  text-align: center;
-  padding-bottom: 20px;
-  border-bottom: 1px solid rgba(255,255,255,0.1);
-  margin-bottom: 20px;
-}
+/* Cards */
+.card{background:#fff;border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
+.card h3{font-size:15px;color:#0f3460;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #dee2e6}
 
-.sidebar-header h1 {
-  font-size: 18px;
-  margin-bottom: 4px;
-}
+/* Actions */
+.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.act{display:flex;align-items:center;gap:10px;padding:14px;background:linear-gradient(135deg,#f8f9fa,#e9ecef);border:2px solid #dee2e6;border-radius:12px;transition:.2s}
+.act:hover{border-color:#0f3460;background:#fff;transform:translateY(-2px)}
+.act .ic{font-size:24px}
+.act h4{font-size:13px;margin-bottom:2px}
+.act p{font-size:11px;color:#6c757d}
 
-.sidebar-header p {
-  font-size: 11px;
-  opacity: 0.7;
-}
+/* Status */
+.status{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:13px}
+.status .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
+.status .dot.on{background:#2ecc71;box-shadow:0 0 6px #2ecc71}
+.status .dot.off{background:#e74c3c}
 
-.nav-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  border-radius: 10px;
-  margin-bottom: 4px;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-  color: rgba(255,255,255,0.85);
-  font-size: 14px;
-}
+/* Quality */
+.qual{padding:12px;border-radius:8px;font-size:13px}
+.qual.ok{background:#e8f5e9;color:#2e7d32;text-align:center}
+.qual.err{background:#ffebee;color:#c62828;margin-bottom:10px}
+.qual.warn{background:#fff3e0;color:#ef6c00;margin-bottom:10px}
 
-.nav-item:hover, .nav-item.active {
-  background: rgba(255,255,255,0.1);
-  color: white;
-}
+/* Logs */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:right;padding:10px;background:#f8f9fa;color:#6c757d;font-size:11px;font-weight:600}
+td{padding:10px;border-bottom:1px solid #f0f0f0}
+tr:hover td{background:#fafbfc}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600}
+.b-add{background:#e8f5e9;color:#2e7d32}
+.b-edit{background:#e3f2fd;color:#1565c0}
+.b-del{background:#ffebee;color:#c62828}
+.b-sync{background:#f3e5f5;color:#6a1b9a}
 
-.nav-item .icon {
-  font-size: 18px;
-  width: 24px;
-  text-align: center;
-}
+/* Empty */
+.empty{text-align:center;padding:30px;color:#6c757d}
+.empty .ic{font-size:40px;margin-bottom:8px;opacity:.3}
 
-.nav-section {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  opacity: 0.5;
-  margin: 16px 0 8px 0;
-  padding-right: 14px;
-}
-
-/* ===== MAIN CONTENT ===== */
-.main-content {
-  margin-right: 260px;
-  padding: 24px;
-  min-height: 100vh;
-}
-
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.top-bar h2 {
-  font-size: 22px;
-  color: var(--primary);
-}
-
-.user-badge {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: white;
-  padding: 8px 16px;
-  border-radius: 50px;
-  box-shadow: var(--shadow);
-  font-size: 13px;
-}
-
-.user-badge .role {
-  background: var(--accent);
-  color: white;
-  padding: 2px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-}
-
-/* ===== STATS CARDS ===== */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.stat-card {
-  background: white;
-  border-radius: var(--radius);
-  padding: 20px;
-  box-shadow: var(--shadow);
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  transition: transform 0.2s;
-}
-
-.stat-card:hover {
-  transform: translateY(-2px);
-}
-
-.stat-icon {
-  width: 50px;
-  height: 50px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-}
-
-.stat-icon.blue { background: #e3f2fd; }
-.stat-icon.green { background: #e8f5e9; }
-.stat-icon.orange { background: #fff3e0; }
-.stat-icon.red { background: #ffebee; }
-.stat-icon.purple { background: #f3e5f5; }
-.stat-icon.teal { background: #e0f2f1; }
-
-.stat-info h3 {
-  font-size: 24px;
-  color: var(--primary);
-  margin-bottom: 2px;
-}
-
-.stat-info p {
-  font-size: 12px;
-  color: var(--gray);
-}
-
-/* ===== CARDS ===== */
-.card {
-  background: white;
-  border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: var(--shadow);
-}
-
-.card h3 {
-  font-size: 16px;
-  color: var(--accent);
-  margin-bottom: 16px;
-  padding-bottom: 10px;
-  border-bottom: 2px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-/* ===== QUICK ACTIONS ===== */
-.actions-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 12px;
-}
-
-.action-btn {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-  border: 2px solid var(--border);
-  border-radius: var(--radius);
-  cursor: pointer;
-  transition: all 0.2s;
-  text-decoration: none;
-  color: var(--primary);
-}
-
-.action-btn:hover {
-  border-color: var(--accent);
-  background: white;
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
-.action-btn .icon {
-  font-size: 28px;
-}
-
-.action-btn .info h4 {
-  font-size: 14px;
-  margin-bottom: 2px;
-}
-
-.action-btn .info p {
-  font-size: 11px;
-  color: var(--gray);
-}
-
-/* ===== AUDIT LOG ===== */
-.log-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 13px;
-}
-
-.log-table th {
-  text-align: right;
-  padding: 10px;
-  background: #f8f9fa;
-  color: var(--gray);
-  font-weight: 600;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.log-table td {
-  padding: 10px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.log-table tr:hover td {
-  background: #fafbfc;
-}
-
-.log-badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.log-add { background: #e8f5e9; color: #2e7d32; }
-.log-edit { background: #e3f2fd; color: #1565c0; }
-.log-delete { background: #ffebee; color: #c62828; }
-.log-sync { background: #f3e5f5; color: #6a1b9a; }
-
-/* ===== STATUS BAR ===== */
-.status-bar {
-  display: flex;
-  gap: 16px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.status-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 13px;
-}
-
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.status-dot.online { background: var(--success); box-shadow: 0 0 8px var(--success); }
-.status-dot.offline { background: var(--danger); }
-.status-dot.warning { background: var(--warning); }
-
-/* ===== MOBILE ===== */
-.mobile-toggle {
-  display: none;
-  position: fixed;
-  top: 16px;
-  right: 16px;
-  z-index: 1100;
-  background: var(--primary);
-  color: white;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 8px;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-@media (max-width: 768px) {
-  .sidebar {
-    transform: translateX(100%);
-  }
-  .sidebar.open {
-    transform: translateX(0);
-  }
-  .main-content {
-    margin-right: 0;
-    padding: 16px;
-    padding-top: 60px;
-  }
-  .mobile-toggle {
-    display: block;
-  }
-  .stats-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-/* ===== EMPTY STATE ===== */
-.empty-state {
-  text-align: center;
-  padding: 40px;
-  color: var(--gray);
-}
-
-.empty-state .icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-  opacity: 0.3;
-}
-
-/* ===== SCROLLBAR ===== */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 3px;
+/* Mobile */
+.mob{position:fixed;top:15px;right:15px;z-index:1100;background:#1a1a2e;color:#fff;border:none;width:38px;height:38px;border-radius:8px;font-size:20px;cursor:pointer;display:none}
+@media(max-width:768px){
+.side{transform:translateX(100%);transition:.3s}
+.side.open{transform:translateX(0)}
+.main{margin-right:0;padding:15px;padding-top:60px}
+.mob{display:block}
+.stats{grid-template-columns:1fr 1fr}
 }
 </style>
-
 <base target="_blank">
 </head>
 <body>
 
-<!-- Mobile Toggle -->
-<button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+<button class="mob" onclick="document.getElementById('side').classList.toggle('open')">☰</button>
 
-<!-- Sidebar -->
-<nav class="sidebar" id="sidebar">
-  <div class="sidebar-header">
-    <h1>⚙️ لوحة الإدارة</h1>
-    <p>أكاديمية الفقه والتفقه</p>
-  </div>
-
-  <div class="nav-section">الرئيسية</div>
-  <a href="#" class="nav-item active" onclick="showSection('dashboard')">
-    <span class="icon">📊</span>
-    <span>اللوحة الرئيسية</span>
-  </a>
-
-  <div class="nav-section">إدارة المحتوى</div>
-  <a href="add-question.html" class="nav-item" target="_blank">
-    <span class="icon">📝</span>
-    <span>إدارة بنك الأسئلة</span>
-  </a>
-  <a href="index.html" class="nav-item" target="_blank">
-    <span class="icon">🎓</span>
-    <span>معاينة المنصة</span>
-  </a>
-
-  <div class="nav-section">النظام</div>
-  <a href="#" class="nav-item" onclick="showSection('logs')">
-    <span class="icon">📋</span>
-    <span>سجل العمليات</span>
-  </a>
-  <a href="#" class="nav-item" onclick="showSection('settings')">
-    <span class="icon">⚙️</span>
-    <span>الإعدادات</span>
-  </a>
-
-  <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1);">
-    <a href="index.html" class="nav-item" style="color: #e74c3c;">
-      <span class="icon">🚪</span>
-      <span>خروج</span>
-    </a>
+<nav class="side" id="side">
+  <h1>⚙️ لوحة الإدارة<p>أكاديمية الفقه والتفقه</p></h1>
+  <div class="nav-sec">الرئيسية</div>
+  <a href="#" class="nav-item on" onclick="show('dash');return false"><span class="icon">📊</span>اللوحة الرئيسية</a>
+  <div class="nav-sec">إدارة المحتوى</div>
+  <a href="add-question.html" class="nav-item" target="_blank"><span class="icon">📝</span>إدارة بنك الأسئلة</a>
+  <a href="index.html" class="nav-item" target="_blank"><span class="icon">🎓</span>معاينة المنصة</a>
+  <div class="nav-sec">النظام</div>
+  <a href="#" class="nav-item" onclick="show('logs');return false"><span class="icon">📋</span>سجل العمليات</a>
+  <a href="#" class="nav-item" onclick="show('set');return false"><span class="icon">⚙️</span>الإعدادات</a>
+  <div style="margin-top:auto;padding-top:15px;border-top:1px solid rgba(255,255,255,.1)">
+    <a href="index.html" class="nav-item" style="color:#e74c3c"><span class="icon">🚪</span>خروج</a>
   </div>
 </nav>
 
-<!-- Main Content -->
-<main class="main-content">
-
-  <!-- Top Bar -->
-  <div class="top-bar">
-    <h2 id="pageTitle">📊 لوحة التحكم</h2>
-    <div class="user-badge">
-      <span>👤 مدير النظام</span>
-      <span class="role">ADMIN</span>
-    </div>
+<main class="main">
+  <div class="top">
+    <h2 id="title">📊 لوحة التحكم</h2>
+    <div class="user"><span>👤 مدير النظام</span><span class="role">ADMIN</span></div>
   </div>
 
-  <!-- DASHBOARD SECTION -->
-  <div id="section-dashboard">
-    <!-- Stats Grid -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon blue">📚</div>
-        <div class="stat-info">
-          <h3 id="statQuestions">0</h3>
-          <p>إجمالي الأسئلة</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon green">📂</div>
-        <div class="stat-info">
-          <h3 id="statCategories">0</h3>
-          <p>التصنيفات</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon orange">🎯</div>
-        <div class="stat-info">
-          <h3 id="statLevels">0</h3>
-          <p>مستويات الصعوبة</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon purple">📖</div>
-        <div class="stat-info">
-          <h3 id="statSources">0</h3>
-          <p>المصادر</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon teal">📝</div>
-        <div class="stat-info">
-          <h3 id="statLastAdded">-</h3>
-          <p>آخر إضافة</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon red" style="background: #ffebee;">⚠️</div>
-        <div class="stat-info">
-          <h3 id="statIssues">0</h3>
-          <p>مشاكل البيانات</p>
-        </div>
-      </div>
+  <!-- Dashboard -->
+  <div id="sec-dash">
+    <div class="stats">
+      <div class="stat"><div class="ic" style="background:#e3f2fd">📚</div><div><h3 id="stQ">0</h3><p>إجمالي الأسئلة</p></div></div>
+      <div class="stat"><div class="ic" style="background:#e8f5e9">📂</div><div><h3 id="stC">0</h3><p>التصنيفات</p></div></div>
+      <div class="stat"><div class="ic" style="background:#fff3e0">🎯</div><div><h3 id="stL">0</h3><p>مستويات الصعوبة</p></div></div>
+      <div class="stat"><div class="ic" style="background:#f3e5f5">📖</div><div><h3 id="stS">0</h3><p>المصادر</p></div></div>
+      <div class="stat"><div class="ic" style="background:#e0f2f1">📝</div><div><h3 id="stLast">-</h3><p>آخر إضافة</p></div></div>
+      <div class="stat"><div class="ic" style="background:#ffebee">⚠️</div><div><h3 id="stIss">0</h3><p>مشاكل البيانات</p></div></div>
     </div>
 
-    <!-- Quick Actions -->
     <div class="card">
       <h3>🚀 إجراءات سريعة</h3>
-      <div class="actions-grid">
-        <a href="add-question.html" class="action-btn" target="_blank">
-          <span class="icon">➕</span>
-          <div class="info">
-            <h4>إضافة أسئلة</h4>
-            <p>إدارة بنك الأسئلة</p>
-          </div>
-        </a>
-        <a href="add-question.html#bulk" class="action-btn" target="_blank">
-          <span class="icon">📋</span>
-          <div class="info">
-            <h4>استيراد نصي</h4>
-            <p>لصق عشرات الأسئلة</p>
-          </div>
-        </a>
-        <a href="https://github.com/ieashehata1965-netizen/Shariah-Training" class="action-btn" target="_blank">
-          <span class="icon">🐙</span>
-          <div class="info">
-            <h4>GitHub</h4>
-            <p>المستودع والملفات</p>
-          </div>
-        </a>
-        <a href="index.html" class="action-btn" target="_blank">
-          <span class="icon">👁️</span>
-          <div class="info">
-            <h4>معاينة</h4>
-            <p>عرض المنصة للطلاب</p>
-          </div>
-        </a>
+      <div class="acts">
+        <a href="add-question.html" class="act" target="_blank"><span class="ic">➕</span><div><h4>إضافة أسئلة</h4><p>إدارة بنك الأسئلة</p></div></a>
+        <a href="add-question.html" class="act" target="_blank"><span class="ic">📋</span><div><h4>استيراد نصي</h4><p>لصق عشرات الأسئلة</p></div></a>
+        <a href="https://github.com/ieashehata1965-netizen/Shariah-Training" class="act" target="_blank"><span class="ic">🐙</span><div><h4>GitHub</h4><p>المستودع والملفات</p></div></a>
+        <a href="index.html" class="act" target="_blank"><span class="ic">👁️</span><div><h4>معاينة</h4><p>عرض المنصة للطلاب</p></div></a>
       </div>
     </div>
 
-    <!-- System Status -->
     <div class="card">
       <h3>🔌 حالة النظام</h3>
-      <div class="status-bar">
-        <div class="status-item">
-          <span class="status-dot online" id="statusDot"></span>
-          <span id="statusText">جاري التحقق...</span>
-        </div>
-        <div class="status-item">
-          <span>📡 GitHub API:</span>
-          <span id="githubStatus">جاري الفحص...</span>
-        </div>
-        <div class="status-item">
-          <span>📦 آخر تحديث:</span>
-          <span id="lastUpdate">-</span>
-        </div>
-        <div class="status-item">
-          <span>💾 نسخة محلية:</span>
-          <span id="localBackup">-</span>
-        </div>
+      <div class="status">
+        <span><span class="dot" id="dot"></span><span id="txt">جاري التحقق...</span></span>
+        <span>📡 GitHub: <span id="gh">جاري الفحص...</span></span>
+        <span>📦 آخر تحديث: <span id="upd">-</span></span>
+        <span>💾 نسخة محلية: <span id="bak">-</span></span>
       </div>
     </div>
 
-    <!-- Data Quality -->
     <div class="card">
       <h3>🔍 جودة البيانات</h3>
-      <div id="qualityReport">
-        <div class="empty-state">
-          <div class="icon">🔍</div>
-          <p>جاري تحليل البيانات...</p>
-        </div>
-      </div>
+      <div id="qual"><div class="empty"><div class="ic">🔍</div><p>جاري التحليل...</p></div></div>
     </div>
   </div>
 
-  <!-- LOGS SECTION -->
-  <div id="section-logs" style="display:none;">
+  <!-- Logs -->
+  <div id="sec-logs" style="display:none">
     <div class="card">
-      <h3>
-        📋 سجل العمليات
-        <button class="btn btn-outline" onclick="clearLogs()" style="padding:4px 12px;font-size:12px;">🗑️ مسح السجل</button>
-      </h3>
-      <div style="overflow-x:auto;">
-        <table class="log-table">
-          <thead>
-            <tr>
-              <th>الوقت</th>
-              <th>المستخدم</th>
-              <th>العملية</th>
-              <th>التفاصيل</th>
-              <th>الحالة</th>
-            </tr>
-          </thead>
-          <tbody id="logTableBody">
-            <tr>
-              <td colspan="5" class="empty-state">
-                <div class="icon">📭</div>
-                <p>لا توجد عمليات مسجلة</p>
-              </td>
-            </tr>
-          </tbody>
+      <h3>📋 سجل العمليات <button onclick="clearLogs()" style="float:left;padding:4px 10px;background:#fff;border:1px solid #dee2e6;border-radius:6px;cursor:pointer;font-size:12px">🗑️ مسح</button></h3>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>الوقت</th><th>المستخدم</th><th>العملية</th><th>التفاصيل</th><th>الحالة</th></tr></thead>
+          <tbody id="logBody"><tr><td colspan="5" class="empty"><div class="ic">📭</div><p>لا توجد عمليات مسجلة</p></td></tr></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- SETTINGS SECTION -->
-  <div id="section-settings" style="display:none;">
+  <!-- Settings -->
+  <div id="sec-set" style="display:none">
     <div class="card">
       <h3>⚙️ إعدادات النظام</h3>
-      <div style="max-width:600px;">
-        <div class="fg" style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--gray);margin-bottom:6px;">🔗 رابط ملف JSON</label>
-          <input type="text" id="jsonUrl" value="https://ieashehata1965-netizen.github.io/Shariah-Training/fiqh-questions.json" readonly style="width:100%;padding:10px;border:2px solid var(--border);border-radius:8px;font-size:13px;background:#f8f9fa;">
-        </div>
-        <div class="fg" style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--gray);margin-bottom:6px;">🐙 مستودع GitHub</label>
-          <input type="text" value="ieashehata1965-netizen/Shariah-Training" readonly style="width:100%;padding:10px;border:2px solid var(--border);border-radius:8px;font-size:13px;background:#f8f9fa;">
-        </div>
-        <div class="fg" style="margin-bottom:16px;">
-          <label style="display:block;font-size:12px;font-weight:600;color:var(--gray);margin-bottom:6px;">📁 مسار الملف</label>
-          <input type="text" value="fiqh-questions.json" readonly style="width:100%;padding:10px;border:2px solid var(--border);border-radius:8px;font-size:13px;background:#f8f9fa;">
-        </div>
-        <div style="background:#e3f2fd;padding:12px;border-radius:8px;font-size:12px;color:#1565c0;">
-          <b>💡 ملاحظة:</b> إدارة الأسئلة تتم من خلال <a href="add-question.html" target="_blank" style="color:#0d47a1;">صفحة إدارة بنك الأسئلة</a>
-        </div>
+      <div style="max-width:500px">
+        <p style="margin-bottom:10px;font-size:13px"><b>🔗 رابط JSON:</b><br><input value="https://ieashehata1965-netizen.github.io/Shariah-Training/fiqh-questions.json" readonly style="width:100%;padding:8px;border:1px solid #dee2e6;border-radius:6px;margin-top:4px;font-size:12px;background:#f8f9fa"></p>
+        <p style="margin-bottom:10px;font-size:13px"><b>🐙 المستودع:</b><br><input value="ieashehata1965-netizen/Shariah-Training" readonly style="width:100%;padding:8px;border:1px solid #dee2e6;border-radius:6px;margin-top:4px;font-size:12px;background:#f8f9fa"></p>
+        <p style="margin-bottom:10px;font-size:13px"><b>📁 المسار:</b><br><input value="fiqh-questions.json" readonly style="width:100%;padding:8px;border:1px solid #dee2e6;border-radius:6px;margin-top:4px;font-size:12px;background:#f8f9fa"></p>
+        <div style="background:#e3f2fd;padding:10px;border-radius:8px;font-size:12px;color:#1565c0">💡 إدارة الأسئلة من <a href="add-question.html" target="_blank" style="color:#0d47a1;font-weight:600">صفحة إدارة بنك الأسئلة</a></div>
       </div>
     </div>
   </div>
-
 </main>
 
 <script>
-"use strict";
+const JSON_URL='https://ieashehata1965-netizen.github.io/Shariah-Training/fiqh-questions.json';
+let questions=[],auditLog=[];
 
-/* =========================
-   CONFIG
-========================= */
-const GITHUB_JSON_URL = 'https://ieashehata1965-netizen.github.io/Shariah-Training/fiqh-questions.json';
-const REPO_API = 'https://api.github.com/repos/ieashehata1965-netizen/Shariah-Training';
-
-/* =========================
-   SECURITY CHECK
-========================= */
-if (sessionStorage.getItem("admin_access") !== "granted") {
-  document.body.innerHTML = `
-    <div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:Segoe UI;">
-      <div style="text-align:center;padding:40px;">
-        <div style="font-size:64px;margin-bottom:16px;">⛔</div>
-        <h2 style="color:#dc2626;margin-bottom:8px;">غير مصرح بالدخول</h2>
-        <p style="color:#666;margin-bottom:20px;">يجب تسجيل الدخول كمدير للوصول لهذه الصفحة</p>
-        <a href="index.html" style="background:#16a34a;color:white;padding:10px 24px;border-radius:8px;text-decoration:none;display:inline-block;">العودة للرئيسية</a>
-      </div>
-    </div>
-  `;
-  throw new Error("Access Denied");
+// Security
+if(sessionStorage.getItem('admin_access')!=='granted'){
+  document.body.innerHTML='<div style="display:flex;justify-content:center;align-items:center;height:100vh;font-family:Segoe UI"><div style="text-align:center"><div style="font-size:48px;margin-bottom:12px">⛔</div><h2 style="color:#dc2626">غير مصرح</h2><p style="color:#666;margin:12px 0">يجب تسجيل الدخول كمدير</p><a href="index.html" style="background:#16a34a;color:#fff;padding:8px 20px;border-radius:8px;text-decoration:none">العودة</a></div></div>';
+  throw new Error('Access Denied');
 }
 
-/* =========================
-   STATE
-========================= */
-let questions = [];
-let auditLog = [];
-
-/* =========================
-   INIT
-========================= */
-document.addEventListener('DOMContentLoaded', async () => {
-  await loadData();
-  loadAuditLog();
-  updateStats();
-  checkSystemStatus();
-});
-
-/* =========================
-   LOAD DATA
-========================= */
-async function loadData() {
-  try {
-    // Try localStorage backup first
-    const backup = localStorage.getItem('questions_backup');
-    if (backup) {
-      try {
-        questions = JSON.parse(backup);
-      } catch (e) {
-        questions = [];
-      }
+// Load data
+async function load(){
+  let backup=localStorage.getItem('questions_backup');
+  if(backup){try{questions=JSON.parse(backup)}catch(e){}}
+  try{
+    let r=await fetch(JSON_URL+'?v='+Date.now());
+    if(r.ok){
+      let d=await r.json();
+      if(Array.isArray(d)&&d.length>0){questions=d.filter(q=>q&&q.q&&q.a&&q.a.length===4);update();analyze()}
     }
-
-    // Fetch from GitHub
-    const res = await fetch(GITHUB_JSON_URL + '?v=' + Date.now());
-    if (res.ok) {
-      const data = await res.json();
-      if (Array.isArray(data) && data.length > 0) {
-        questions = data.filter(q => q && q.q && q.a && q.a.length === 4);
-        updateStats();
-        analyzeDataQuality();
-      }
-    }
-  } catch (e) {
-    console.log('Using local data:', e.message);
-    updateStats();
-  }
+  }catch(e){update()}
+  checkStatus();
+  loadLogs();
 }
 
-/* =========================
-   UPDATE STATS
-========================= */
-function updateStats() {
-  document.getElementById('statQuestions').textContent = questions.length;
-
-  const cats = [...new Set(questions.map(q => q.category).filter(Boolean))];
-  document.getElementById('statCategories').textContent = cats.length;
-
-  const levels = [...new Set(questions.map(q => q.level).filter(Boolean))];
-  document.getElementById('statLevels').textContent = levels.length;
-
-  const sources = [...new Set(questions.map(q => q.source).filter(Boolean))];
-  document.getElementById('statSources').textContent = sources.length;
-
-  const lastQ = questions[questions.length - 1];
-  document.getElementById('statLastAdded').textContent = lastQ ? '#' + lastQ.id : '-';
-
-  // Count data issues
-  const issues = questions.filter(q => {
-    return !q.q || !q.a || q.a.length !== 4 || q.a.some(a => !a) || 
-           typeof q.c !== 'number' || q.c < 0 || q.c > 3;
-  }).length;
-  document.getElementById('statIssues').textContent = issues;
+function update(){
+  document.getElementById('stQ').textContent=questions.length;
+  document.getElementById('stC').textContent=[...new Set(questions.map(q=>q.category).filter(Boolean))].size;
+  document.getElementById('stL').textContent=[...new Set(questions.map(q=>q.level).filter(Boolean))].size;
+  document.getElementById('stS').textContent=[...new Set(questions.map(q=>q.source).filter(Boolean))].size;
+  let last=questions[questions.length-1];
+  document.getElementById('stLast').textContent=last?'#'+last.id:'-';
+  let iss=questions.filter(q=>!q.q||!q.a||q.a.length!==4||q.a.some(a=>!a)||typeof q.c!=='number'||q.c<0||q.c>3).length;
+  document.getElementById('stIss').textContent=iss;
 }
 
-/* =========================
-   DATA QUALITY ANALYSIS
-========================= */
-function analyzeDataQuality() {
-  const report = document.getElementById('qualityReport');
-
-  const issues = [];
-  const warnings = [];
-
-  // Check for empty fields
-  questions.forEach((q, i) => {
-    if (!q.category || q.category === 'غير مصنف') {
-      warnings.push(`سؤال #${q.id}: بدون تصنيف`);
-    }
-    if (!q.source || q.source === 'غير محدد') {
-      warnings.push(`سؤال #${q.id}: بدون مصدر`);
-    }
-    if (!q.level || q.level === 'غير محدد') {
-      warnings.push(`سؤال #${q.id}: بدون مستوى`);
-    }
+function analyze(){
+  let issues=[],warns=[];
+  questions.forEach(q=>{
+    if(!q.category||q.category==='غير مصنف')warns.push(`#${q.id}: بدون تصنيف`);
+    if(!q.source||q.source==='غير محدد')warns.push(`#${q.id}: بدون مصدر`);
+    if(!q.level||q.level==='غير محدد')warns.push(`#${q.id}: بدون مستوى`);
   });
-
-  // Check for duplicates
-  const seen = new Map();
-  questions.forEach(q => {
-    const key = q.q.toLowerCase().replace(/\s+/g, ' ').trim();
-    if (seen.has(key)) {
-      issues.push(`تكرار: سؤال #${q.id} مكرر مع #${seen.get(key)}`);
-    } else {
-      seen.set(key, q.id);
-    }
-  });
-
-  // Check answer validity
-  questions.forEach(q => {
-    if (typeof q.c !== 'number' || q.c < 0 || q.c > 3) {
-      issues.push(`سؤال #${q.id}: إجابة صحيحة غير صالحة (${q.c})`);
-    }
-  });
-
-  // Render report
-  let html = '';
-
-  if (issues.length === 0 && warnings.length === 0) {
-    html = `
-      <div style="background:#e8f5e9;color:#2e7d32;padding:16px;border-radius:8px;text-align:center;">
-        <div style="font-size:32px;margin-bottom:8px;">✅</div>
-        <b>البيانات نظيفة</b><br>
-        <span style="font-size:13px;opacity:0.8;">لا توجد مشاكل أو تحذيرات</span>
-      </div>
-    `;
-  } else {
-    if (issues.length > 0) {
-      html += `
-        <div style="background:#ffebee;color:#c62828;padding:12px;border-radius:8px;margin-bottom:12px;">
-          <b>❌ أخطاء (${issues.length}):</b>
-          <ul style="margin:8px 0 0 0;padding-right:20px;font-size:12px;">
-            ${issues.slice(0, 5).map(i => `<li>${i}</li>`).join('')}
-            ${issues.length > 5 ? `<li>... و ${issues.length - 5} أخطاء أخرى</li>` : ''}
-          </ul>
-        </div>
-      `;
-    }
-    if (warnings.length > 0) {
-      html += `
-        <div style="background:#fff3e0;color:#ef6c00;padding:12px;border-radius:8px;">
-          <b>⚠️ تحذيرات (${warnings.length}):</b>
-          <ul style="margin:8px 0 0 0;padding-right:20px;font-size:12px;">
-            ${warnings.slice(0, 5).map(w => `<li>${w}</li>`).join('')}
-            ${warnings.length > 5 ? `<li>... و ${warnings.length - 5} تحذيرات أخرى</li>` : ''}
-          </ul>
-        </div>
-      `;
-    }
+  let seen=new Map();
+  questions.forEach(q=>{let k=q.q.toLowerCase().replace(/\s+/g,' ').trim();if(seen.has(k))issues.push(`تكرار: #${q.id} مع #${seen.get(k)}`);else seen.set(k,q.id)});
+  questions.forEach(q=>{if(typeof q.c!=='number'||q.c<0||q.c>3)issues.push(`#${q.id}: إجابة غير صالحة`)});
+  let html='';
+  if(issues.length===0&&warns.length===0)html='<div class="qual ok"><div style="font-size:28px;margin-bottom:6px">✅</div><b>البيانات نظيفة</b><br><span style="font-size:12px;opacity:.8">لا توجد مشاكل</span></div>';
+  else{
+    if(issues.length)html+=`<div class="qual err"><b>❌ أخطاء (${issues.length}):</b><ul style="margin:6px 0 0 0;padding-right:16px;font-size:12px">${issues.slice(0,5).map(i=>`<li>${i}</li>`).join('')}${issues.length>5?`<li>... و ${issues.length-5} أخرى</li>`:''}</ul></div>`;
+    if(warns.length)html+=`<div class="qual warn"><b>⚠️ تحذيرات (${warns.length}):</b><ul style="margin:6px 0 0 0;padding-right:16px;font-size:12px">${warns.slice(0,5).map(w=>`<li>${w}</li>`).join('')}${warns.length>5?`<li>... و ${warns.length-5} أخرى</li>`:''}</ul></div>`;
   }
-
-  report.innerHTML = html;
+  document.getElementById('qual').innerHTML=html;
 }
 
-/* =========================
-   SYSTEM STATUS
-========================= */
-async function checkSystemStatus() {
-  const dot = document.getElementById('statusDot');
-  const text = document.getElementById('statusText');
-  const ghStatus = document.getElementById('githubStatus');
-
-  try {
-    const res = await fetch(GITHUB_JSON_URL, { method: 'HEAD' });
-    if (res.ok) {
-      dot.className = 'status-dot online';
-      text.textContent = 'متصل';
-      ghStatus.textContent = '✅ يعمل';
-    } else {
-      throw new Error('HTTP ' + res.status);
-    }
-  } catch (e) {
-    dot.className = 'status-dot offline';
-    text.textContent = 'غير متصل';
-    ghStatus.textContent = '❌ خطأ في الاتصال';
-  }
-
-  // Last update
-  const lastUpdate = localStorage.getItem('last_sync_time');
-  document.getElementById('lastUpdate').textContent = lastUpdate ? 
-    new Date(lastUpdate).toLocaleString('ar-SA') : 'غير معروف';
-
-  // Local backup
-  const hasBackup = localStorage.getItem('questions_backup');
-  document.getElementById('localBackup').textContent = hasBackup ? 
-    '✅ متوفرة (' + JSON.parse(hasBackup).length + ' سؤال)' : '❌ غير متوفرة';
+async function checkStatus(){
+  let dot=document.getElementById('dot'),txt=document.getElementById('txt'),gh=document.getElementById('gh');
+  try{let r=await fetch(JSON_URL,{method:'HEAD'});if(r.ok){dot.className='dot on';txt.textContent='متصل';gh.textContent='✅ يعمل'}else throw new Error()}
+  catch(e){dot.className='dot off';txt.textContent='غير متصل';gh.textContent='❌ خطأ'}
+  let upd=localStorage.getItem('last_sync_time');
+  document.getElementById('upd').textContent=upd?new Date(upd).toLocaleString('ar-SA'):'غير معروف';
+  let bak=localStorage.getItem('questions_backup');
+  document.getElementById('bak').textContent=bak?'✅ '+JSON.parse(bak).length+' سؤال':'❌ غير متوفرة';
 }
 
-/* =========================
-   AUDIT LOG
-========================= */
-function loadAuditLog() {
-  const stored = localStorage.getItem('audit_log');
-  if (stored) {
-    try {
-      auditLog = JSON.parse(stored);
-      renderAuditLog();
-    } catch (e) {
-      auditLog = [];
-    }
-  }
+function loadLogs(){
+  let s=localStorage.getItem('audit_log');
+  if(s){try{auditLog=JSON.parse(s);renderLogs()}catch(e){}}
 }
-
-function renderAuditLog() {
-  const tbody = document.getElementById('logTableBody');
-
-  if (auditLog.length === 0) {
-    tbody.innerHTML = `
-      <tr>
-        <td colspan="5" class="empty-state">
-          <div class="icon">📭</div>
-          <p>لا توجد عمليات مسجلة</p>
-        </td>
-      </tr>
-    `;
-    return;
-  }
-
-  tbody.innerHTML = auditLog.slice().reverse().map(entry => {
-    const badgeClass = {
-      'add': 'log-add',
-      'edit': 'log-edit',
-      'delete': 'log-delete',
-      'sync': 'log-sync'
-    }[entry.type] || 'log-add';
-
-    const typeLabel = {
-      'add': 'إضافة',
-      'edit': 'تعديل',
-      'delete': 'حذف',
-      'sync': 'مزامنة'
-    }[entry.type] || entry.type;
-
-    return `
-      <tr>
-        <td>${new Date(entry.time).toLocaleString('ar-SA')}</td>
-        <td>${entry.user || 'مدير النظام'}</td>
-        <td><span class="log-badge ${badgeClass}">${typeLabel}</span></td>
-        <td>${entry.details || '-'}</td>
-        <td>${entry.status === 'success' ? '✅ نجاح' : '❌ فشل'}</td>
-      </tr>
-    `;
+function renderLogs(){
+  let b=document.getElementById('logBody');
+  if(!auditLog.length){b.innerHTML='<tr><td colspan="5" class="empty"><div class="ic">📭</div><p>لا توجد عمليات مسجلة</p></td></tr>';return}
+  let map={add:['b-add','إضافة'],edit:['b-edit','تعديل'],del:['b-del','حذف'],sync:['b-sync','مزامنة']};
+  b.innerHTML=auditLog.slice().reverse().map(e=>{
+    let m=map[e.type]||['b-add',e.type];
+    return`<tr><td>${new Date(e.time).toLocaleString('ar-SA')}</td><td>${e.user||'مدير'}</td><td><span class="badge ${m[0]}">${m[1]}</span></td><td>${e.details||'-'}</td><td>${e.status==='success'?'✅ نجاح':'❌ فشل'}</td></tr>`
   }).join('');
 }
+function clearLogs(){if(!confirm('مسح السجل؟'))return;auditLog=[];localStorage.removeItem('audit_log');renderLogs()}
 
-function clearLogs() {
-  if (!confirm('مسح سجل العمليات؟')) return;
-  auditLog = [];
-  localStorage.removeItem('audit_log');
-  renderAuditLog();
+function show(id){
+  document.getElementById('sec-dash').style.display='none';
+  document.getElementById('sec-logs').style.display='none';
+  document.getElementById('sec-set').style.display='none';
+  document.getElementById('sec-'+id).style.display='block';
+  let titles={dash:'📊 لوحة التحكم',logs:'📋 سجل العمليات',set:'⚙️ الإعدادات'};
+  document.getElementById('title').textContent=titles[id]||'';
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('on'));
+  event.currentTarget.classList.add('on');
 }
 
-/* =========================
-   NAVIGATION
-========================= */
-function showSection(sectionId) {
-  // Hide all sections
-  document.getElementById('section-dashboard').style.display = 'none';
-  document.getElementById('section-logs').style.display = 'none';
-  document.getElementById('section-settings').style.display = 'none';
-
-  // Show selected
-  document.getElementById('section-' + sectionId).style.display = 'block';
-
-  // Update title
-  const titles = {
-    'dashboard': '📊 لوحة التحكم',
-    'logs': '📋 سجل العمليات',
-    'settings': '⚙️ الإعدادات'
-  };
-  document.getElementById('pageTitle').textContent = titles[sectionId] || '';
-
-  // Update nav active state
-  document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-  event.currentTarget.classList.add('active');
-}
-
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('open');
-}
-
-/* =========================
-   UTILITY: Add to audit log from other pages
-========================= */
-window.addEventListener('storage', (e) => {
-  if (e.key === 'audit_log') {
-    loadAuditLog();
-  }
-});
+load();
 </script>
 
 </body>
