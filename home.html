@@ -98,13 +98,13 @@ a{text-decoration:none;color:inherit}
 .stats-in{grid-template-columns:repeat(2,1fr)}
 }
 </style>
-<base target="_self">
+<base target="_blank">
 </head>
 <body>
 
 <nav class="nav" id="nav">
   <div class="nav-in">
-    <a href="#" class="logo"><span>📖</span>أكاديمية الفقه والتفقه</a>
+    <a href="home.html" class="logo"><span>📖</span>أكاديمية الفقه والتفقه</a>
     <div class="nav-links" id="navLinks">
       <a href="#feat">المميزات</a>
       <a href="#vis">عن المنصة</a>
@@ -199,10 +199,10 @@ a{text-decoration:none;color:inherit}
 <section class="share">
   <h3>📢 شارك المنصة مع الآخرين</h3>
   <div class="share-btns">
-    <a href="#" class="s-wa" onclick="sh('wa');return false" title="WhatsApp" target="_blank">📱</a>
-    <a href="#" class="s-tg" onclick="sh('tg');return false" title="Telegram" target="_blank">✈️</a>
-    <a href="#" class="s-fb" onclick="sh('fb');return false" title="Facebook" target="_blank">📘</a>
-    <a href="#" class="s-x" onclick="sh('x');return false" title="X" target="_blank">𝕏</a>
+    <a href="#" class="s-wa" onclick="sh('wa');return false" title="WhatsApp">📱</a>
+    <a href="#" class="s-tg" onclick="sh('tg');return false" title="Telegram">✈️</a>
+    <a href="#" class="s-fb" onclick="sh('fb');return false" title="Facebook">📘</a>
+    <a href="#" class="s-x" onclick="sh('x');return false" title="X">𝕏</a>
     <button class="s-link" onclick="cpLink()" title="نسخ الرابط">🔗</button>
   </div>
 </section>
@@ -260,7 +260,9 @@ anim('stE',+(localStorage.getItem('total_exams')||0));
 anim('stR',+(localStorage.getItem('total_certs')||0));
 
 function anim(id,tgt){
-  let el=document.getElementById(id),c=0,step=Math.ceil(tgt/25);
+  let el=document.getElementById(id);
+  if(!el)return;
+  let c=0,step=Math.ceil(tgt/25);
   let iv=setInterval(()=>{c+=step;if(c>=tgt){c=tgt;clearInterval(iv)}el.textContent=c.toLocaleString('ar-SA')},40);
 }
 
@@ -280,10 +282,8 @@ function sh(p){
 function cpLink(){navigator.clipboard.writeText(SITE).then(()=>alert('✅ تم النسخ')).catch(()=>{let i=document.createElement('input');i.value=SITE;document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);alert('✅ تم النسخ')})}
 
 // Intersection Observer for animations
-let obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.style.opacity=1}),{threshold:.1});
+let obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='translateY(0)'}}),{threshold:.1});
 document.querySelectorAll('.card,.vis-box').forEach(el=>{el.style.opacity=0;el.style.transition='opacity .6s,transform .6s';el.style.transform='translateY(20px)';obs.observe(el)});
-obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='translateY(0)'}}));
-document.querySelectorAll('.card,.vis-box').forEach(el=>obs.observe(el));
 </script>
 
 </body>
