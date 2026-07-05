@@ -125,6 +125,7 @@ button:disabled{
 }
 </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 
 <body>
@@ -159,6 +160,10 @@ button:disabled{
     <option value="سهل">سهل</option>
     <option value="متوسط">متوسط</option>
     <option value="صعب">صعب</option>
+</select>
+
+<select id="sourceFilter">
+    <option value="all">كل المصادر</option>
 </select>
 
 <select id="questionCount">
@@ -236,6 +241,18 @@ async function loadQuestions() {
 
         allQuestions = raw.map(normalize).filter(Boolean);
 
+        // Populate source filter dynamically
+        const sources = [...new Set(allQuestions.map(q => q.source).filter(Boolean))].sort();
+        const sourceFilter = document.getElementById("sourceFilter");
+        // Keep the first option (all)
+        sourceFilter.innerHTML = '<option value="all">كل المصادر</option>';
+        sources.forEach(src => {
+            const opt = document.createElement("option");
+            opt.value = src;
+            opt.textContent = src;
+            sourceFilter.appendChild(opt);
+        });
+
         return true;
 
     } catch (e) {
@@ -263,6 +280,7 @@ function normalize(item){
         id: item.id,
         category: item.category || "غير مصنف",
         level: item.level || "غير محدد",
+        source: item.source || "غير محدد",
         q,
         a,
         c: (c >= 0 && c < a.length) ? c : 0
@@ -307,10 +325,12 @@ window.startExam = async function () {
 
     const cat = document.getElementById("categoryFilter").value;
     const lvl = document.getElementById("levelFilter").value;
+    const src = document.getElementById("sourceFilter").value;
 
     let pool = allQuestions.filter(q =>
         (cat === "all" || q.category === cat) &&
-        (lvl === "all" || q.level === lvl)
+        (lvl === "all" || q.level === lvl) &&
+        (src === "all" || q.source === src)
     );
 
     if(pool.length === 0){
