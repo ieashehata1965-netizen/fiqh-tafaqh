@@ -92,6 +92,7 @@
   @media (max-width: 768px) { .form-grid { grid-template-columns: 1fr; } .answers-grid { grid-template-columns: 1fr; } .q-ans { grid-template-columns: 1fr; } }
 </style>
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 <div class="container">
@@ -186,7 +187,64 @@
     </div>
   </div>
 
+  
   <div class="card">
+    <h2>📝 إضافة مجموعة أسئلة (نص عادي)</h2>
+    <div class="bulk-hint">
+      <b>📋 طريقة الاستخدام:</b> الصق الأسئلة بالتنسيق التالي (يمكن لصق عشرات الأسئلة دفعة واحدة):<br><br>
+      <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;">السؤال:</code> نص السؤال هنا<br>
+      <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;">أ</code> الخيار الأول<br>
+      <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;">ب</code> الخيار الثاني<br>
+      <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;">ج</code> الخيار الثالث<br>
+      <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;">د</code> الخيار الرابع<br>
+      <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;">الإجابة:</code> أ (أو ب أو ج أو د)<br>
+      <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;">المصدر:</code> اسم المصدر<br>
+      <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;">الفئة:</code> فقه (اختياري - افتراضي: عام)<br>
+      <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;">المستوى:</code> سهل/متوسط/صعب (اختياري - افتراضي: متوسط)<br>
+      <code style="background:#f0f0f0;padding:2px 6px;border-radius:4px;">---</code> فاصل بين الأسئلة<br><br>
+      <b>💡 يقبل أيضاً:</b> الأرقام (1,2,3,4) بدلاً من (أ,ب,ج,د) | يمكن ترك الفئة والمستوى والمصدر
+    </div>
+    <div class="bulk-area">
+      <textarea id="bulkTextInput" placeholder='السؤال: ما حكم صيام يوم عيد الفطر؟
+أ- واجب
+ب- مستحب
+ج- مكروه
+د- محرم
+الإجابة: د
+المصدر: زاد المستقنع
+الفئة: فقه
+المستوى: سهل
+---
+السؤال: ما عدد أركان الإيمان؟
+أ- ثلاثة
+ب- أربعة
+ج- ستة
+د- سبعة
+الإجابة: ج
+المصدر: الأصول الثلاثة
+الفئة: عقيدة
+المستوى: سهل'></textarea>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+      <button class="btn btn-outline" onclick="document.getElementById('bulkTextInput').value=''">🗑️ مسح</button>
+      <button class="btn btn-success" onclick="parseBulkText()">🔍 تحليل ومعاينة</button>
+    </div>
+
+    <!-- Preview Section -->
+    <div id="bulkPreview" style="display:none;margin-top:16px;">
+      <h3 style="font-size:14px;color:var(--accent);margin-bottom:10px;">📋 معاينة الأسئلة المستخرجة</h3>
+      <div id="bulkPreviewContent" style="max-height:300px;overflow-y:auto;border:1px solid var(--border);border-radius:8px;padding:10px;"></div>
+      <div style="display:flex;gap:10px;margin-top:10px;justify-content:flex-end;">
+        <button class="btn btn-outline" onclick="document.getElementById('bulkPreview').style.display='none'">❌ إلغاء</button>
+        <button class="btn btn-primary" onclick="confirmBulkAdd()">✅ تأكيد الإضافة</button>
+      </div>
+    </div>
+
+    <!-- Parse Results -->
+    <div id="bulkResults" style="margin-top:10px;font-size:13px;"></div>
+  </div>
+
+<div class="card">
     <h2>🔍 البحث والفلاتر</h2>
     <div class="search-filter">
       <input type="text" id="searchQ" placeholder="ابحث في الأسئلة..." oninput="renderList()">
@@ -2618,6 +2676,282 @@ window.addEventListener('beforeunload', function(e) {
   }
 });
 
+
+// =====================
+// BULK TEXT PARSER
+// =====================
+let parsedBulkQuestions = [];
+
+function parseBulkText() {
+  const input = document.getElementById('bulkTextInput').value.trim();
+  if (!input) {
+    toast('❌ الرجاء إدخال نص الأسئلة', 'err');
+    return;
+  }
+
+  // Split by separator (--- or multiple newlines)
+  const blocks = input.split(/(?:^|
+)---(?:
+|$)/).map(b => b.trim()).filter(b => b.length > 10);
+
+  parsedBulkQuestions = [];
+  const errors = [];
+  const warnings = [];
+
+  blocks.forEach((block, idx) => {
+    const result = parseQuestionBlock(block, idx + 1);
+    if (result.error) {
+      errors.push(`سؤال ${idx + 1}: ${result.error}`);
+    } else {
+      // Check for duplicates in existing data
+      const dupCheck = checkDuplicate(result.data);
+      if (dupCheck.found) {
+        warnings.push(`سؤال ${idx + 1}: مشابه لسؤال موجود (#${dupCheck.id})`);
+      }
+      parsedBulkQuestions.push(result.data);
+    }
+  });
+
+  // Show results
+  const resultsDiv = document.getElementById('bulkResults');
+  let html = '';
+
+  if (errors.length > 0) {
+    html += `<div style="background:#ffebee;color:#c62828;padding:10px;border-radius:8px;margin-bottom:10px;">
+      <b>❌ أخطاء (${errors.length}):</b><br>${errors.join('<br>')}
+    </div>`;
+  }
+
+  if (warnings.length > 0) {
+    html += `<div style="background:#fff3e0;color:#ef6c00;padding:10px;border-radius:8px;margin-bottom:10px;">
+      <b>⚠️ تحذيرات (${warnings.length}):</b><br>${warnings.join('<br>')}
+    </div>`;
+  }
+
+  if (parsedBulkQuestions.length > 0) {
+    html += `<div style="background:#e8f5e9;color:#2e7d32;padding:10px;border-radius:8px;">
+      <b>✅ تم تحليل ${parsedBulkQuestions.length} سؤال بنجاح</b>
+    </div>`;
+    showBulkPreview();
+  } else {
+    html += `<div style="background:#ffebee;color:#c62828;padding:10px;border-radius:8px;">
+      <b>❌ لم يتم استخراج أي سؤال صالح</b>
+    </div>`;
+  }
+
+  resultsDiv.innerHTML = html;
+}
+
+function parseQuestionBlock(text, blockNum) {
+  const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+
+  let q = '';
+  let answers = ['', '', '', ''];
+  let correct = -1;
+  let source = 'غير محدد';
+  let category = 'عام';
+  let level = 'متوسط';
+
+  let currentSection = '';
+  let ansIdx = 0;
+
+  for (let line of lines) {
+    // Remove Arabic punctuation for cleaner matching
+    const cleanLine = line.replace(/[؟،]/g, '').trim();
+
+    // Question detection
+    if (/^(السؤال[:：]|س[:：]|سؤال[:：])?\s*(.*)/i.test(line) && !q && ansIdx === 0) {
+      const match = line.match(/^(?:السؤال[:：]|س[:：]|سؤال[:：])?\s*(.+)/);
+      if (match && match[1] && match[1].length > 5) {
+        q = match[1].trim();
+        continue;
+      }
+    }
+
+    // If no explicit "السؤال:" prefix, first substantial line is the question
+    if (!q && line.length > 10 && ansIdx === 0 && 
+        !line.match(/^[أاببتثججحخدذرزسشصضطظعغفقكلمنهوي]\s*[-.]/)) {
+      q = line;
+      continue;
+    }
+
+    // Answer options (أ, ب, ج, د or 1,2,3,4)
+    const ansMatch = line.match(/^([أاببتثججحخدذرزسشصضطظعغفقكلمنهوي]|\d)\s*[-.)\s]+(.+)/);
+    if (ansMatch && ansIdx < 4) {
+      answers[ansIdx] = ansMatch[2].trim();
+      ansIdx++;
+      continue;
+    }
+
+    // Correct answer detection
+    const correctMatch = line.match(/^(?:الإجابة|الصحيحة|الجواب)[:：]?\s*([أ-د1-4])/i);
+    if (correctMatch) {
+      const ans = correctMatch[1];
+      const map = {'أ':0,'ا':0,'1':0,'ب':1,'2':1,'ج':2,'3':2,'د':3,'4':3};
+      correct = map[ans] !== undefined ? map[ans] : -1;
+      continue;
+    }
+
+    // Source
+    const srcMatch = line.match(/^(?:المصدر|المرجع|من)[:：]?\s*(.+)/);
+    if (srcMatch) {
+      source = srcMatch[1].trim();
+      continue;
+    }
+
+    // Category
+    const catMatch = line.match(/^(?:الفئة|التصنيف|القسم)[:：]?\s*(.+)/);
+    if (catMatch) {
+      category = catMatch[1].trim();
+      continue;
+    }
+
+    // Level
+    const lvlMatch = line.match(/^(?:المستوى|الصعوبة)[:：]?\s*(سهل|متوسط|صعب)/);
+    if (lvlMatch) {
+      level = lvlMatch[1].trim();
+      continue;
+    }
+  }
+
+  // Validation
+  if (!q || q.length < 5) {
+    return { error: 'نص السؤال مفقود أو قصير جداً' };
+  }
+
+  if (answers.some(a => !a)) {
+    return { error: `إجابات ناقصة: [${answers.map((a,i) => a ? '✓' : '✗').join(', ')}]` };
+  }
+
+  if (correct === -1) {
+    return { error: 'الإجابة الصحيحة غير محددة' };
+  }
+
+  // Clean question text
+  q = q.replace(/^(?:السؤال[:：]|س[:：])\s*/, '').trim();
+
+  return {
+    data: {
+      q,
+      a: answers,
+      c: correct,
+      source,
+      category,
+      level
+    }
+  };
+}
+
+function checkDuplicate(newQ) {
+  const normalizedQ = newQ.q.toLowerCase().replace(/\s+/g, ' ').trim();
+  const normalizedA = newQ.a.map(x => x.toLowerCase().replace(/\s+/g, ' ').trim()).join('|');
+
+  for (let existing of questions) {
+    const existingQ = String(existing.q).toLowerCase().replace(/\s+/g, ' ').trim();
+    const existingA = existing.a.map(opt => opt.toLowerCase().replace(/\s+/g, ' ').trim()).join('|');
+
+    // Exact match or 80%+ similarity
+    if (existingQ === normalizedQ || existingA === normalizedA) {
+      return { found: true, id: existing.id };
+    }
+
+    // Check if question text is very similar (>70%)
+    if (similarity(existingQ, normalizedQ) > 0.7) {
+      return { found: true, id: existing.id };
+    }
+  }
+
+  return { found: false };
+}
+
+function similarity(s1, s2) {
+  // Simple Jaccard similarity for Arabic text
+  const set1 = new Set(s1.split(' '));
+  const set2 = new Set(s2.split(' '));
+  const intersection = new Set([...set1].filter(x => set2.has(x)));
+  const union = new Set([...set1, ...set2]);
+  return intersection.size / union.size;
+}
+
+function showBulkPreview() {
+  const preview = document.getElementById('bulkPreview');
+  const content = document.getElementById('bulkPreviewContent');
+
+  let html = '';
+  parsedBulkQuestions.forEach((q, i) => {
+    const correctLetter = ['أ','ب','ج','د'][q.c];
+    html += `
+      <div style="border:1px solid #e0e0e0;border-radius:8px;padding:10px;margin-bottom:8px;background:#fafafa;">
+        <div style="font-weight:600;color:var(--accent);margin-bottom:6px;">
+          #${i+1} ${esc(q.q.substring(0, 80))}${q.q.length > 80 ? '...' : ''}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:12px;">
+          ${q.a.map((ans, ai) => `<div style="padding:4px 8px;border-radius:4px;background:${ai === q.c ? '#e8f5e9' : '#f5f5f5'};color:${ai === q.c ? '#2e7d32' : '#666'};">${['أ','ب','ج','د'][ai]}. ${esc(ans)} ${ai === q.c ? '✓' : ''}</div>`).join('')}
+        </div>
+        <div style="margin-top:6px;font-size:11px;color:#999;">
+          📂 ${esc(q.category)} | 📊 ${esc(q.level)} | 📖 ${esc(q.source)}
+        </div>
+      </div>
+    `;
+  });
+
+  content.innerHTML = html;
+  preview.style.display = 'block';
+}
+
+function confirmBulkAdd() {
+  if (!parsedBulkQuestions.length) {
+    toast('❌ لا توجد أسئلة للإضافة', 'err');
+    return;
+  }
+
+  let maxId = questions.length > 0 ? Math.max(...questions.map(q => q.id)) : 0;
+  let added = 0;
+  let skipped = 0;
+
+  parsedBulkQuestions.forEach(q => {
+    // Final duplicate check
+    const dup = checkDuplicate(q);
+    if (dup.found) {
+      skipped++;
+      return;
+    }
+
+    maxId++;
+    questions.push({
+      id: maxId,
+      category: q.category,
+      level: q.level,
+      source: q.source,
+      q: q.q,
+      a: q.a,
+      c: q.c
+    });
+    added++;
+  });
+
+  // Clear and update
+  document.getElementById('bulkTextInput').value = '';
+  document.getElementById('bulkPreview').style.display = 'none';
+  document.getElementById('bulkResults').innerHTML = '';
+  parsedBulkQuestions = [];
+
+  updateStats();
+  updateFilters();
+  renderList();
+
+  // Auto-save backup
+  localStorage.setItem('questions_backup', JSON.stringify(questions));
+  checkUnsaved();
+
+  toast(`✅ تم إضافة ${added} سؤال | ⚠️ تم تخطي ${skipped} مكرر`, added > 0 ? 'ok' : 'inf');
+
+  // Show quick push if token available
+  if (githubToken && githubToken.length > 10) {
+    showQuickPush();
+  }
+}
+
 // =====================
 // INIT
 // =====================
@@ -2639,4 +2973,3 @@ initHash();
 
 </body>
 </html>
-
