@@ -51,6 +51,30 @@ button:disabled{
     cursor:not-allowed;
 }
 
+/* ====== تنسيق مميز لحقل المصدر ====== */
+.source-box {
+    background: #ecfdf5;
+    border: 2px solid #16a34a;
+    border-radius: 12px;
+    padding: 15px;
+    margin: 12px 0;
+}
+.source-box label {
+    display: block;
+    color: #065f46;
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 6px;
+}
+.source-box select {
+    margin: 0;
+    border: 2px solid #16a34a;
+    background: #fff;
+    font-weight: bold;
+    color: #065f46;
+}
+/* =================================== */
+
 .question{
     font-size:22px;
     font-weight:700;
@@ -126,6 +150,7 @@ button:disabled{
 </style>
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 
 <body>
@@ -162,9 +187,15 @@ button:disabled{
     <option value="صعب">صعب</option>
 </select>
 
-<select id="sourceFilter">
-    <option value="all">كل المصادر</option>
-</select>
+<!-- ====== حقل المصدر المميز ====== -->
+<div class="source-box">
+    <label for="sourceFilter">📚 اختر المصدر (الكتاب / المنهج)</label>
+    <select id="sourceFilter">
+        <option value="all">📖 كل المصادر</option>
+    </select>
+    <small style="color:#166534;">يتم تحديث القائمة تلقائياً حسب المصادر المتاحة في قاعدة البيانات</small>
+</div>
+<!-- ================================ -->
 
 <select id="questionCount">
     <option value="3" selected>3</option>
@@ -245,11 +276,11 @@ async function loadQuestions() {
         const sources = [...new Set(allQuestions.map(q => q.source).filter(Boolean))].sort();
         const sourceFilter = document.getElementById("sourceFilter");
         // Keep the first option (all)
-        sourceFilter.innerHTML = '<option value="all">كل المصادر</option>';
+        sourceFilter.innerHTML = '<option value="all">📖 كل المصادر</option>';
         sources.forEach(src => {
             const opt = document.createElement("option");
             opt.value = src;
-            opt.textContent = src;
+            opt.textContent = "📖 " + src;
             sourceFilter.appendChild(opt);
         });
 
