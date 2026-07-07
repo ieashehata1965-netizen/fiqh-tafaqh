@@ -55,7 +55,7 @@ button:disabled{
     cursor:not-allowed;
 }
 
-/* ====== تنسيق مميز لحقل المصدر ====== */
+/* ====== حقل المصدر المميز ====== */
 .source-box {
     background: #ecfdf5;
     border: 2px solid #16a34a;
@@ -63,6 +63,7 @@ button:disabled{
     padding: 15px;
     margin: 12px 0;
     text-align:right;
+    position:relative;
 }
 .source-box label {
     display: block;
@@ -86,41 +87,76 @@ button:disabled{
     color:#166534;
     font-size:13px;
 }
-.src-list{
+
+/* قائمة المصادر المنسدلة */
+.src-dropdown{
+    position:absolute;
+    top:100%;
+    right:15px;
+    left:15px;
     background:#fff;
-    border:1px solid #16a34a;
-    border-radius:8px;
-    max-height:200px;
+    border:2px solid #16a34a;
+    border-radius:10px;
+    max-height:250px;
     overflow-y:auto;
+    z-index:100;
+    display:none;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);
     margin-top:4px;
     text-align:right;
-    display:none;
-    box-shadow:0 4px 12px rgba(0,0,0,.15);
 }
-.src-list.on{display:block}
+.src-dropdown.on{display:block}
 .src-item{
-    padding:10px 14px;
-    font-size:15px;
+    padding:12px 16px;
+    font-size:16px;
     cursor:pointer;
     border-bottom:1px solid #e5e7eb;
-    text-align:right;
     color:#065f46;
+    font-weight:600;
+    transition:background .15s;
 }
 .src-item:hover{background:#dcfce7}
-.src-item.sel{background:#16a34a;color:#fff;font-weight:bold}
-.src-clear{
-    background:none;
-    border:none;
-    color:#dc2626;
-    cursor:pointer;
-    font-size:14px;
-    padding:4px 8px;
-    width:auto;
-    margin-top:6px;
+.src-item.sel{background:#16a34a;color:#fff}
+.src-item .count{
+    float:left;
+    background:rgba(22,163,74,.15);
+    color:#065f46;
+    padding:2px 10px;
+    border-radius:12px;
+    font-size:12px;
+    font-weight:700;
 }
+.src-item.sel .count{background:rgba(255,255,255,.3);color:#fff}
+
+.src-selected{
+    margin-top:10px;
+    padding:10px 14px;
+    background:#dcfce7;
+    border-radius:10px;
+    border:1px solid #16a34a;
+    display:none;
+}
+.src-selected.on{display:block}
+.src-selected span{
+    color:#065f46;
+    font-weight:bold;
+    font-size:15px;
+}
+.src-clear{
+    background:#dc2626;
+    color:#fff;
+    border:none;
+    padding:4px 12px;
+    border-radius:6px;
+    cursor:pointer;
+    font-size:12px;
+    font-weight:bold;
+    margin-right:8px;
+}
+
 /* =================================== */
 
-/* ====== شاشة الاختبار تملأ الشاشة ====== */
+/* ====== شاشة الاختبار ====== */
 #quiz{
     max-width:900px;
     margin:0 auto;
@@ -210,7 +246,7 @@ button:disabled{
 .wrong-ans{color:#b91c1c;font-weight:bold;font-size:16px;}
 .correct-ans{color:#15803d;font-weight:bold;font-size:16px;}
 
-/* ====== تنسيق الشهادة ====== */
+/* ====== الشهادة ====== */
 #certificate{
     display:none;
     margin-top:20px;
@@ -329,22 +365,27 @@ button:disabled{
     <option value="صعب">🔴 صعب</option>
 </select>
 
-<!-- ====== حقل المصدر المميز - بحث ذكي ====== -->
+<!-- ====== حقل المصدر - بحث ذكي محسّن ====== -->
 <div class="source-box">
     <label for="sourceSearch">📚 ابحث عن المصدر (الكتاب / المنهج)</label>
-    <input id="sourceSearch" placeholder="🔍 اكتب اسم المصدر مثل: زاد المستقنع أو الأصول الثلاثة..." autocomplete="off" oninput="filterSrc(this.value)" onfocus="showSrcList()">
-    <div class="src-list" id="srcList"></div>
-    <div id="srcSelected" style="display:none;margin-top:8px">
-        <span style="color:#065f46;font-weight:bold;font-size:15px">✅ المصدر المختار: <span id="srcName"></span></span>
-        <button class="src-clear" onclick="clearSrc()">❌ إلغاء الاختيار</button>
+    <input id="sourceSearch" placeholder="🔍 اكتب اسم المصدر..." autocomplete="off" oninput="onSrcInput(this.value)" onfocus="onSrcFocus()">
+
+    <!-- قائمة المصادر المنسدلة -->
+    <div class="src-dropdown" id="srcDropdown"></div>
+
+    <!-- المصدر المختار -->
+    <div class="src-selected" id="srcSelectedBox">
+        <span>✅ المصدر المختار: <span id="srcSelectedName"></span></span>
+        <button class="src-clear" onclick="clearSrc()">❌ إلغاء</button>
     </div>
-    <small>يتم تحديث القائمة تلقائياً حسب المصادر المتاحة في قاعدة البيانات</small>
+
+    <small id="srcHint">⏳ جاري تحميل المصادر...</small>
 </div>
 <!-- =================================== -->
 
 <select id="questionCount" style="font-size:16px">
-    <option value="3">3 أسئلة</option>
-    <option value="5" selected>5 أسئلة</option>
+    <option value="3" selected>3 أسئلة</option>
+    <option value="5">5 أسئلة</option>
     <option value="10">10 أسئلة</option>
     <option value="20">20 سؤال</option>
     <option value="30">30 سؤال</option>
@@ -383,34 +424,38 @@ let questions = [];
 let current = 0;
 let score = 0;
 let candidateName = "";
-let selectedCount = 5;
+let selectedCount = 3;  // الافتراضي 3 أسئلة
 let answered = false;
 let userAnswers = [];
 let selSrc = "";
 let srcListData = [];
+let dataLoaded = false;
 
 const MIN_CERT_QUESTIONS = 20;
 const JSON_URL = "https://raw.githubusercontent.com/ieashehata1965-netizen/fiqh-tafaqh/main/fiqh-questions.json";
 
 /* =========================
-   LOAD NAME FROM HOME PAGE
+   INIT - تحميل فوري عند فتح الصفحة
 ========================= */
 (function(){
     const savedName = localStorage.getItem('trainee_name');
     if(savedName){
         document.getElementById("candidateName").value = savedName;
     }
+    // تحميل الأسئلة فوراً لبناء قائمة المصادر
+    loadQuestionsSilent();
 })();
 
 /* =========================
-   LOAD QUESTIONS
+   LOAD QUESTIONS - صامت (بدون alert)
 ========================= */
-async function loadQuestions() {
+async function loadQuestionsSilent() {
     try {
+        document.getElementById('srcHint').textContent = '⏳ جاري تحميل المصادر...';
         const res = await fetch(JSON_URL, { cache: "no-store" });
-        if (!res.ok) throw new Error("HTTP Error: " + res.status);
+        if (!res.ok) throw new Error("HTTP " + res.status);
         const raw = await res.json();
-        if (!Array.isArray(raw)) throw new Error("Data not array");
+        if (!Array.isArray(raw)) throw new Error("Not array");
 
         allQuestions = raw.map(normalize).filter(Boolean);
 
@@ -423,79 +468,107 @@ async function loadQuestions() {
             return true;
         });
 
-        // بناء قائمة المصادر
+        dataLoaded = true;
         buildSrcList();
+        document.getElementById('srcHint').textContent = '✅ تم تحميل ' + srcListData.length + ' مصدر — اكتب للبحث أو انقر للاختيار';
+        toast('✅ تم تحميل ' + allQuestions.length + ' سؤال و ' + srcListData.length + ' مصدر', 'ok');
 
-        return true;
     } catch (e) {
         console.error(e);
-        document.getElementById("quiz").innerHTML = '<div class="error-msg">❌ فشل تحميل الأسئلة. تأكد من اتصالك بالإنترنت.</div>';
-        return false;
+        document.getElementById('srcHint').textContent = '❌ فشل التحميل — اضغط هنا لإعادة المحاولة';
+        document.getElementById('srcHint').style.cursor = 'pointer';
+        document.getElementById('srcHint').onclick = function(){ loadQuestionsSilent(); };
+        toast('❌ فشل تحميل الأسئلة: ' + e.message, 'err');
     }
 }
 
 /* =========================
-   SOURCE SEARCH - البحث الذكي بالمصدر
+   BUILD SOURCE LIST
 ========================= */
 function buildSrcList(){
-    // استخراج المصادر الفريدة
-    srcListData = [...new Set(allQuestions.map(q => q.source).filter(Boolean))].sort((a,b) => {
+    // عدد الأسئلة لكل مصدر
+    const counts = {};
+    allQuestions.forEach(q => {
+        const s = q.source || 'غير محدد';
+        counts[s] = (counts[s] || 0) + 1;
+    });
+
+    // ترتيب المصادر: المحددة أولاً ثم حسب عدد الأسئلة تنازلياً
+    srcListData = Object.keys(counts).sort((a, b) => {
         if(a === 'غير محدد') return 1;
         if(b === 'غير محدد') return -1;
-        return a.localeCompare(b, 'ar');
+        return counts[b] - counts[a];
     });
+
+    window._srcCounts = counts;
 }
 
-function showSrcList(){
-    renderSrcList(srcListData);
-    document.getElementById('srcList').classList.add('on');
+/* =========================
+   SOURCE DROPDOWN
+========================= */
+function onSrcFocus(){
+    showSrcDropdown(srcListData);
 }
 
-function filterSrc(txt){
-    const list = document.getElementById('srcList');
-    if(!txt){
-        renderSrcList(srcListData);
-        list.classList.add('on');
+function onSrcInput(txt){
+    selSrc = '';
+    document.getElementById('srcSelectedBox').classList.remove('on');
+
+    if(!txt.trim()){
+        showSrcDropdown(srcListData);
         return;
     }
-    const fil = srcListData.filter(s => s.toLowerCase().includes(txt.toLowerCase()));
-    renderSrcList(fil);
-    list.classList.add('on');
+
+    const lower = txt.toLowerCase();
+    const filtered = srcListData.filter(s => s.toLowerCase().includes(lower));
+    showSrcDropdown(filtered);
 }
 
-function renderSrcList(srcs){
-    let html = '';
-    if(!srcs.length){
-        html = '<div class="src-item" style="color:#999">لا توجد مصادر مطابقة</div>';
-    } else {
-        html = srcs.map(s =>
-            '<div class="src-item ' + (selSrc === s ? 'sel' : '') + '" onclick="pickSrc(' + escJS(s) + ')">' +
-            esc(s) + (selSrc === s ? ' ✓' : '') +
-            '</div>'
-        ).join('');
+function showSrcDropdown(list){
+    const dd = document.getElementById('srcDropdown');
+    if(!list || !list.length){
+        dd.innerHTML = '<div class="src-item" style="color:#999;padding:16px;text-align:center">لا توجد مصادر مطابقة</div>';
+        dd.classList.add('on');
+        return;
     }
-    document.getElementById('srcList').innerHTML = html;
+
+    const counts = window._srcCounts || {};
+    dd.innerHTML = list.map(s => {
+        const isSel = selSrc === s;
+        const count = counts[s] || 0;
+        return '<div class="src-item ' + (isSel ? 'sel' : '') + '" onclick="selectSrc(' + escJS(s) + ')">' +
+               esc(s) + 
+               '<span class="count">' + count + ' سؤال</span>' +
+               '</div>';
+    }).join('');
+
+    dd.classList.add('on');
 }
 
-function pickSrc(src){
+function selectSrc(src){
     selSrc = src;
     document.getElementById('sourceSearch').value = src;
-    document.getElementById('srcList').classList.remove('on');
-    document.getElementById('srcSelected').style.display = 'block';
-    document.getElementById('srcName').textContent = src;
+    document.getElementById('srcDropdown').classList.remove('on');
+    document.getElementById('srcSelectedBox').classList.add('on');
+    document.getElementById('srcSelectedName').textContent = src;
+
+    const counts = window._srcCounts || {};
+    const count = counts[src] || 0;
+    document.getElementById('srcHint').textContent = '✅ ' + count + ' سؤال متاح من هذا المصدر';
 }
 
 function clearSrc(){
     selSrc = '';
     document.getElementById('sourceSearch').value = '';
-    document.getElementById('srcSelected').style.display = 'none';
-    document.getElementById('srcList').classList.remove('on');
+    document.getElementById('srcSelectedBox').classList.remove('on');
+    document.getElementById('srcDropdown').classList.remove('on');
+    document.getElementById('srcHint').textContent = '✅ تم تحميل ' + srcListData.length + ' مصدر — اكتب للبحث أو انقر للاختيار';
 }
 
 // إغلاق القائمة عند النقر خارجها
 document.addEventListener('click', function(e){
     if(!e.target.closest('.source-box')){
-        document.getElementById('srcList').classList.remove('on');
+        document.getElementById('srcDropdown').classList.remove('on');
     }
 });
 
@@ -542,14 +615,20 @@ window.startExam = async function () {
         return;
     }
 
-    selectedCount = parseInt(document.getElementById("questionCount").value, 10) || 5;
+    selectedCount = parseInt(document.getElementById("questionCount").value, 10) || 3;
 
     const btn = document.getElementById("startBtn");
     btn.disabled = true;
-    btn.textContent = "⏳ جاري التحميل...";
+    btn.textContent = "⏳ جاري التحضير...";
 
-    const ok = await loadQuestions();
-    if(!ok){
+    // إذا لم تُحمّل البيانات بعد، نحاول مرة أخرى
+    if(!dataLoaded){
+        toast("⏳ جاري تحميل الأسئلة...", "inf");
+        await loadQuestionsSilent();
+    }
+
+    if(!dataLoaded || allQuestions.length === 0){
+        toast("❌ لا توجد أسئلة متاحة", "err");
         btn.disabled = false;
         btn.textContent = "🚀 ابدأ الاختبار";
         return;
@@ -586,7 +665,7 @@ window.startExam = async function () {
 };
 
 /* =========================
-   SHOW QUESTION - تملأ الشاشة بحروف كبيرة
+   SHOW QUESTION
 ========================= */
 function showQuestion(){
     answered = false;
@@ -597,11 +676,11 @@ function showQuestion(){
     const q = questions[current];
     let html = "<div style='max-width:900px;margin:0 auto;padding:10px'>";
     html += "<div class='meta'>📌 سؤال " + (current + 1) + " من " + questions.length + " &nbsp;|&nbsp; " + esc(q.category) + " &nbsp;|&nbsp; " + esc(q.level) + "</div>";
-    html += "<div style='text-align:right;margin-bottom:12px'><span style='background:#f3e5f5;color:#6a1b9a;padding:6px 14px;border-radius:20px;font-size:15px;font-weight:600'>📖 " + esc(q.source || 'غير محدد') + "</span></div>";
+    html += "<div style='text-align:right;margin-bottom:12px'><span style='background:#f3e5f5;color:#6a1b9a;padding:8px 16px;border-radius:20px;font-size:15px;font-weight:700'>📖 " + esc(q.source || 'غير محدد') + "</span></div>";
     html += "<div class='question'>" + esc(q.q) + "</div>";
     const labels = ['أ','ب','ج','د'];
     q.a.forEach((ans, i) => {
-        html += "<div class='answer' onclick='answer(" + i + ")' id='ans" + i + "'><span style='color:#16a34a;margin-left:10px'>" + labels[i] + "-</span> " + esc(ans) + "</div>";
+        html += "<div class='answer' onclick='answer(" + i + ")' id='ans" + i + "'><span style='color:#16a34a;margin-left:12px;font-size:22px'>" + labels[i] + "-</span> " + esc(ans) + "</div>";
     });
     html += "</div>";
     document.getElementById("quiz").innerHTML = html;
@@ -643,7 +722,7 @@ function answer(i){
 }
 
 /* =========================
-   RESULT - مع الشهادة
+   RESULT
 ========================= */
 function showResult(){
     const total = questions.length;
@@ -657,7 +736,6 @@ function showResult(){
 
     const showCertificate = selectedCount >= MIN_CERT_QUESTIONS && percent >= 60;
 
-    // بناء تحليل الأخطاء
     let wrongAnswersHTML = "";
     questions.forEach((q, index) => {
         const userAnswer = userAnswers[index];
@@ -675,7 +753,6 @@ function showResult(){
         }
     });
 
-    // تحديث عدد الاختبارات
     let totalExams = parseInt(localStorage.getItem('total_exams') || '0', 10);
     localStorage.setItem('total_exams', totalExams + 1);
 
@@ -770,7 +847,7 @@ function esc(t){
 }
 
 function escJS(s){
-    return "'" + s.replace(/'/g, "\'") + "'";
+    return "'" + s.replace(/'/g, "\\'") + "'";
 }
 
 function toast(msg, tp){
