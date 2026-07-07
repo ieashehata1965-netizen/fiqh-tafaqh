@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة الإدارة - أكاديمية الفقه</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#d1fae5;min-height:100vh;color:#065f46;font-size:16px}
+a{text-decoration:none;color:inherit}
+
+/* ====== Sidebar ====== */
+.side{position:fixed;right:0;top:0;width:260px;height:100vh;background:linear-gradient(180deg,#065f46,#16a34a);color:#fff;padding:20px;overflow-y:auto;z-index:1000;transition:transform .3s ease}
+.side h1{font-size:18px;text-align:center;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:15px}
+.side h1 p{font-size:13px;opacity:.85;margin-top:6px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:4px;cursor:pointer;transition:.2s;color:rgba(255,255,255,.9);font-size:15px;font-weight:600}
+.nav-item:hover,.nav-item.on{background:rgba(255,255,255,.15);color:#fff}
+.nav-item .icon{font-size:20px;width:24px;text-align:center}
+.nav-sec{font-size:11px;text-transform:uppercase;opacity:.6;margin:18px 0 10px;padding-right:12px;font-weight:700}
+
+/* Collapsed sidebar */
+.side.collapsed{transform:translateX(100%)}
+.main{margin-right:260px;padding:24px;transition:margin-right .3s ease}
+.main.expanded{margin-right:0}
+
+/* Toggle button */
+.toggle-btn{position:fixed;top:16px;right:270px;z-index:1101;background:#16a34a;color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.15);transition:.3s}
+.toggle-btn:hover{background:#15803d}
+.toggle-btn.collapsed{right:16px}
+
+/* ====== Header ====== */
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;background:#fff;padding:16px 24px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.top h2{font-size:24px;color:#065f46;font-weight:800}
+.user{display:flex;align-items:center;gap:10px;background:#ecfdf5;padding:8px 16px;border-radius:50px;font-size:14px;font-weight:600;color:#065f46}
+.user .role{background:#16a34a;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+
+/* Refresh button */
+.refresh-btn{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;padding:10px 20px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:8px;transition:.2s;box-shadow:0 4px 12px rgba(22,163,74,.3)}
+.refresh-btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(22,163,74,.4)}
+.refresh-btn.spin .icon{animation:spin 1s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* ====== Stats ====== */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-bottom:24px}
+.stat{background:#fff;padding:22px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08);display:flex;align-items:center;gap:16px;transition:.2s}
+.stat:hover{transform:translateY(-4px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.stat .ic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:26px}
+.stat h3{font-size:28px;color:#065f46;font-weight:800}
+.stat p{font-size:14px;color:#6b7280;font-weight:600}
+
+/* ====== Cards ====== */
+.card{background:#fff;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.card h3{font-size:18px;color:#065f46;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid #d1fae5;font-weight:700}
+
+/* Actions */
+.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.act{display:flex;align-items:center;gap:14px;padding:18px;background:linear-gradient(135deg,#ecfdf5,#dcfce7);border:2px solid #bbf7d0;border-radius:14px;transition:.2s;cursor:pointer}
+.act:hover{border-color:#16a34a;background:#fff;transform:translateY(-3px);box-shadow:0 8px 24px rgba(22,163,74,.15)}
+.act .ic{font-size:32px}
+.act h4{font-size:15px;margin-bottom:4px;color:#065f46;font-weight:700}
+.act p{font-size:13px;color:#6b7280}
+
+/* Status */
+.status{display:flex;gap:18px;flex-wrap:wrap;align-items:center;font-size:15px;font-weight:600}
+.status .dot{width:12px;height:12px;border-radius:50%;display:inline-block}
+.status .dot.on{background:#16a34a;box-shadow:0 0 8px #16a34a}
+.status .dot.off{background:#dc2626}
+
+/* Quality */
+.qual{padding:16px;border-radius:12px;font-size:15px}
+.qual.ok{background:#dcfce7;color:#166534;text-align:center;font-weight:700}
+.qual.err{background:#fee2e2;color:#991b1b;margin-bottom:12px;font-weight:600}
+.qual.warn{background:#fef3c7;color:#92400e;margin-bottom:12px;font-weight:600}
+
+/* Logs */
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{text-align:right;padding:12px;background:#ecfdf5;color:#065f46;font-size:13px;font-weight:700}
+td{padding:12px;border-bottom:1px solid #e5e7eb}
+tr:hover td{background:#f0fdf4}
+.badge{display:inline-block;padding:4px 14px;border-radius:20px;font-size:12px;font-weight:700}
+.b-add{background:#dcfce7;color:#166534}
+.b-edit{background:#dbeafe;color:#1e40af}
+.b-del{background:#fee2e2;color:#991b1b}
+.b-sync{background:#f3e8ff;color:#7c3aed}
+
+/* Empty */
+.empty{text-align:center;padding:40px;color:#6b7280}
+.empty .ic{font-size:48px;margin-bottom:12px;opacity:.4}
+
+/* Login */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#065f46,#16a34a);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:#fff;padding:40px;border-radius:20px;max-width:400px;width:90%;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.login-box h2{color:#065f46;margin-bottom:10px;font-size:24px;font-weight:800}
+.login-box p{color:#6b7280;font-size:15px;margin-bottom:28px}
+.login-box input{width:100%;padding:14px;border:2px solid #d1fae5;border-radius:12px;font-size:16px;margin-bottom:18px;text-align:center;font-family:inherit;font-weight:600}
+.login-box input:focus{outline:none;border-color:#16a34a}
+.login-box button{width:100%;padding:14px;background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(22,163,74,.3)}
+.login-box button:hover{opacity:.9;transform:translateY(-1px)}
+.login-box .hint{color:#dc2626;font-size:14px;margin-top:14px;display:none;font-weight:700}
+
+/* Mobile */
+@media(max-width:768px){
+.side{transform:translateX(100%);width:280px}
+.side.open{transform:translateX(0)}
+.main{margin-right:0;padding:16px;padding-top:70px}
+.toggle-btn{right:16px}
+.toggle-btn.collapsed{right:16px}
+.stats{grid-template-columns:1fr 1fr}
+.top h2{font-size:20px}
+.stat h3{font-size:24px}
+}
+</style>
+<base target="_blank">
+</head>
+<body>
+
+<!-- Login Screen -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h2>🔐 تسجيل الدخول</h2>
+    <p>أدخل كلمة المرور للوصول إلى لوحة الإدارة</p>
+    <input type="password" id="adminPass" placeholder="كلمة المرور" maxlength="50" onkeypress="if(event.key==='Enter')doLogin()">
+    <button onclick="doLogin()">دخول</button>
+    <div class="hint" id="loginHint">❌ كلمة المرور غير صحيحة</div>
+    <p style="margin-top:24px;font-size:13px;color:#9ca3af"><a href="index.html" style="color:#16a34a;font-weight:700">← العودة للرئيسية</a></p>
+  </div>
+</div>
+
+<!-- Toggle Sidebar Button -->
+<button class="toggle-btn" id="toggleBtn" onclick="toggleSidebar()">☰</button>
+
+<nav class="side" id="side">
+  <h1>⚙️ لوحة الإدارة<p>أكاديمية الفقه والتفقه</p></h1>
+  <div class="nav-sec">الرئيسية</div>
+  <a href="#" class="nav-item on" onclick="showSec('dash');return false"><span class="icon">📊</span>اللوحة الرئيسية</a>
+  <div class="nav-sec">إدارة المحتوى</div>
+  <a href="add-question.html" class="nav-item"><span class="icon">📝</span>إدارة بنك الأسئلة</a>
+  <a href="index.html" class="nav-item"><span class="icon">🎓</span>معاينة المنصة</a>
+  <div class="nav-sec">النظام</div>
+  <a href="#" class="nav-item" onclick="showSec('logs');return false"><span class="icon">📋</span>سجل العمليات</a>
+  <a href="#" class="nav-item" onclick="showSec('set');return false"><span class="icon">⚙️</span>الإعدادات</a>
+  <div style="margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.15)">
+    <a href="#" class="nav-item" style="color:#fecaca" onclick="logout();return false"><span class="icon">🚪</span>خروج</a>
+  </div>
+</nav>
+
+<main class="main" id="main">
+  <div class="top">
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <h2 id="title">📊 لوحة التحكم</h2>
+      <button class="refresh-btn" id="refreshBtn" onclick="refreshData()">
+        <span class="icon">🔄</span>
+        <span>تحديث البيانات</span>
+      </button>
+    </div>
+    <div class="user"><span>👤 مدير النظام</span><span class="role">ADMIN</span></div>
+  </div>
+
+  <!-- Dashboard -->
+  <div id="sec-dash">
+    <div class="stats">
+      <div class="stat"><div class="ic" style="background:#dcfce7">📚</div><div><h3 id="stQ">0</h3><p>إجمالي الأسئلة</p></div></div>
+      <div class="stat"><div class="ic" style="background:#dbeafe">📂</div><div><h3 id="stC">0</h3><p>التصنيفات</p></div></div>
+      <div class="stat"><div class="ic" style="background:#fef3c7">🎯</div><div><h3 id="stL">0</h3><p>مستويات الصعوبة</p></div></div>
+      <div class="stat"><div class="ic" style="background:#f3e8ff">📖</div><div><h3 id="stS">0</h3><p>المصادر</p></div></div>
+      <div class="stat"><div class="ic" style="background:#ccfbf1">📝</div><div><h3 id="stLast">-</h3><p>آخر إضافة</p></div></div>
+      <div class="stat"><div class="ic" style="background:#fee2e2">⚠️</div><div><h3 id="stIss">0</h3><p>مشاكل البيانات</p></div></div>
+    </div>
+
+    <div class="card">
+      <h3>🚀 إجراءات سريعة</h3>
+      <div class="acts">
+        <a href="add-question.html" class="act"><span class="ic">➕</span><div><h4>إضافة أسئلة</h4><p>إدارة بنك الأسئلة</p></div></a>
+        <a href="add-question.html" class="act"><span class="ic">📋</span><div><h4>استيراد نصي</h4><p>لصق عشرات الأسئلة</p></div></a>
+        <a href="https://github.com/ieashehata1965-netizen/fiqh-tafaqh" class="act" target="_blank"><span class="ic">🐙</span><div><h4>GitHub</h4><p>المستودع والملفات</p></div></a>
+        <a href="index.html" class="act"><span class="ic">👁️</span><div><h4>معاينة</h4><p>عرض المنصة للطلاب</p></div></a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔌 حالة النظام</h3>
+      <div class="status">
+        <span><span class="dot" id="dot"></span><span id="txt">جاري التحقق...</span></span>
+        <span>📡 GitHub: <span id="gh">جاري الفحص...</span></span>
+        <span>📦 آخر تحديث: <span id="upd">-</span></span>
+        <span>💾 نسخة محلية: <span id="bak">-</span></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>🔍 جودة البيانات</h3>
+      <div id="qual"><div class="empty"><div class="ic">🔍</div><p>جاري التحليل...</p></div></div>
+    </div>
+  </div>
+
+  <!-- Logs -->
+  <div id="sec-logs" style="display:none">
+    <div class="card">
+      <h3>📋 سجل العمليات <button onclick="clearLogs()" style="float:left;padding:6px 14px;background:#fee2e2;color:#991b1b;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700">🗑️ مسح</button></h3>
+      <div style="overflow-x:auto">
+        <table>
+          <thead><tr><th>الوقت</th><th>المستخدم</th><th>العملية</th><th>التفاصيل</th><th>الحالة</th></tr></thead>
+          <tbody id="logBody"><tr><td colspan="5" class="empty"><div class="ic">📭</div><p>لا توجد عمليات مسجلة</p></td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings -->
+  <div id="sec-set" style="display:none">
+    <div class="card">
+      <h3>⚙️ إعدادات النظام</h3>
+      <div style="max-width:600px">
+        <p style="margin-bottom:14px;font-size:14px"><b>🔗 رابط JSON:</b><br><input value="https://ieashehata1965-netizen.github.io/fiqh-tafaqh/fiqh-questions.json" readonly style="width:100%;padding:10px;border:1px solid #d1fae5;border-radius:8px;margin-top:6px;font-size:13px;background:#f0fdf4;color:#065f46;font-weight:600"></p>
+        <p style="margin-bottom:14px;font-size:14px"><b>🐙 المستودع:</b><br><input value="ieashehata1965-netizen/fiqh-tafaqh" readonly style="width:100%;padding:10px;border:1px solid #d1fae5;border-radius:8px;margin-top:6px;font-size:13px;background:#f0fdf4;color:#065f46;font-weight:600"></p>
+        <p style="margin-bottom:14px;font-size:14px"><b>📁 المسار:</b><br><input value="fiqh-questions.json" readonly style="width:100%;padding:10px;border:1px solid #d1fae5;border-radius:8px;margin-top:6px;font-size:13px;background:#f0fdf4;color:#065f46;font-weight:600"></p>
+        <div style="background:#ecfdf5;padding:14px;border-radius:10px;font-size:13px;color:#166534;font-weight:600">💡 إدارة الأسئلة من <a href="add-question.html" style="color:#065f46;font-weight:800">صفحة إدارة بنك الأسئلة</a></div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const JSON_URL='https://ieashehata1965-netizen.github.io/fiqh-tafaqh/fiqh-questions.json';
+let questions=[],auditLog=[];
+
+/* =========================
+   LOGIN
+========================= */
+const ADMIN_PASS = 'admin';
+
+function checkLogin() {
+    if(sessionStorage.getItem('admin_access') === 'granted') {
+        document.getElementById('loginScreen').style.display = 'none';
+        load();
+    }
+}
+
+function doLogin() {
+    const pass = document.getElementById('adminPass').value.trim();
+    if(pass === ADMIN_PASS) {
+        sessionStorage.setItem('admin_access', 'granted');
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('loginHint').style.display = 'none';
+        load();
+    } else {
+        document.getElementById('loginHint').style.display = 'block';
+        document.getElementById('adminPass').value = '';
+        document.getElementById('adminPass').focus();
+    }
+}
+
+function logout() {
+    sessionStorage.removeItem('admin_access');
+    location.reload();
+}
+
+/* =========================
+   SIDEBAR TOGGLE
+========================= */
+function toggleSidebar(){
+    const side = document.getElementById('side');
+    const main = document.getElementById('main');
+    const btn = document.getElementById('toggleBtn');
+
+    if(side.classList.contains('collapsed')){
+        side.classList.remove('collapsed');
+        main.classList.remove('expanded');
+        btn.classList.remove('collapsed');
+        btn.innerHTML = '☰';
+    } else {
+        side.classList.add('collapsed');
+        main.classList.add('expanded');
+        btn.classList.add('collapsed');
+        btn.innerHTML = '☰';
+    }
+}
+
+/* =========================
+   REFRESH DATA
+========================= */
+async function refreshData(){
+    const btn = document.getElementById('refreshBtn');
+    btn.classList.add('spin');
+    btn.disabled = true;
+
+    toast('🔄 جاري تحديث البيانات...');
+
+    try{
+        // Clear cache and reload
+        localStorage.removeItem('questions_backup');
+        await load();
+        toast('✅ تم تحديث البيانات بنجاح');
+    }catch(e){
+        toast('❌ فشل التحديث: ' + e.message);
+    }finally{
+        btn.classList.remove('spin');
+        btn.disabled = false;
+    }
+}
+
+/* =========================
+   LOAD DATA
+========================= */
+async function load(){
+  let backup=localStorage.getItem('questions_backup');
+  if(backup){try{questions=JSON.parse(backup)}catch(e){questions=[]}}
+  try{
+    let r=await fetch(JSON_URL+'?v='+Date.now());
+    if(r.ok){
+      let d=await r.json();
+      if(Array.isArray(d)&&d.length>0){
+        questions=d.filter(q=>q&&q.q&&q.a&&q.a.length===4);
+        // Save to localStorage
+        localStorage.setItem('questions_backup', JSON.stringify(questions));
+        localStorage.setItem('last_sync_time', new Date().toISOString());
+        update();analyze();
+      }
+    }
+  }catch(e){update()}
+  checkStatus();
+  loadLogs();
+}
+
+function update(){
+  document.getElementById('stQ').textContent=questions.length;
+  document.getElementById('stC').textContent=[...new Set(questions.map(q=>q.category).filter(Boolean))].size;
+  document.getElementById('stL').textContent=[...new Set(questions.map(q=>q.level).filter(Boolean))].size;
+  document.getElementById('stS').textContent=[...new Set(questions.map(q=>q.source).filter(Boolean))].size;
+  let last=questions[questions.length-1];
+  document.getElementById('stLast').textContent=last?'#'+last.id:'-';
+  let iss=questions.filter(q=>!q.q||!q.a||q.a.length!==4||q.a.some(a=>!a)||typeof q.c!=='number'||q.c<0||q.c>3).length;
+  document.getElementById('stIss').textContent=iss;
+}
+
+function analyze(){
+  let issues=[],warns=[];
+  questions.forEach(q=>{
+    if(!q.category||q.category==='غير مصنف')warns.push(`#${q.id}: بدون تصنيف`);
+    if(!q.source||q.source==='غير محدد')warns.push(`#${q.id}: بدون مصدر`);
+    if(!q.level||q.level==='غير محدد')warns.push(`#${q.id}: بدون مستوى`);
+  });
+  let seen=new Map();
+  questions.forEach(q=>{let k=String(q.q).toLowerCase().replace(/\s+/g,' ').trim();if(seen.has(k))issues.push(`تكرار: #${q.id} مع #${seen.get(k)}`);else seen.set(k,q.id)});
+  questions.forEach(q=>{if(typeof q.c!=='number'||q.c<0||q.c>3)issues.push(`#${q.id}: إجابة غير صالحة`)});
+  let html='';
+  if(issues.length===0&&warns.length===0)html='<div class="qual ok"><div style="font-size:32px;margin-bottom:8px">✅</div><b>البيانات نظيفة</b><br><span style="font-size:14px;opacity:.8">لا توجد مشاكل</span></div>';
+  else{
+    if(issues.length)html+=`<div class="qual err"><b>❌ أخطاء (${issues.length}):</b><ul style="margin:8px 0 0 0;padding-right:20px;font-size:14px">${issues.slice(0,5).map(i=>`<li>${i}</li>`).join('')}${issues.length>5?`<li>... و ${issues.length-5} أخرى</li>`:''}</ul></div>`;
+    if(warns.length)html+=`<div class="qual warn"><b>⚠️ تحذيرات (${warns.length}):</b><ul style="margin:8px 0 0 0;padding-right:20px;font-size:14px">${warns.slice(0,5).map(w=>`<li>${w}</li>`).join('')}${warns.length>5?`<li>... و ${warns.length-5} أخرى</li>`:''}</ul></div>`;
+  }
+  document.getElementById('qual').innerHTML=html;
+}
+
+async function checkStatus(){
+  let dot=document.getElementById('dot'),txt=document.getElementById('txt'),gh=document.getElementById('gh');
+  try{let r=await fetch(JSON_URL,{method:'HEAD'});if(r.ok){dot.className='dot on';txt.textContent='متصل';gh.textContent='✅ يعمل'}else throw new Error()}
+  catch(e){dot.className='dot off';txt.textContent='غير متصل';gh.textContent='❌ خطأ'}
+  let upd=localStorage.getItem('last_sync_time');
+  document.getElementById('upd').textContent=upd?new Date(upd).toLocaleString('ar-SA'):'غير معروف';
+  let bak=localStorage.getItem('questions_backup');
+  document.getElementById('bak').textContent=bak?'✅ '+JSON.parse(bak).length+' سؤال':'❌ غير متوفرة';
+}
+
+function loadLogs(){
+  let s=localStorage.getItem('audit_log');
+  if(s){try{auditLog=JSON.parse(s);renderLogs()}catch(e){auditLog=[]}}
+}
+function renderLogs(){
+  let b=document.getElementById('logBody');
+  if(!auditLog.length){b.innerHTML='<tr><td colspan="5" class="empty"><div class="ic">📭</div><p>لا توجد عمليات مسجلة</p></td></tr>';return}
+  let map={add:['b-add','إضافة'],edit:['b-edit','تعديل'],del:['b-del','حذف'],sync:['b-sync','مزامنة']};
+  b.innerHTML=auditLog.slice().reverse().map(e=>{
+    let m=map[e.type]||['b-add',e.type];
+    return`<tr><td>${new Date(e.time).toLocaleString('ar-SA')}</td><td>${e.user||'مدير'}</td><td><span class="badge ${m[0]}">${m[1]}</span></td><td>${e.details||'-'}</td><td>${e.status==='success'?'✅ نجاح':'❌ فشل'}</td></tr>`
+  }).join('');
+}
+function clearLogs(){if(!confirm('مسح السجل؟'))return;auditLog=[];localStorage.removeItem('audit_log');renderLogs()}
+
+function showSec(id){
+  document.getElementById('sec-dash').style.display='none';
+  document.getElementById('sec-logs').style.display='none';
+  document.getElementById('sec-set').style.display='none';
+  document.getElementById('sec-'+id).style.display='block';
+  let titles={dash:'📊 لوحة التحكم',logs:'📋 سجل العمليات',set:'⚙️ الإعدادات'};
+  document.getElementById('title').textContent=titles[id]||'';
+  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('on'));
+  if(event && event.currentTarget) event.currentTarget.classList.add('on');
+}
+
+function toast(msg){
+    // Simple toast implementation
+    const div = document.createElement('div');
+    div.style.cssText = 'position:fixed;top:20px;left:20px;background:#065f46;color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:slideIn .3s ease;';
+    div.textContent = msg;
+    document.body.appendChild(div);
+    setTimeout(()=>div.remove(), 3000);
+}
+
+// Check login on load
+checkLogin();
+</script>
+</body>
+</html>
