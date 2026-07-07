@@ -3,92 +3,139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>لوحة الإدارة - أكاديمية الفقه</title>
+<title>إدارة بنك الأسئلة - أكاديمية الفقه</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f5f7fa;min-height:100vh;color:#1a1a2e}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#d1fae5;min-height:100vh;color:#065f46;font-size:16px}
 a{text-decoration:none;color:inherit}
 
-/* Sidebar */
-.side{position:fixed;right:0;top:0;width:250px;height:100vh;background:linear-gradient(180deg,#1a1a2e,#16213e);color:#fff;padding:20px 15px;overflow-y:auto;z-index:1000}
-.side h1{font-size:16px;text-align:center;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:15px}
-.side h1 p{font-size:11px;opacity:.7;margin-top:4px}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;margin-bottom:3px;cursor:pointer;transition:.2s;color:rgba(255,255,255,.85);font-size:14px}
-.nav-item:hover,.nav-item.on{background:rgba(255,255,255,.1);color:#fff}
-.nav-item .icon{font-size:16px;width:20px;text-align:center}
-.nav-sec{font-size:10px;text-transform:uppercase;opacity:.5;margin:15px 0 8px;padding-right:12px}
+/* ====== Sidebar ====== */
+.side{position:fixed;right:0;top:0;width:260px;height:100vh;background:linear-gradient(180deg,#065f46,#16a34a);color:#fff;padding:20px;overflow-y:auto;z-index:1000;transition:transform .3s ease}
+.side h1{font-size:18px;text-align:center;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:15px}
+.side h1 p{font-size:13px;opacity:.85;margin-top:6px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:4px;cursor:pointer;transition:.2s;color:rgba(255,255,255,.9);font-size:15px;font-weight:600}
+.nav-item:hover,.nav-item.on{background:rgba(255,255,255,.15);color:#fff}
+.nav-item .icon{font-size:20px;width:24px;text-align:center}
+.nav-sec{font-size:11px;text-transform:uppercase;opacity:.6;margin:18px 0 10px;padding-right:12px;font-weight:700}
 
-/* Main */
-.main{margin-right:250px;padding:20px}
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
-.top h2{font-size:20px}
-.user{display:flex;align-items:center;gap:8px;background:#fff;padding:6px 14px;border-radius:50px;box-shadow:0 2px 10px rgba(0,0,0,.08);font-size:13px}
-.user .role{background:#0f3460;color:#fff;padding:2px 8px;border-radius:10px;font-size:11px}
+/* Collapsed sidebar */
+.side.collapsed{transform:translateX(100%)}
+.main{margin-right:260px;padding:24px;transition:margin-right .3s ease}
+.main.expanded{margin-right:0}
 
-/* Stats */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;margin-bottom:20px}
-.stat{background:#fff;padding:18px;border-radius:12px;box-shadow:0 2px 10px rgba(0,0,0,.08);display:flex;align-items:center;gap:14px}
-.stat .ic{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
-.stat h3{font-size:22px;color:#1a1a2e}
-.stat p{font-size:12px;color:#6c757d}
+/* Toggle button */
+.toggle-btn{position:fixed;top:16px;right:270px;z-index:1101;background:#16a34a;color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.15);transition:.3s}
+.toggle-btn:hover{background:#15803d}
+.toggle-btn.collapsed{right:16px}
 
-/* Cards */
-.card{background:#fff;border-radius:12px;padding:18px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.08)}
-.card h3{font-size:15px;color:#0f3460;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #dee2e6}
+/* ====== Header ====== */
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;background:#fff;padding:16px 24px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.top h2{font-size:24px;color:#065f46;font-weight:800}
+.user{display:flex;align-items:center;gap:10px;background:#ecfdf5;padding:8px 16px;border-radius:50px;font-size:14px;font-weight:600;color:#065f46}
+.user .role{background:#16a34a;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
 
-/* Actions */
-.acts{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
-.act{display:flex;align-items:center;gap:10px;padding:14px;background:linear-gradient(135deg,#f8f9fa,#e9ecef);border:2px solid #dee2e6;border-radius:12px;transition:.2s}
-.act:hover{border-color:#0f3460;background:#fff;transform:translateY(-2px)}
-.act .ic{font-size:24px}
-.act h4{font-size:13px;margin-bottom:2px}
-.act p{font-size:11px;color:#6c757d}
+/* ====== Cards ====== */
+.card{background:#fff;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.card h3{font-size:18px;color:#065f46;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid #d1fae5;font-weight:700}
 
-/* Status */
-.status{display:flex;gap:14px;flex-wrap:wrap;align-items:center;font-size:13px}
-.status .dot{width:9px;height:9px;border-radius:50%;display:inline-block}
-.status .dot.on{background:#2ecc71;box-shadow:0 0 6px #2ecc71}
-.status .dot.off{background:#e74c3c}
+/* ====== Form ====== */
+.form-group{margin-bottom:16px}
+.form-group label{display:block;margin-bottom:6px;font-weight:700;font-size:14px;color:#065f46}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:2px solid #d1fae5;border-radius:12px;font-size:15px;font-family:inherit;color:#065f46;background:#fff;transition:.2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.1)}
+.form-group textarea{min-height:80px;resize:vertical}
 
-/* Quality */
-.qual{padding:12px;border-radius:8px;font-size:13px}
-.qual.ok{background:#e8f5e9;color:#2e7d32;text-align:center}
-.qual.err{background:#ffebee;color:#c62828;margin-bottom:10px}
-.qual.warn{background:#fff3e0;color:#ef6c00;margin-bottom:10px}
+.answers-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.answer-item{display:flex;align-items:center;gap:10px;background:#f0fdf4;padding:12px;border-radius:12px;border:2px solid #d1fae5}
+.answer-item input[type="radio"]{width:20px;height:20px;accent-color:#16a34a;cursor:pointer}
+.answer-item input[type="text"]{flex:1;border:none;background:transparent;padding:8px;font-size:15px}
+.answer-item input[type="text"]:focus{outline:none}
+.answer-item.correct{background:#dcfce7;border-color:#16a34a}
 
-/* Logs */
-table{width:100%;border-collapse:collapse;font-size:13px}
-th{text-align:right;padding:10px;background:#f8f9fa;color:#6c757d;font-size:11px;font-weight:600}
-td{padding:10px;border-bottom:1px solid #f0f0f0}
-tr:hover td{background:#fafbfc}
-.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:11px;font-weight:600}
-.b-add{background:#e8f5e9;color:#2e7d32}
-.b-edit{background:#e3f2fd;color:#1565c0}
-.b-del{background:#ffebee;color:#c62828}
-.b-sync{background:#f3e5f5;color:#6a1b9a}
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:.2s}
+.btn-primary{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;box-shadow:0 4px 12px rgba(22,163,74,.3)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(22,163,74,.4)}
+.btn-secondary{background:#ecfdf5;color:#065f46;border:2px solid #16a34a}
+.btn-secondary:hover{background:#16a34a;color:#fff}
+.btn-danger{background:#fee2e2;color:#991b1b;border:2px solid #ef4444}
+.btn-danger:hover{background:#ef4444;color:#fff}
+.btn-warning{background:#fef3c7;color:#92400e;border:2px solid #f59e0b}
+.btn-warning:hover{background:#f59e0b;color:#fff}
 
-/* Empty */
-.empty{text-align:center;padding:30px;color:#6c757d}
-.empty .ic{font-size:40px;margin-bottom:8px;opacity:.3}
+/* ====== Search ====== */
+.search-box{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.search-box input{flex:1;min-width:200px;padding:12px 16px;border:2px solid #d1fae5;border-radius:12px;font-size:15px;font-family:inherit}
+.search-box input:focus{outline:none;border-color:#16a34a}
 
-/* Login - FIXED */
-.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;z-index:9999}
-.login-box{background:#fff;padding:40px;border-radius:16px;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.3)}
-.login-box h2{color:#1a1a2e;margin-bottom:8px}
-.login-box p{color:#6c757d;font-size:13px;margin-bottom:24px}
-.login-box input{width:100%;padding:12px;border:2px solid #dee2e6;border-radius:10px;font-size:15px;margin-bottom:16px;text-align:center;font-family:inherit}
-.login-box input:focus{outline:none;border-color:#0f3460}
-.login-box button{width:100%;padding:12px;background:linear-gradient(135deg,#0f3460,#1a1a2e);color:#fff;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
-.login-box button:hover{opacity:.9}
-.login-box .hint{color:#e74c3c;font-size:12px;margin-top:12px;display:none}
+/* ====== Question List ====== */
+.q-list{display:flex;flex-direction:column;gap:12px}
+.q-item{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:2px solid #bbf7d0;border-radius:14px;padding:16px;transition:.2s}
+.q-item:hover{border-color:#16a34a;transform:translateY(-2px);box-shadow:0 6px 20px rgba(22,163,74,.1)}
+.q-item-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
+.q-item-id{background:#16a34a;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-cat{background:#dbeafe;color:#1e40af;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-level{background:#fef3c7;color:#92400e;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-source{background:#f3e8ff;color:#7c3aed;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-text{font-size:15px;font-weight:600;color:#065f46;margin-bottom:10px;line-height:1.6}
+.q-item-answers{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.q-item-answer{padding:8px 12px;border-radius:8px;font-size:14px;background:#fff;border:1px solid #d1fae5}
+.q-item-answer.correct{background:#dcfce7;border-color:#16a34a;color:#166534;font-weight:700}
+.q-item-actions{display:flex;gap:8px;flex-wrap:wrap}
+.q-item-actions button{padding:6px 14px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:.2s}
+.q-item-actions .edit-btn{background:#dbeafe;color:#1e40af}
+.q-item-actions .edit-btn:hover{background:#3b82f6;color:#fff}
+.q-item-actions .del-btn{background:#fee2e2;color:#991b1b}
+.q-item-actions .del-btn:hover{background:#ef4444;color:#fff}
+
+/* ====== Stats ====== */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:24px}
+.stat{background:#fff;padding:18px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.06);display:flex;align-items:center;gap:12px}
+.stat .ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.stat h3{font-size:24px;color:#065f46;font-weight:800}
+.stat p{font-size:13px;color:#6b7280;font-weight:600}
+
+/* ====== Token Section ====== */
+.token-section{background:linear-gradient(135deg,#ecfdf5,#dcfce7);border:2px solid #bbf7d0;border-radius:14px;padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.token-section input{flex:1;min-width:200px;padding:10px 14px;border:2px solid #d1fae5;border-radius:10px;font-size:14px;font-family:inherit}
+.token-section input:focus{outline:none;border-color:#16a34a}
+
+/* ====== Toast ====== */
+.toast{position:fixed;top:20px;left:20px;background:#065f46;color:#fff;padding:12px 20px;border-radius:10px;font-size:14px;font-weight:700;z-index:9999;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:slideIn .3s ease}
+@keyframes slideIn{from{transform:translateX(-100%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ====== Modal ====== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px;padding:24px;max-width:500px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.modal h3{font-size:20px;color:#065f46;margin-bottom:16px;font-weight:800}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+
+/* ====== Bulk Import ====== */
+.bulk-area{width:100%;min-height:120px;padding:12px;border:2px solid #d1fae5;border-radius:12px;font-size:14px;font-family:inherit;resize:vertical}
+.bulk-area:focus{outline:none;border-color:#16a34a}
+
+/* ====== Preview ====== */
+.preview-box{background:#f0fdf4;border:2px dashed #16a34a;border-radius:12px;padding:16px;margin-top:12px;max-height:300px;overflow-y:auto}
+
+/* ====== Empty State ====== */
+.empty{text-align:center;padding:40px;color:#6b7280}
+.empty .ic{font-size:48px;margin-bottom:12px;opacity:.4}
+
+/* ====== Loading ====== */
+.loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:20px;color:#6b7280;font-weight:600}
+.spinner{width:20px;height:20px;border:3px solid #d1fae5;border-top-color:#16a34a;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
 /* Mobile */
-.mob{position:fixed;top:15px;right:15px;z-index:1100;background:#1a1a2e;color:#fff;border:none;width:38px;height:38px;border-radius:8px;font-size:20px;cursor:pointer;display:none}
 @media(max-width:768px){
-.side{transform:translateX(100%);transition:.3s}
+.side{transform:translateX(100%);width:280px}
 .side.open{transform:translateX(0)}
-.main{margin-right:0;padding:15px;padding-top:60px}
-.mob{display:block}
+.main{margin-right:0;padding:16px;padding-top:70px}
+.toggle-btn{right:16px}
+.toggle-btn.collapsed{right:16px}
+.answers-grid{grid-template-columns:1fr}
+.q-item-answers{grid-template-columns:1fr}
 .stats{grid-template-columns:1fr 1fr}
 }
 </style>
@@ -96,225 +143,772 @@ tr:hover td{background:#fafbfc}
 </head>
 <body>
 
-<!-- Login Screen -->
-<div class="login-screen" id="loginScreen">
-  <div class="login-box">
-    <h2>🔐 تسجيل الدخول</h2>
-    <p>أدخل كلمة المرور للوصول إلى لوحة الإدارة</p>
-    <input type="password" id="adminPass" placeholder="كلمة المرور" maxlength="50" onkeypress="if(event.key==='Enter')doLogin()">
-    <button onclick="doLogin()">دخول</button>
-    <div class="hint" id="loginHint">❌ كلمة المرور غير صحيحة</div>
-    <p style="margin-top:20px;font-size:12px;color:#999"><a href="index.html" style="color:#0f3460">← العودة للرئيسية</a></p>
-  </div>
-</div>
-
-<button class="mob" onclick="document.getElementById('side').classList.toggle('open')">☰</button>
+<!-- Toggle Sidebar Button -->
+<button class="toggle-btn" id="toggleBtn" onclick="toggleSidebar()">☰</button>
 
 <nav class="side" id="side">
   <h1>⚙️ لوحة الإدارة<p>أكاديمية الفقه والتفقه</p></h1>
   <div class="nav-sec">الرئيسية</div>
-  <a href="#" class="nav-item on" onclick="showSec('dash');return false"><span class="icon">📊</span>اللوحة الرئيسية</a>
-  <div class="nav-sec">إدارة المحتوى</div>
-  <a href="add-question.html" class="nav-item"><span class="icon">📝</span>إدارة بنك الأسئلة</a>
+  <a href="admin.html" class="nav-item"><span class="icon">📊</span>لوحة التحكم</a>
+  <a href="#" class="nav-item on" onclick="return false"><span class="icon">📝</span>إدارة بنك الأسئلة</a>
   <a href="index.html" class="nav-item"><span class="icon">🎓</span>معاينة المنصة</a>
   <div class="nav-sec">النظام</div>
-  <a href="#" class="nav-item" onclick="showSec('logs');return false"><span class="icon">📋</span>سجل العمليات</a>
-  <a href="#" class="nav-item" onclick="showSec('set');return false"><span class="icon">⚙️</span>الإعدادات</a>
-  <div style="margin-top:auto;padding-top:15px;border-top:1px solid rgba(255,255,255,.1)">
-    <a href="#" class="nav-item" style="color:#e74c3c" onclick="logout();return false"><span class="icon">🚪</span>خروج</a>
+  <a href="admin.html#logs" class="nav-item"><span class="icon">📋</span>سجل العمليات</a>
+  <a href="admin.html#set" class="nav-item"><span class="icon">⚙️</span>الإعدادات</a>
+  <div style="margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.15)">
+    <a href="#" class="nav-item" style="color:#fecaca" onclick="logout();return false"><span class="icon">🚪</span>خروج</a>
   </div>
 </nav>
 
-<main class="main">
+<main class="main" id="main">
   <div class="top">
-    <h2 id="title">📊 لوحة التحكم</h2>
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <h2>📝 إدارة بنك الأسئلة</h2>
+    </div>
     <div class="user"><span>👤 مدير النظام</span><span class="role">ADMIN</span></div>
   </div>
 
-  <!-- Dashboard -->
-  <div id="sec-dash">
-    <div class="stats">
-      <div class="stat"><div class="ic" style="background:#e3f2fd">📚</div><div><h3 id="stQ">0</h3><p>إجمالي الأسئلة</p></div></div>
-      <div class="stat"><div class="ic" style="background:#e8f5e9">📂</div><div><h3 id="stC">0</h3><p>التصنيفات</p></div></div>
-      <div class="stat"><div class="ic" style="background:#fff3e0">🎯</div><div><h3 id="stL">0</h3><p>مستويات الصعوبة</p></div></div>
-      <div class="stat"><div class="ic" style="background:#f3e5f5">📖</div><div><h3 id="stS">0</h3><p>المصادر</p></div></div>
-      <div class="stat"><div class="ic" style="background:#e0f2f1">📝</div><div><h3 id="stLast">-</h3><p>آخر إضافة</p></div></div>
-      <div class="stat"><div class="ic" style="background:#ffebee">⚠️</div><div><h3 id="stIss">0</h3><p>مشاكل البيانات</p></div></div>
-    </div>
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="ic" style="background:#dcfce7">📚</div><div><h3 id="stQ">0</h3><p>إجمالي الأسئلة</p></div></div>
+    <div class="stat"><div class="ic" style="background:#dbeafe">📂</div><div><h3 id="stC">0</h3><p>الفئات</p></div></div>
+    <div class="stat"><div class="ic" style="background:#fef3c7">🎯</div><div><h3 id="stL">0</h3><p>المستويات</p></div></div>
+    <div class="stat"><div class="ic" style="background:#f3e8ff">📖</div><div><h3 id="stS">0</h3><p>المصادر</p></div></div>
+  </div>
 
-    <div class="card">
-      <h3>🚀 إجراءات سريعة</h3>
-      <div class="acts">
-        <a href="add-question.html" class="act"><span class="ic">➕</span><div><h4>إضافة أسئلة</h4><p>إدارة بنك الأسئلة</p></div></a>
-        <a href="add-question.html" class="act"><span class="ic">📋</span><div><h4>استيراد نصي</h4><p>لصق عشرات الأسئلة</p></div></a>
-        <a href="https://github.com/ieashehata1965-netizen/fiqh-tafaqh" class="act" target="_blank"><span class="ic">🐙</span><div><h4>GitHub</h4><p>المستودع والملفات</p></div></a>
-        <a href="index.html" class="act"><span class="ic">👁️</span><div><h4>معاينة</h4><p>عرض المنصة للطلاب</p></div></a>
+  <!-- GitHub Token -->
+  <div class="card">
+    <h3>🔐 ربط GitHub</h3>
+    <div class="token-section">
+      <span id="tokenStatus">⚪ غير متصل</span>
+      <input type="password" id="githubToken" placeholder="أدخل GitHub Token (classic) مع صلاحيات repo">
+      <button class="btn btn-primary" onclick="saveToken()">💾 حفظ</button>
+      <button class="btn btn-secondary" onclick="testToken()">🧪 اختبار</button>
+    </div>
+    <p style="font-size:13px;color:#6b7280;margin-top:8px">💡 اذهب إلى GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token → اختر صلاحية <b>repo</b></p>
+  </div>
+
+  <!-- Add/Edit Question Form -->
+  <div class="card">
+    <h3 id="formTitle">➕ إضافة سؤال جديد</h3>
+    <form id="questionForm" onsubmit="return false">
+      <input type="hidden" id="editId" value="">
+
+      <div class="form-group">
+        <label>نص السؤال</label>
+        <textarea id="qText" placeholder="أدخل نص السؤال هنا..."></textarea>
       </div>
-    </div>
 
-    <div class="card">
-      <h3>🔌 حالة النظام</h3>
-      <div class="status">
-        <span><span class="dot" id="dot"></span><span id="txt">جاري التحقق...</span></span>
-        <span>📡 GitHub: <span id="gh">جاري الفحص...</span></span>
-        <span>📦 آخر تحديث: <span id="upd">-</span></span>
-        <span>💾 نسخة محلية: <span id="bak">-</span></span>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px">
+        <div class="form-group">
+          <label>الفئة</label>
+          <input type="text" id="qCategory" list="catList" placeholder="مثال: فقه، عقيدة، حديث...">
+          <datalist id="catList">
+            <option value="فقه">
+            <option value="عقيدة">
+            <option value="حديث">
+            <option value="تفسير">
+            <option value="أصول فقه">
+            <option value="سيرة">
+            <option value="لغة عربية">
+            <option value="منوعات إسلامية">
+            <option value="ثقافة إسلامية">
+            <option value="عام">
+          </datalist>
+        </div>
+        <div class="form-group">
+          <label>المستوى</label>
+          <select id="qLevel">
+            <option value="سهل">🟢 سهل</option>
+            <option value="متوسط">🟡 متوسط</option>
+            <option value="صعب">🔴 صعب</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المصدر</label>
+          <input type="text" id="qSource" list="srcList" placeholder="مثال: زاد المستقنع، الأصول الثلاثة...">
+          <datalist id="srcList">
+            <option value="زاد المستقنع">
+            <option value="الأصول الثلاثة">
+            <option value="صحيح البخاري">
+            <option value="صحيح مسلم">
+            <option value="تفسير ابن كثير">
+            <option value="مدارسات السنة الرابعة - ابن عثيمين">
+            <option value="مدارسات السنة الرابعة - ابن قدامة">
+            <option value="السيرة النبوية">
+            <option value="علوم شرعية عامة">
+            <option value="غير محدد">
+          </datalist>
+        </div>
       </div>
-    </div>
 
-    <div class="card">
-      <h3>🔍 جودة البيانات</h3>
-      <div id="qual"><div class="empty"><div class="ic">🔍</div><p>جاري التحليل...</p></div></div>
+      <div class="form-group">
+        <label>الإجابات (حدد الصحيحة بالضغط على الدائرة):</label>
+        <div class="answers-grid">
+          <div class="answer-item" id="ans0" onclick="selectCorrect(0)">
+            <input type="radio" name="correct" value="0" id="correct0">
+            <input type="text" id="a0" placeholder="الإجابة أ">
+          </div>
+          <div class="answer-item" id="ans1" onclick="selectCorrect(1)">
+            <input type="radio" name="correct" value="1" id="correct1">
+            <input type="text" id="a1" placeholder="الإجابة ب">
+          </div>
+          <div class="answer-item" id="ans2" onclick="selectCorrect(2)">
+            <input type="radio" name="correct" value="2" id="correct2">
+            <input type="text" id="a2" placeholder="الإجابة ج">
+          </div>
+          <div class="answer-item" id="ans3" onclick="selectCorrect(3)">
+            <input type="radio" name="correct" value="3" id="correct3">
+            <input type="text" id="a3" placeholder="الإجابة د">
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button type="button" class="btn btn-primary" id="saveBtn" onclick="saveQuestion()">💾 حفظ السؤال</button>
+        <button type="button" class="btn btn-secondary" id="updateBtn" onclick="updateQuestion()" style="display:none">🔄 تحديث السؤال</button>
+        <button type="button" class="btn btn-secondary" onclick="resetForm()">🔄 إعادة تعيين</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Bulk Import JSON -->
+  <div class="card">
+    <h3>📋 إضافة مجموعة (JSON)</h3>
+    <p style="font-size:14px;color:#6b7280;margin-bottom:12px">أدخل JSON كمصفوفة. سيتم دمجها مع إعادة ترقيم.</p>
+    <textarea class="bulk-area" id="bulkJson" placeholder='[{"q":"...","a":["...","...","...","..."],"c":0,"category":"...","level":"...","source":"..."}]'></textarea>
+    <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="previewBulkJson()">👁️ معاينة</button>
+      <button class="btn btn-secondary" onclick="importBulkJson()">📥 استيراد</button>
+    </div>
+    <div class="preview-box" id="jsonPreview" style="display:none"></div>
+  </div>
+
+  <!-- Bulk Import Text -->
+  <div class="card">
+    <h3>📝 إضافة مجموعة (نص عادي)</h3>
+    <p style="font-size:14px;color:#6b7280;margin-bottom:12px">
+      الصيغة: السؤال: ... / أ- ... / ب- ... / ج- ... / د- ... / الإجابة: أ / المصدر: ... / الفئة: ... / المستوى: ... / ---
+    </p>
+    <textarea class="bulk-area" id="bulkText" placeholder="السؤال: ما حكم صيام يوم عيد الفطر؟ / أ- واجب / ب- مستحب / ج- مكروه / د- محرم / الإجابة: د / المصدر: الفقه / الفئة: فقه / المستوى: سهل / ---"></textarea>
+    <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="previewBulkText()">👁️ معاينة</button>
+      <button class="btn btn-secondary" onclick="importBulkText()">📥 استيراد</button>
+    </div>
+    <div class="preview-box" id="textPreview" style="display:none"></div>
+  </div>
+
+  <!-- Search -->
+  <div class="card">
+    <h3>🔍 البحث في الأسئلة</h3>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="ابحث في نص السؤال أو الفئة أو المصدر..." oninput="searchQuestions()">
+      <select id="searchFilter" onchange="searchQuestions()" style="padding:12px;border:2px solid #d1fae5;border-radius:12px;font-size:15px;font-family:inherit;color:#065f46">
+        <option value="all">الكل</option>
+        <option value="q">نص السؤال</option>
+        <option value="category">الفئة</option>
+        <option value="source">المصدر</option>
+        <option value="level">المستوى</option>
+      </select>
+      <button class="btn btn-secondary" onclick="clearSearch()">🧹 مسح</button>
     </div>
   </div>
 
-  <!-- Logs -->
-  <div id="sec-logs" style="display:none">
-    <div class="card">
-      <h3>📋 سجل العمليات <button onclick="clearLogs()" style="float:left;padding:4px 10px;background:#fff;border:1px solid #dee2e6;border-radius:6px;cursor:pointer;font-size:12px">🗑️ مسح</button></h3>
-      <div style="overflow-x:auto">
-        <table>
-          <thead><tr><th>الوقت</th><th>المستخدم</th><th>العملية</th><th>التفاصيل</th><th>الحالة</th></tr></thead>
-          <tbody id="logBody"><tr><td colspan="5" class="empty"><div class="ic">📭</div><p>لا توجد عمليات مسجلة</p></td></tr></tbody>
-        </table>
-      </div>
+  <!-- Question List -->
+  <div class="card">
+    <h3>📋 قائمة الأسئلة <span id="qCount" style="font-size:14px;color:#6b7280">(0)</span></h3>
+    <div id="questionList">
+      <div class="loading"><div class="spinner"></div>جاري تحميل الأسئلة...</div>
     </div>
   </div>
 
-  <!-- Settings -->
-  <div id="sec-set" style="display:none">
-    <div class="card">
-      <h3>⚙️ إعدادات النظام</h3>
-      <div style="max-width:500px">
-        <p style="margin-bottom:10px;font-size:13px"><b>🔗 رابط JSON:</b><br><input value="https://ieashehata1965-netizen.github.io/fiqh-tafaqh/fiqh-questions.json" readonly style="width:100%;padding:8px;border:1px solid #dee2e6;border-radius:6px;margin-top:4px;font-size:12px;background:#f8f9fa"></p>
-        <p style="margin-bottom:10px;font-size:13px"><b>🐙 المستودع:</b><br><input value="ieashehata1965-netizen/fiqh-tafaqh" readonly style="width:100%;padding:8px;border:1px solid #dee2e6;border-radius:6px;margin-top:4px;font-size:12px;background:#f8f9fa"></p>
-        <p style="margin-bottom:10px;font-size:13px"><b>📁 المسار:</b><br><input value="fiqh-questions.json" readonly style="width:100%;padding:8px;border:1px solid #dee2e6;border-radius:6px;margin-top:4px;font-size:12px;background:#f8f9fa"></p>
-        <div style="background:#e3f2fd;padding:10px;border-radius:8px;font-size:12px;color:#1565c0">💡 إدارة الأسئلة من <a href="add-question.html" style="color:#0d47a1;font-weight:600">صفحة إدارة بنك الأسئلة</a></div>
-      </div>
+  <!-- Upload to GitHub -->
+  <div class="card" style="background:linear-gradient(135deg,#fee2e2,#fecaca);border:2px solid #ef4444">
+    <h3 style="color:#991b1b;border-bottom-color:#fecaca">🚀 رفع التعديلات إلى GitHub</h3>
+    <p style="font-size:14px;color:#7f1d1d;margin-bottom:16px;font-weight:600">⚠️ هذا الزر يرفع جميع الأسئلة إلى GitHub. تأكد من صحة البيانات قبل الرفع.</p>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-danger" onclick="uploadToGitHub()">🚀 رفع التعديلات</button>
+      <button class="btn btn-secondary" onclick="downloadJson()">💾 تحميل JSON محلي</button>
     </div>
+    <div id="uploadStatus" style="margin-top:12px;font-size:14px;font-weight:600"></div>
   </div>
 </main>
 
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="deleteModal">
+  <div class="modal">
+    <h3>⚠️ تأكيد الحذف</h3>
+    <p style="color:#6b7280;margin-bottom:16px">هل أنت متأكد من حذف هذا السؤال؟ لا يمكن التراجع عن هذا الإجراء.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeDeleteModal()">إلغاء</button>
+      <button class="btn btn-danger" id="confirmDeleteBtn">🗑️ حذف</button>
+    </div>
+  </div>
+</div>
+
 <script>
-const JSON_URL='https://ieashehata1965-netizen.github.io/fiqh-tafaqh/fiqh-questions.json';
-let questions=[],auditLog=[];
+const JSON_URL = 'https://ieashehata1965-netizen.github.io/fiqh-tafaqh/fiqh-questions.json';
+const REPO = 'ieashehata1965-netizen/fiqh-tafaqh';
+const FILE_PATH = 'fiqh-questions.json';
+let questions = [];
+let deleteTargetId = null;
+let editingId = null;
 
 /* =========================
-   LOGIN - مبسط وموثوق
+   LOGIN CHECK
 ========================= */
-const ADMIN_PASS = 'admin'; // ← غيّرها إذا أردت
-
 function checkLogin() {
-    if(sessionStorage.getItem('admin_access') === 'granted') {
-        document.getElementById('loginScreen').style.display = 'none';
-        load();
-    }
-}
-
-function doLogin() {
-    const pass = document.getElementById('adminPass').value.trim();
-    if(pass === ADMIN_PASS) {
-        sessionStorage.setItem('admin_access', 'granted');
-        document.getElementById('loginScreen').style.display = 'none';
-        document.getElementById('loginHint').style.display = 'none';
-        load();
-    } else {
-        document.getElementById('loginHint').style.display = 'block';
-        document.getElementById('adminPass').value = '';
-        document.getElementById('adminPass').focus();
+    if (sessionStorage.getItem('admin_access') !== 'granted') {
+        window.location.href = 'admin.html';
     }
 }
 
 function logout() {
     sessionStorage.removeItem('admin_access');
-    location.reload();
+    window.location.href = 'admin.html';
+}
+
+/* =========================
+   SIDEBAR TOGGLE
+========================= */
+function toggleSidebar() {
+    const side = document.getElementById('side');
+    const main = document.getElementById('main');
+    const btn = document.getElementById('toggleBtn');
+    if (side.classList.contains('collapsed')) {
+        side.classList.remove('collapsed');
+        main.classList.remove('expanded');
+        btn.classList.remove('collapsed');
+    } else {
+        side.classList.add('collapsed');
+        main.classList.add('expanded');
+        btn.classList.add('collapsed');
+    }
+}
+
+/* =========================
+   TOKEN
+========================= */
+function saveToken() {
+    const token = document.getElementById('githubToken').value.trim();
+    if (!token) {
+        toast('❌ أدخل التوكن أولاً');
+        return;
+    }
+    localStorage.setItem('github_token_fiqh', token);
+    testToken();
+}
+
+function getToken() {
+    return localStorage.getItem('github_token_fiqh') || '';
+}
+
+async function testToken() {
+    const token = getToken();
+    if (!token) {
+        document.getElementById('tokenStatus').innerHTML = '⚪ غير متصل';
+        return;
+    }
+    document.getElementById('tokenStatus').innerHTML = '🟡 جاري الاختبار...';
+    try {
+        const r = await fetch('https://api.github.com/user', {
+            headers: { 'Authorization': 'token ' + token }
+        });
+        if (r.ok) {
+            const data = await r.json();
+            document.getElementById('tokenStatus').innerHTML = '🟢 متصل: ' + data.login;
+            toast('✅ التوكن يعمل بشكل صحيح');
+        } else {
+            document.getElementById('tokenStatus').innerHTML = '🔴 التوكن غير صالح';
+            toast('❌ التوكن غير صالح');
+        }
+    } catch (e) {
+        document.getElementById('tokenStatus').innerHTML = '🔴 خطأ في الاتصال';
+        toast('❌ خطأ في الاتصال');
+    }
 }
 
 /* =========================
    LOAD DATA
 ========================= */
-async function load(){
-  let backup=localStorage.getItem('questions_backup');
-  if(backup){try{questions=JSON.parse(backup)}catch(e){questions=[]}}
-  try{
-    let r=await fetch(JSON_URL+'?v='+Date.now());
-    if(r.ok){
-      let d=await r.json();
-      if(Array.isArray(d)&&d.length>0){questions=d.filter(q=>q&&q.q&&q.a&&q.a.length===4);update();analyze()}
+async function load() {
+    // Try localStorage first
+    const backup = localStorage.getItem('fiqh_questions_backup');
+    if (backup) {
+        try { questions = JSON.parse(backup); } catch (e) { questions = []; }
     }
-  }catch(e){update()}
-  checkStatus();
-  loadLogs();
+
+    // Then fetch from GitHub
+    try {
+        const r = await fetch(JSON_URL + '?v=' + Date.now());
+        if (r.ok) {
+            const d = await r.json();
+            if (Array.isArray(d) && d.length > 0) {
+                questions = d.filter(q => q && q.q && q.a && q.a.length === 4);
+                localStorage.setItem('fiqh_questions_backup', JSON.stringify(questions));
+                localStorage.setItem('fiqh_last_sync', new Date().toISOString());
+            }
+        }
+    } catch (e) {
+        console.log('Using local backup');
+    }
+
+    updateStats();
+    renderQuestions();
+
+    // Auto-test token if exists
+    const token = getToken();
+    if (token) {
+        document.getElementById('githubToken').value = token;
+        testToken();
+    }
 }
 
-function update(){
-  document.getElementById('stQ').textContent=questions.length;
-  document.getElementById('stC').textContent=[...new Set(questions.map(q=>q.category).filter(Boolean))].size;
-  document.getElementById('stL').textContent=[...new Set(questions.map(q=>q.level).filter(Boolean))].size;
-  document.getElementById('stS').textContent=[...new Set(questions.map(q=>q.source).filter(Boolean))].size;
-  let last=questions[questions.length-1];
-  document.getElementById('stLast').textContent=last?'#'+last.id:'-';
-  let iss=questions.filter(q=>!q.q||!q.a||q.a.length!==4||q.a.some(a=>!a)||typeof q.c!=='number'||q.c<0||q.c>3).length;
-  document.getElementById('stIss').textContent=iss;
+function updateStats() {
+    document.getElementById('stQ').textContent = questions.length;
+    document.getElementById('stC').textContent = [...new Set(questions.map(q => q.category).filter(Boolean))].size;
+    document.getElementById('stL').textContent = [...new Set(questions.map(q => q.level).filter(Boolean))].size;
+    document.getElementById('stS').textContent = [...new Set(questions.map(q => q.source).filter(Boolean))].size;
 }
 
-function analyze(){
-  let issues=[],warns=[];
-  questions.forEach(q=>{
-    if(!q.category||q.category==='غير مصنف')warns.push(`#${q.id}: بدون تصنيف`);
-    if(!q.source||q.source==='غير محدد')warns.push(`#${q.id}: بدون مصدر`);
-    if(!q.level||q.level==='غير محدد')warns.push(`#${q.id}: بدون مستوى`);
-  });
-  let seen=new Map();
-  questions.forEach(q=>{let k=String(q.q).toLowerCase().replace(/\s+/g,' ').trim();if(seen.has(k))issues.push(`تكرار: #${q.id} مع #${seen.get(k)}`);else seen.set(k,q.id)});
-  questions.forEach(q=>{if(typeof q.c!=='number'||q.c<0||q.c>3)issues.push(`#${q.id}: إجابة غير صالحة`)});
-  let html='';
-  if(issues.length===0&&warns.length===0)html='<div class="qual ok"><div style="font-size:28px;margin-bottom:6px">✅</div><b>البيانات نظيفة</b><br><span style="font-size:12px;opacity:.8">لا توجد مشاكل</span></div>';
-  else{
-    if(issues.length)html+=`<div class="qual err"><b>❌ أخطاء (${issues.length}):</b><ul style="margin:6px 0 0 0;padding-right:16px;font-size:12px">${issues.slice(0,5).map(i=>`<li>${i}</li>`).join('')}${issues.length>5?`<li>... و ${issues.length-5} أخرى</li>`:''}</ul></div>`;
-    if(warns.length)html+=`<div class="qual warn"><b>⚠️ تحذيرات (${warns.length}):</b><ul style="margin:6px 0 0 0;padding-right:16px;font-size:12px">${warns.slice(0,5).map(w=>`<li>${w}</li>`).join('')}${warns.length>5?`<li>... و ${warns.length-5} أخرى</li>`:''}</ul></div>`;
-  }
-  document.getElementById('qual').innerHTML=html;
+/* =========================
+   FORM & ANSWER SELECTION
+========================= */
+function selectCorrect(idx) {
+    document.querySelectorAll('.answer-item').forEach((el, i) => {
+        el.classList.toggle('correct', i === idx);
+    });
+    document.getElementById('correct' + idx).checked = true;
 }
 
-async function checkStatus(){
-  let dot=document.getElementById('dot'),txt=document.getElementById('txt'),gh=document.getElementById('gh');
-  try{let r=await fetch(JSON_URL,{method:'HEAD'});if(r.ok){dot.className='dot on';txt.textContent='متصل';gh.textContent='✅ يعمل'}else throw new Error()}
-  catch(e){dot.className='dot off';txt.textContent='غير متصل';gh.textContent='❌ خطأ'}
-  let upd=localStorage.getItem('last_sync_time');
-  document.getElementById('upd').textContent=upd?new Date(upd).toLocaleString('ar-SA'):'غير معروف';
-  let bak=localStorage.getItem('questions_backup');
-  document.getElementById('bak').textContent=bak?'✅ '+JSON.parse(bak).length+' سؤال':'❌ غير متوفرة';
+function resetForm() {
+    document.getElementById('questionForm').reset();
+    document.getElementById('editId').value = '';
+    document.getElementById('formTitle').textContent = '➕ إضافة سؤال جديد';
+    document.getElementById('saveBtn').style.display = 'inline-flex';
+    document.getElementById('updateBtn').style.display = 'none';
+    document.querySelectorAll('.answer-item').forEach(el => el.classList.remove('correct'));
+    editingId = null;
 }
 
-function loadLogs(){
-  let s=localStorage.getItem('audit_log');
-  if(s){try{auditLog=JSON.parse(s);renderLogs()}catch(e){auditLog=[]}}
-}
-function renderLogs(){
-  let b=document.getElementById('logBody');
-  if(!auditLog.length){b.innerHTML='<tr><td colspan="5" class="empty"><div class="ic">📭</div><p>لا توجد عمليات مسجلة</p></td></tr>';return}
-  let map={add:['b-add','إضافة'],edit:['b-edit','تعديل'],del:['b-del','حذف'],sync:['b-sync','مزامنة']};
-  b.innerHTML=auditLog.slice().reverse().map(e=>{
-    let m=map[e.type]||['b-add',e.type];
-    return`<tr><td>${new Date(e.time).toLocaleString('ar-SA')}</td><td>${e.user||'مدير'}</td><td><span class="badge ${m[0]}">${m[1]}</span></td><td>${e.details||'-'}</td><td>${e.status==='success'?'✅ نجاح':'❌ فشل'}</td></tr>`
-  }).join('');
-}
-function clearLogs(){if(!confirm('مسح السجل؟'))return;auditLog=[];localStorage.removeItem('audit_log');renderLogs()}
+function getFormData() {
+    const q = document.getElementById('qText').value.trim();
+    const category = document.getElementById('qCategory').value.trim() || 'غير مصنف';
+    const level = document.getElementById('qLevel').value;
+    const source = document.getElementById('qSource').value.trim() || 'غير محدد';
+    const a = [
+        document.getElementById('a0').value.trim(),
+        document.getElementById('a1').value.trim(),
+        document.getElementById('a2').value.trim(),
+        document.getElementById('a3').value.trim()
+    ];
+    const correctEl = document.querySelector('input[name="correct"]:checked');
+    const c = correctEl ? parseInt(correctEl.value) : 0;
 
-function showSec(id){
-  document.getElementById('sec-dash').style.display='none';
-  document.getElementById('sec-logs').style.display='none';
-  document.getElementById('sec-set').style.display='none';
-  document.getElementById('sec-'+id).style.display='block';
-  let titles={dash:'📊 لوحة التحكم',logs:'📋 سجل العمليات',set:'⚙️ الإعدادات'};
-  document.getElementById('title').textContent=titles[id]||'';
-  document.querySelectorAll('.nav-item').forEach(i=>i.classList.remove('on'));
-  if(event && event.currentTarget) event.currentTarget.classList.add('on');
+    if (!q) { toast('❌ أدخل نص السؤال'); return null; }
+    if (a.some(x => !x)) { toast('❌ أكمل جميع الإجابات'); return null; }
+
+    return { q, a, c, category, level, source };
 }
 
-// Check login on load
+/* =========================
+   SAVE QUESTION
+========================= */
+function saveQuestion() {
+    const data = getFormData();
+    if (!data) return;
+
+    const newId = questions.length > 0 ? Math.max(...questions.map(q => q.id || 0)) + 1 : 1;
+    const question = { id: newId, ...data };
+
+    questions.push(question);
+    localStorage.setItem('fiqh_questions_backup', JSON.stringify(questions));
+
+    addLog('add', 'إضافة سؤال #' + newId, 'success');
+    toast('✅ تم إضافة السؤال #' + newId);
+
+    resetForm();
+    updateStats();
+    renderQuestions();
+}
+
+/* =========================
+   EDIT QUESTION
+========================= */
+function editQuestion(id) {
+    const q = questions.find(x => x.id === id);
+    if (!q) return;
+
+    editingId = id;
+    document.getElementById('editId').value = id;
+    document.getElementById('qText').value = q.q;
+    document.getElementById('qCategory').value = q.category || '';
+    document.getElementById('qLevel').value = q.level || 'سهل';
+    document.getElementById('qSource').value = q.source || '';
+    document.getElementById('a0').value = q.a[0] || '';
+    document.getElementById('a1').value = q.a[1] || '';
+    document.getElementById('a2').value = q.a[2] || '';
+    document.getElementById('a3').value = q.a[3] || '';
+
+    selectCorrect(q.c || 0);
+
+    document.getElementById('formTitle').textContent = '✏️ تعديل السؤال #' + id;
+    document.getElementById('saveBtn').style.display = 'none';
+    document.getElementById('updateBtn').style.display = 'inline-flex';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    toast('✏️ جاري تعديل السؤال #' + id);
+}
+
+function updateQuestion() {
+    const data = getFormData();
+    if (!data || !editingId) return;
+
+    const idx = questions.findIndex(q => q.id === editingId);
+    if (idx === -1) return;
+
+    questions[idx] = { id: editingId, ...data };
+    localStorage.setItem('fiqh_questions_backup', JSON.stringify(questions));
+
+    addLog('edit', 'تعديل سؤال #' + editingId, 'success');
+    toast('✅ تم تحديث السؤال #' + editingId);
+
+    resetForm();
+    updateStats();
+    renderQuestions();
+}
+
+/* =========================
+   DELETE QUESTION
+========================= */
+function deleteQuestion(id) {
+    deleteTargetId = id;
+    document.getElementById('deleteModal').classList.add('show');
+}
+
+function closeDeleteModal() {
+    document.getElementById('deleteModal').classList.remove('show');
+    deleteTargetId = null;
+}
+
+document.getElementById('confirmDeleteBtn').onclick = function() {
+    if (!deleteTargetId) return;
+    questions = questions.filter(q => q.id !== deleteTargetId);
+    localStorage.setItem('fiqh_questions_backup', JSON.stringify(questions));
+    addLog('del', 'حذف سؤال #' + deleteTargetId, 'success');
+    toast('🗑️ تم حذف السؤال #' + deleteTargetId);
+    closeDeleteModal();
+    updateStats();
+    renderQuestions();
+};
+
+/* =========================
+   RENDER QUESTIONS
+========================= */
+function renderQuestions(list = null) {
+    const container = document.getElementById('questionList');
+    const data = list || questions;
+    document.getElementById('qCount').textContent = '(' + data.length + ')';
+
+    if (data.length === 0) {
+        container.innerHTML = '<div class="empty"><div class="ic">📭</div><p>لا توجد أسئلة</p></div>';
+        return;
+    }
+
+    container.innerHTML = '<div class="q-list">' + data.map(q => {
+        const correctLabel = ['أ', 'ب', 'ج', 'د'][q.c] || '؟';
+        return `
+        <div class="q-item">
+          <div class="q-item-header">
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <span class="q-item-id">#${q.id}</span>
+              <span class="q-item-cat">${escapeHtml(q.category || 'غير مصنف')}</span>
+              <span class="q-item-level">${escapeHtml(q.level || 'غير محدد')}</span>
+              <span class="q-item-source">${escapeHtml(q.source || 'غير محدد')}</span>
+            </div>
+            <span style="font-size:13px;color:#16a34a;font-weight:700">✅ ${correctLabel}</span>
+          </div>
+          <div class="q-item-text">${escapeHtml(q.q)}</div>
+          <div class="q-item-answers">
+            ${(q.a || []).map((ans, i) => `<div class="q-item-answer ${i === q.c ? 'correct' : ''}">${['أ','ب','ج','د'][i]}- ${escapeHtml(ans)}</div>`).join('')}
+          </div>
+          <div class="q-item-actions">
+            <button class="edit-btn" onclick="editQuestion(${q.id})">✏️ تعديل</button>
+            <button class="del-btn" onclick="deleteQuestion(${q.id})">🗑️ حذف</button>
+          </div>
+        </div>`;
+    }).join('') + '</div>';
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+/* =========================
+   SEARCH
+========================= */
+function searchQuestions() {
+    const query = document.getElementById('searchInput').value.trim().toLowerCase();
+    const filter = document.getElementById('searchFilter').value;
+
+    if (!query) {
+        renderQuestions();
+        return;
+    }
+
+    const filtered = questions.filter(q => {
+        const searchMap = {
+            'all': () => (q.q || '').toLowerCase().includes(query) || 
+                         (q.category || '').toLowerCase().includes(query) || 
+                         (q.source || '').toLowerCase().includes(query) ||
+                         (q.level || '').toLowerCase().includes(query),
+            'q': () => (q.q || '').toLowerCase().includes(query),
+            'category': () => (q.category || '').toLowerCase().includes(query),
+            'source': () => (q.source || '').toLowerCase().includes(query),
+            'level': () => (q.level || '').toLowerCase().includes(query)
+        };
+        return searchMap[filter] ? searchMap[filter]() : searchMap['all']();
+    });
+
+    renderQuestions(filtered);
+}
+
+function clearSearch() {
+    document.getElementById('searchInput').value = '';
+    document.getElementById('searchFilter').value = 'all';
+    renderQuestions();
+}
+
+/* =========================
+   BULK IMPORT JSON
+========================= */
+function previewBulkJson() {
+    const text = document.getElementById('bulkJson').value.trim();
+    const preview = document.getElementById('jsonPreview');
+    if (!text) { preview.style.display = 'none'; return; }
+
+    try {
+        const data = JSON.parse(text);
+        if (!Array.isArray(data)) throw new Error('يجب أن يكون JSON مصفوفة');
+        preview.innerHTML = `<p style="color:#166534;font-weight:700">✅ صالح: ${data.length} سؤال</p>` + 
+            data.slice(0, 3).map((q, i) => `<div style="margin:8px 0;padding:8px;background:#fff;border-radius:8px"><b>#${i+1}:</b> ${escapeHtml((q.q || '').substring(0, 60))}...</div>`).join('') +
+            (data.length > 3 ? `<p style="color:#6b7280">... و ${data.length - 3} أخرى</p>` : '');
+        preview.style.display = 'block';
+    } catch (e) {
+        preview.innerHTML = `<p style="color:#991b1b;font-weight:700">❌ خطأ: ${e.message}</p>`;
+        preview.style.display = 'block';
+    }
+}
+
+function importBulkJson() {
+    const text = document.getElementById('bulkJson').value.trim();
+    if (!text) { toast('❌ أدخل JSON أولاً'); return; }
+
+    try {
+        const data = JSON.parse(text);
+        if (!Array.isArray(data)) throw new Error('يجب أن يكون JSON مصفوفة');
+
+        let added = 0;
+        const maxId = questions.length > 0 ? Math.max(...questions.map(q => q.id || 0)) : 0;
+
+        data.forEach((item, i) => {
+            if (item.q && item.a && item.a.length === 4) {
+                questions.push({
+                    id: maxId + i + 1,
+                    q: item.q,
+                    a: item.a,
+                    c: typeof item.c === 'number' ? item.c : 0,
+                    category: item.category || 'غير مصنف',
+                    level: item.level || 'غير محدد',
+                    source: item.source || 'غير محدد'
+                });
+                added++;
+            }
+        });
+
+        localStorage.setItem('fiqh_questions_backup', JSON.stringify(questions));
+        addLog('add', `استيراد ${added} سؤال من JSON`, 'success');
+        toast(`✅ تم استيراد ${added} سؤال`);
+        document.getElementById('bulkJson').value = '';
+        document.getElementById('jsonPreview').style.display = 'none';
+        updateStats();
+        renderQuestions();
+    } catch (e) {
+        toast('❌ خطأ: ' + e.message);
+    }
+}
+
+/* =========================
+   BULK IMPORT TEXT
+========================= */
+function previewBulkText() {
+    const text = document.getElementById('bulkText').value.trim();
+    const preview = document.getElementById('textPreview');
+    if (!text) { preview.style.display = 'none'; return; }
+
+    const parsed = parseBulkText(text);
+    if (parsed.length === 0) {
+        preview.innerHTML = '<p style="color:#991b1b;font-weight:700">❌ لم يتم العثور على أسئلة بالصيغة المطلوبة</p>';
+        preview.style.display = 'block';
+        return;
+    }
+
+    preview.innerHTML = `<p style="color:#166534;font-weight:700">✅ تم العثور على ${parsed.length} سؤال</p>` + 
+        parsed.slice(0, 3).map((q, i) => `<div style="margin:8px 0;padding:8px;background:#fff;border-radius:8px"><b>#${i+1}:</b> ${escapeHtml(q.q.substring(0, 60))}... (إجابة: ${['أ','ب','ج','د'][q.c]})</div>`).join('') +
+        (parsed.length > 3 ? `<p style="color:#6b7280">... و ${parsed.length - 3} أخرى</p>` : '');
+    preview.style.display = 'block';
+}
+
+function importBulkText() {
+    const text = document.getElementById('bulkText').value.trim();
+    if (!text) { toast('❌ أدخل النص أولاً'); return; }
+
+    const parsed = parseBulkText(text);
+    if (parsed.length === 0) { toast('❌ لم يتم العثور على أسئلة'); return; }
+
+    const maxId = questions.length > 0 ? Math.max(...questions.map(q => q.id || 0)) : 0;
+    parsed.forEach((item, i) => {
+        questions.push({ id: maxId + i + 1, ...item });
+    });
+
+    localStorage.setItem('fiqh_questions_backup', JSON.stringify(questions));
+    addLog('add', `استيراد ${parsed.length} سؤال من نص`, 'success');
+    toast(`✅ تم استيراد ${parsed.length} سؤال`);
+    document.getElementById('bulkText').value = '';
+    document.getElementById('textPreview').style.display = 'none';
+    updateStats();
+    renderQuestions();
+}
+
+function parseBulkText(text) {
+    const blocks = text.split(/---+|
+\s*
+/).filter(b => b.trim());
+    const result = [];
+
+    blocks.forEach(block => {
+        const qMatch = block.match(/السؤال[:\s]+(.+?)(?:\s*\/\s*|$)/i);
+        const aMatch = block.match(/أ[-\s]+(.+?)(?:\s*\/\s*|$)/i);
+        const bMatch = block.match(/ب[-\s]+(.+?)(?:\s*\/\s*|$)/i);
+        const cMatch = block.match(/ج[-\s]+(.+?)(?:\s*\/\s*|$)/i);
+        const dMatch = block.match(/د[-\s]+(.+?)(?:\s*\/\s*|$)/i);
+        const ansMatch = block.match(/الإجابة[:\s]+([أبجد])/i);
+        const srcMatch = block.match(/المصدر[:\s]+(.+?)(?:\s*\/\s*|$)/i);
+        const catMatch = block.match(/الفئة[:\s]+(.+?)(?:\s*\/\s*|$)/i);
+        const lvlMatch = block.match(/المستوى[:\s]+(.+?)(?:\s*\/\s*|$)/i);
+
+        if (qMatch && aMatch && bMatch && cMatch && dMatch) {
+            const ansMap = { 'أ': 0, 'ب': 1, 'ج': 2, 'د': 3 };
+            result.push({
+                q: qMatch[1].trim(),
+                a: [aMatch[1].trim(), bMatch[1].trim(), cMatch[1].trim(), dMatch[1].trim()],
+                c: ansMap[ansMatch ? ansMatch[1] : 'أ'] || 0,
+                category: catMatch ? catMatch[1].trim() : 'غير مصنف',
+                level: lvlMatch ? lvlMatch[1].trim() : 'غير محدد',
+                source: srcMatch ? srcMatch[1].trim() : 'غير محدد'
+            });
+        }
+    });
+
+    return result;
+}
+
+/* =========================
+   UPLOAD TO GITHUB
+========================= */
+async function uploadToGitHub() {
+    const token = getToken();
+    if (!token) { toast('❌ أدخل GitHub Token أولاً'); return; }
+
+    const status = document.getElementById('uploadStatus');
+    status.innerHTML = '<div class="loading"><div class="spinner"></div>جاري الرفع...</div>';
+
+    try {
+        // Get current file SHA
+        const getRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+            headers: { 'Authorization': 'token ' + token }
+        });
+
+        let sha = '';
+        if (getRes.ok) {
+            const fileData = await getRes.json();
+            sha = fileData.sha;
+        }
+
+        // Prepare content
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(questions, null, 2))));
+
+        // Upload
+        const putRes = await fetch(`https://api.github.com/repos/${REPO}/contents/${FILE_PATH}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': 'token ' + token,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                message: 'تحديث بنك الأسئلة - ' + new Date().toLocaleString('ar-SA'),
+                content: content,
+                sha: sha || undefined
+            })
+        });
+
+        if (putRes.ok) {
+            status.innerHTML = '<span style="color:#166534">✅ تم الرفع بنجاح! انتظر دقيقة ثم اضغط تحديث في لوحة التحكم.</span>';
+            addLog('sync', 'رفع التعديلات إلى GitHub', 'success');
+            toast('✅ تم رفع التعديلات إلى GitHub');
+            localStorage.setItem('fiqh_last_sync', new Date().toISOString());
+        } else {
+            const err = await putRes.json();
+            status.innerHTML = '<span style="color:#991b1b">❌ فشل الرفع: ' + (err.message || 'خطأ غير معروف') + '</span>';
+            toast('❌ فشل الرفع');
+        }
+    } catch (e) {
+        status.innerHTML = '<span style="color:#991b1b">❌ خطأ: ' + e.message + '</span>';
+        toast('❌ خطأ في الرفع');
+    }
+}
+
+function downloadJson() {
+    const blob = new Blob([JSON.stringify(questions, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'fiqh-questions.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('💾 تم تحميل الملف');
+}
+
+/* =========================
+   AUDIT LOG
+========================= */
+function addLog(type, details, status) {
+    let logs = [];
+    const s = localStorage.getItem('fiqh_audit_log');
+    if (s) { try { logs = JSON.parse(s); } catch (e) {} }
+    logs.push({ time: new Date().toISOString(), user: 'مدير', type, details, status });
+    if (logs.length > 200) logs = logs.slice(-200);
+    localStorage.setItem('fiqh_audit_log', JSON.stringify(logs));
+}
+
+/* =========================
+   TOAST
+========================= */
+function toast(msg) {
+    const div = document.createElement('div');
+    div.className = 'toast';
+    div.textContent = msg;
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 3000);
+}
+
+/* =========================
+   INIT
+========================= */
 checkLogin();
+load();
 </script>
 </body>
 </html>
