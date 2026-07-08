@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدارة بنك الأسئلة - أكاديمية الفقه</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:#d1fae5;min-height:100vh;color:#065f46;font-size:16px}
+a{text-decoration:none;color:inherit}
+
+/* ====== Sidebar ====== */
+.side{position:fixed;right:0;top:0;width:260px;height:100vh;background:linear-gradient(180deg,#065f46,#16a34a);color:#fff;padding:20px;overflow-y:auto;z-index:1000;transition:transform .3s ease}
+.side h1{font-size:18px;text-align:center;padding-bottom:15px;border-bottom:1px solid rgba(255,255,255,.2);margin-bottom:15px}
+.side h1 p{font-size:13px;opacity:.85;margin-top:6px}
+.nav-item{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;margin-bottom:4px;cursor:pointer;transition:.2s;color:rgba(255,255,255,.9);font-size:15px;font-weight:600}
+.nav-item:hover,.nav-item.on{background:rgba(255,255,255,.15);color:#fff}
+.nav-item .icon{font-size:20px;width:24px;text-align:center}
+.nav-sec{font-size:11px;text-transform:uppercase;opacity:.6;margin:18px 0 10px;padding-right:12px;font-weight:700}
+
+.side.collapsed{transform:translateX(100%)}
+.main{margin-right:260px;padding:24px;transition:margin-right .3s ease}
+.main.expanded{margin-right:0}
+
+.toggle-btn{position:fixed;top:16px;right:270px;z-index:1101;background:#16a34a;color:#fff;border:none;width:42px;height:42px;border-radius:10px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,.15);transition:.3s}
+.toggle-btn:hover{background:#15803d}
+.toggle-btn.collapsed{right:16px}
+
+/* ====== Header ====== */
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;background:#fff;padding:16px 24px;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.top h2{font-size:24px;color:#065f46;font-weight:800}
+.user{display:flex;align-items:center;gap:10px;background:#ecfdf5;padding:8px 16px;border-radius:50px;font-size:14px;font-weight:600;color:#065f46}
+.user .role{background:#16a34a;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+
+/* ====== Stats ====== */
+.stats{display:flex;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+.stat{background:#fff;padding:18px;border-radius:14px;box-shadow:0 4px 12px rgba(0,0,0,.06);text-align:center;min-width:100px;flex:1;transition:.2s}
+.stat:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.1)}
+.stat .n{font-size:28px;font-weight:800;color:#065f46}
+.stat .l{font-size:13px;color:#6b7280;font-weight:600}
+
+/* ====== Cards ====== */
+.card{background:#fff;border-radius:16px;padding:24px;margin-bottom:20px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+.card h3{font-size:18px;color:#065f46;margin-bottom:18px;padding-bottom:10px;border-bottom:2px solid #d1fae5;font-weight:700}
+
+/* ====== Token ====== */
+.token-section{background:linear-gradient(135deg,#ecfdf5,#dcfce7);border:2px solid #bbf7d0;border-radius:14px;padding:16px;margin-bottom:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.token-section input{flex:1;min-width:200px;padding:12px 16px;border:2px solid #d1fae5;border-radius:12px;font-size:14px;font-family:inherit;color:#065f46}
+.token-section input:focus{outline:none;border-color:#16a34a}
+.token-status{font-size:14px;font-weight:700;padding:6px 14px;border-radius:20px}
+.token-status.ok{background:#dcfce7;color:#166534}
+.token-status.off{background:#fee2e2;color:#991b1b}
+.token-status.warn{background:#fef3c7;color:#92400e}
+
+/* ====== Form ====== */
+.form-group{margin-bottom:16px}
+.form-group label{display:block;margin-bottom:6px;font-weight:700;font-size:14px;color:#065f46}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:2px solid #d1fae5;border-radius:12px;font-size:15px;font-family:inherit;color:#065f46;background:#fff;transition:.2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.1)}
+.form-group textarea{min-height:80px;resize:vertical}
+
+.grid3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+
+.answers-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.answer-item{display:flex;align-items:center;gap:10px;background:#f0fdf4;padding:12px;border-radius:12px;border:2px solid #d1fae5;cursor:pointer;transition:.2s}
+.answer-item:hover{border-color:#86efac}
+.answer-item.correct{background:#dcfce7;border-color:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+.answer-item input[type="radio"]{width:20px;height:20px;accent-color:#16a34a;cursor:pointer}
+.answer-item input[type="text"]{flex:1;border:none;background:transparent;padding:8px;font-size:15px;color:#065f46}
+.answer-item input[type="text"]:focus{outline:none}
+.answer-item label{font-weight:700;color:#065f46;min-width:20px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:.2s}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{background:linear-gradient(135deg,#16a34a,#15803d);color:#fff;box-shadow:0 4px 12px rgba(22,163,74,.3)}
+.btn-primary:hover{box-shadow:0 6px 20px rgba(22,163,74,.4)}
+.btn-secondary{background:#ecfdf5;color:#065f46;border:2px solid #16a34a}
+.btn-secondary:hover{background:#16a34a;color:#fff}
+.btn-danger{background:#fee2e2;color:#991b1b;border:2px solid #ef4444}
+.btn-danger:hover{background:#ef4444;color:#fff}
+.btn-warning{background:#fef3c7;color:#92400e;border:2px solid #f59e0b}
+.btn-warning:hover{background:#f59e0b;color:#fff}
+.btn-info{background:#dbeafe;color:#1e40af;border:2px solid #3b82f6}
+.btn-info:hover{background:#3b82f6;color:#fff}
+.btn-outline{background:#fff;border:2px solid #d1fae5;color:#6b7280}
+.btn-outline:hover{border-color:#16a34a;color:#065f46}
+
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+
+/* ====== Search ====== */
+.search-box{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.search-box input,.search-box select{flex:1;min-width:150px;padding:12px 16px;border:2px solid #d1fae5;border-radius:12px;font-size:15px;font-family:inherit;color:#065f46}
+.search-box input:focus,.search-box select:focus{outline:none;border-color:#16a34a}
+
+/* ====== Question List ====== */
+.q-list{display:flex;flex-direction:column;gap:10px;max-height:600px;overflow-y:auto;padding-right:4px}
+.q-list::-webkit-scrollbar{width:6px}
+.q-list::-webkit-scrollbar-track{background:#f0fdf4;border-radius:10px}
+.q-list::-webkit-scrollbar-thumb{background:#16a34a;border-radius:10px}
+
+.q-item{background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:2px solid #bbf7d0;border-radius:14px;padding:16px;transition:.2s}
+.q-item:hover{border-color:#16a34a;transform:translateY(-2px);box-shadow:0 6px 20px rgba(22,163,74,.1)}
+.q-item-header{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.q-item-badges{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.q-item-id{background:#16a34a;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-cat{background:#dbeafe;color:#1e40af;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-level-ez{background:#dcfce7;color:#166534;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-level-md{background:#fef3c7;color:#92400e;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-level-hd{background:#fee2e2;color:#991b1b;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-source{background:#f3e8ff;color:#7c3aed;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-correct{background:#dcfce7;color:#166534;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:700}
+.q-item-text{font-size:15px;font-weight:600;color:#065f46;margin-bottom:10px;line-height:1.7}
+.q-item-answers{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.q-item-answer{padding:8px 12px;border-radius:8px;font-size:14px;background:#fff;border:1px solid #d1fae5;color:#374151}
+.q-item-answer.correct{background:#dcfce7;border-color:#16a34a;color:#166534;font-weight:700}
+.q-item-actions{display:flex;gap:8px;flex-wrap:wrap}
+.q-item-actions button{padding:8px 16px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:inherit;transition:.2s}
+.q-item-actions .edit-btn{background:#dbeafe;color:#1e40af}
+.q-item-actions .edit-btn:hover{background:#3b82f6;color:#fff;transform:translateY(-1px)}
+.q-item-actions .del-btn{background:#fee2e2;color:#991b1b}
+.q-item-actions .del-btn:hover{background:#ef4444;color:#fff;transform:translateY(-1px)}
+
+/* Checkbox */
+.q-chk{width:18px;height:18px;accent-color:#16a34a;cursor:pointer;margin-top:4px}
+
+/* ====== Bulk Import ====== */
+.bulk-area{width:100%;min-height:140px;padding:14px;border:2px solid #d1fae5;border-radius:12px;font-size:14px;font-family:'Courier New',monospace;direction:ltr;text-align:left;resize:vertical;color:#065f46}
+.bulk-area:focus{outline:none;border-color:#16a34a}
+.bulk-hint{font-size:13px;color:#6b7280;margin-bottom:10px;line-height:1.6;background:#f0fdf4;padding:10px;border-radius:8px;border-right:4px solid #16a34a}
+
+/* ====== Preview ====== */
+.preview-box{background:#f0fdf4;border:2px dashed #16a34a;border-radius:12px;padding:16px;margin-top:12px;max-height:300px;overflow-y:auto;display:none}
+.preview-box.show{display:block}
+.prev-item{background:#fff;border:1px solid #d1fae5;border-radius:10px;padding:12px;margin-bottom:8px}
+.prev-item .t{font-weight:700;color:#065f46;font-size:14px;margin-bottom:6px}
+.prev-item .a{display:grid;grid-template-columns:1fr 1fr;gap:4px;font-size:12px}
+.prev-item .a>div{padding:4px 8px;border-radius:6px;background:#f0fdf4}
+.prev-item .a>div.ok{background:#dcfce7;color:#166534;font-weight:700}
+
+/* ====== Empty State ====== */
+.empty{text-align:center;padding:40px;color:#6b7280}
+.empty .ic{font-size:48px;margin-bottom:12px;opacity:.4}
+
+/* ====== Toast ====== */
+.toast-wrap{position:fixed;top:20px;left:20px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 20px;border-radius:12px;color:#fff;font-size:14px;font-weight:700;box-shadow:0 4px 16px rgba(0,0,0,.2);animation:tIn .3s ease;max-width:400px}
+@keyframes tIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+.toast.ok{background:#16a34a}
+.toast.err{background:#ef4444}
+.toast.inf{background:#065f46}
+.toast.warn{background:#f59e0b}
+
+/* ====== Warning Bar ====== */
+.warn-bar{position:fixed;top:0;left:0;right:0;background:#ef4444;color:#fff;padding:12px;text-align:center;font-weight:700;z-index:5000;font-size:14px;display:none;gap:10px;align-items:center;justify-content:center}
+.warn-bar.show{display:flex}
+.warn-bar button{background:#fff;color:#ef4444;border:none;padding:6px 16px;border-radius:8px;cursor:pointer;font-weight:700;font-size:13px;margin:0 4px}
+
+/* ====== Quick Push Button ====== */
+#qPush{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;padding:14px 28px;border-radius:50px;box-shadow:0 8px 30px rgba(239,68,68,.4);display:none;align-items:center;gap:10px;z-index:4000;cursor:pointer;font-weight:700;font-size:15px;border:none;transition:.2s}
+#qPush:hover{transform:translateX(-50%) translateY(-2px);box-shadow:0 12px 40px rgba(239,68,68,.5)}
+#qPush .cnt{background:rgba(255,255,255,.2);padding:3px 10px;border-radius:20px;font-size:13px}
+
+/* ====== Modal ====== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:6000;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:20px;padding:28px;max-width:450px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.25)}
+.modal h3{font-size:20px;color:#065f46;margin-bottom:16px;font-weight:800}
+.modal p{color:#6b7280;margin-bottom:20px;font-size:15px;line-height:1.6}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end}
+
+/* ====== Loading ====== */
+.loading{display:flex;align-items:center;justify-content:center;gap:10px;padding:30px;color:#6b7280;font-weight:600}
+.spinner{width:24px;height:24px;border:3px solid #d1fae5;border-top-color:#16a34a;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Mobile */
+@media(max-width:768px){
+.side{transform:translateX(100%);width:280px}
+.side.open{transform:translateX(0)}
+.main{margin-right:0;padding:16px;padding-top:70px}
+.toggle-btn{right:16px}
+.toggle-btn.collapsed{right:16px}
+.answers-grid{grid-template-columns:1fr}
+.q-item-answers{grid-template-columns:1fr}
+.stats{grid-template-columns:1fr 1fr}
+.grid3{grid-template-columns:1fr}
+.search-box{flex-direction:column}
+.search-box input,.search-box select{width:100%}
+}
+</style>
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+
+<!-- Warning Bar -->
+<div class="warn-bar" id="warnBar">
+  <span>⚠️ تعديلات غير محفوظة على GitHub!</span>
+  <button onclick="qPush()">🚀 رفع الآن</button>
+  <button onclick="document.getElementById('warnBar').classList.remove('show')" style="background:transparent;color:#fff;border:1px solid #fff">تجاهل</button>
+</div>
+
+<!-- Toggle Sidebar Button -->
+<button class="toggle-btn" id="toggleBtn" onclick="toggleSidebar()">☰</button>
+
+<nav class="side" id="side">
+  <h1>⚙️ لوحة الإدارة<p>أكاديمية الفقه والتفقه</p></h1>
+  <div class="nav-sec">الرئيسية</div>
+  <a href="admin.html" class="nav-item"><span class="icon">📊</span>لوحة التحكم</a>
+  <a href="#" class="nav-item on" onclick="return false"><span class="icon">📝</span>إدارة بنك الأسئلة</a>
+  <a href="index.html" class="nav-item"><span class="icon">🎓</span>معاينة المنصة</a>
+  <div class="nav-sec">النظام</div>
+  <a href="admin.html" class="nav-item"><span class="icon">📋</span>سجل العمليات</a>
+  <a href="admin.html" class="nav-item"><span class="icon">⚙️</span>الإعدادات</a>
+  <div style="margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.15)">
+    <a href="#" class="nav-item" style="color:#fecaca" onclick="logout();return false"><span class="icon">🚪</span>خروج</a>
+  </div>
+</nav>
+
+<main class="main" id="main">
+  <div class="top">
+    <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <h2>📝 إدارة بنك الأسئلة</h2>
+    </div>
+    <div class="user"><span>👤 مدير النظام</span><span class="role">ADMIN</span></div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat"><div class="n" id="stT">0</div><div class="l">إجمالي الأسئلة</div></div>
+    <div class="stat"><div class="n" id="stC">0</div><div class="l">الفئات</div></div>
+    <div class="stat"><div class="n" id="stL">0</div><div class="l">المستويات</div></div>
+    <div class="stat"><div class="n" id="stS">0</div><div class="l">المصادر</div></div>
+    <div class="stat"><div class="n" id="stSel">0</div><div class="l">المحدد</div></div>
+  </div>
+
+  <!-- GitHub Token -->
+  <div class="card">
+    <h3>🔐 ربط GitHub</h3>
+    <div class="token-section">
+      <span class="token-status off" id="tokSt">⚪ غير متصل</span>
+      <input type="password" id="ghTok" placeholder="أدخل GitHub Token (classic) مع صلاحيات repo">
+      <button class="btn btn-secondary" onclick="testCon()">🧪 اختبار</button>
+      <button class="btn btn-primary" onclick="saveToken()">💾 حفظ</button>
+    </div>
+    <p style="font-size:13px;color:#6b7280;margin-top:10px;line-height:1.7">
+      💡 <b>كيف تحصل على التوكن:</b><br>
+      1. اذهب إلى <a href="https://github.com/settings/tokens" target="_blank" style="color:#16a34a;font-weight:700">GitHub &rarr; Settings &rarr; Developer settings &rarr; Personal access tokens &rarr; Tokens (classic)</a><br>
+      2. اضغط "Generate new token (classic)"<br>
+      3. امنح صلاحية <b>repo</b> (كامل الوصول للمستودع)<br>
+      4. انسخ التوكن والصقه هنا
+    </p>
+  </div>
+
+  <!-- Add/Edit Question Form -->
+  <div class="card">
+    <h3 id="formTitle">➕ إضافة سؤال جديد</h3>
+    <form id="addF" onsubmit="return false">
+      <input type="hidden" id="editId" value="">
+
+      <div class="form-group">
+        <label>نص السؤال</label>
+        <textarea id="inQ" placeholder="اكتب نص السؤال هنا..."></textarea>
+      </div>
+
+      <div class="grid3">
+        <div class="form-group">
+          <label>الفئة</label>
+          <select id="inCat">
+            <option value="فقه">فقه</option>
+            <option value="عقيدة">عقيدة</option>
+            <option value="حديث">حديث</option>
+            <option value="تفسير">تفسير</option>
+            <option value="أصول فقه">أصول فقه</option>
+            <option value="سيرة">سيرة</option>
+            <option value="لغة عربية">لغة عربية</option>
+            <option value="ثقافة إسلامية">ثقافة إسلامية</option>
+            <option value="منوعات إسلامية">منوعات إسلامية</option>
+            <option value="عام">عام</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المستوى</label>
+          <select id="inLvl">
+            <option value="سهل">🟢 سهل</option>
+            <option value="متوسط">🟡 متوسط</option>
+            <option value="صعب">🔴 صعب</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المصدر</label>
+          <input type="text" id="inSrc" placeholder="مثال: زاد المستقنع">
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-top:8px">
+        <label>الإجابات (اضغط على الصف لتحديد الإجابة الصحيحة):</label>
+        <div class="answers-grid">
+          <div class="answer-item" id="ans0" onclick="selectCorrect(0)">
+            <input type="radio" name="cor" value="0" id="r0">
+            <label>أ</label>
+            <input type="text" id="a0" placeholder="الإجابة الأولى">
+          </div>
+          <div class="answer-item" id="ans1" onclick="selectCorrect(1)">
+            <input type="radio" name="cor" value="1" id="r1">
+            <label>ب</label>
+            <input type="text" id="a1" placeholder="الإجابة الثانية">
+          </div>
+          <div class="answer-item" id="ans2" onclick="selectCorrect(2)">
+            <input type="radio" name="cor" value="2" id="r2">
+            <label>ج</label>
+            <input type="text" id="a2" placeholder="الإجابة الثالثة">
+          </div>
+          <div class="answer-item" id="ans3" onclick="selectCorrect(3)">
+            <input type="radio" name="cor" value="3" id="r3">
+            <label>د</label>
+            <input type="text" id="a3" placeholder="الإجابة الرابعة">
+          </div>
+        </div>
+      </div>
+
+      <div class="btns">
+        <button type="button" class="btn btn-outline" onclick="clrF()">🔄 مسح النموذج</button>
+        <button type="button" class="btn btn-primary" id="subBtn" onclick="addQ()">💾 إضافة السؤال</button>
+        <button type="button" class="btn btn-warning" id="updBtn" onclick="updateQ()" style="display:none">🔄 تحديث السؤال</button>
+        <button type="button" class="btn btn-secondary" id="cancelBtn" onclick="cancelEdit()" style="display:none">❌ إلغاء التعديل</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Bulk JSON -->
+  <div class="card">
+    <h3>📋 إضافة مجموعة (JSON)</h3>
+    <div class="bulk-hint">أدخل JSON كمصفوفة. سيتم دمجها مع إعادة ترقيم.</div>
+    <textarea class="bulk-area" id="bulkJ" placeholder='[{"category":"فقه","level":"سهل","source":"مصدر","q":"نص السؤال","a":["أ","ب","ج","د"],"c":0}]'></textarea>
+    <div class="btns">
+      <button class="btn btn-outline" onclick="document.getElementById('bulkJ').value=''">🗑️ مسح</button>
+      <button class="btn btn-info" onclick="previewBulkJ()">👁️ معاينة</button>
+      <button class="btn btn-primary" onclick="addBulkJ()">📥 استيراد</button>
+    </div>
+    <div class="preview-box" id="jsonPreview"></div>
+  </div>
+
+  <!-- Bulk Text -->
+  <div class="card">
+    <h3>📝 إضافة مجموعة (نص عادي)</h3>
+    <div class="bulk-hint">
+      الصيغة المطلوبة:<br>
+      السؤال: ... / أ- ... / ب- ... / ج- ... / د- ... / الإجابة: أ / المصدر: ... / الفئة: ... / المستوى: ... / ---
+    </div>
+    <textarea class="bulk-area" id="bulkT" placeholder="السؤال: ما حكم صيام يوم العيد؟&#10;أ- واجب&#10;ب- مستحب&#10;ج- مكروه&#10;د- محرم&#10;الإجابة: د&#10;المصدر: زاد المستقنع&#10;الفئة: فقه&#10;المستوى: سهل&#10;---&#10;السؤال: ..."></textarea>
+    <div class="btns">
+      <button class="btn btn-outline" onclick="document.getElementById('bulkT').value=''">🗑️ مسح</button>
+      <button class="btn btn-info" onclick="parseBulk()">🔍 تحليل</button>
+    </div>
+    <div id="bulkRes" style="margin-top:12px;font-size:14px"></div>
+    <div class="preview-box" id="textPreview"></div>
+  </div>
+
+  <!-- Search -->
+  <div class="card">
+    <h3>🔍 البحث في الأسئلة</h3>
+    <div class="search-box">
+      <input type="text" id="schQ" placeholder="ابحث في نص السؤال أو الفئة أو المصدر..." oninput="render()">
+      <select id="fCat" onchange="render()"><option value="">كل الفئات</option></select>
+      <select id="fLvl" onchange="render()"><option value="">كل المستويات</option><option value="سهل">🟢 سهل</option><option value="متوسط">🟡 متوسط</option><option value="صعب">🔴 صعب</option></select>
+      <select id="fSrc" onchange="render()"><option value="">كل المصادر</option></select>
+    </div>
+  </div>
+
+  <!-- Question List -->
+  <div class="card">
+    <h3>📋 قائمة الأسئلة <span id="lcnt" style="font-size:14px;color:#6b7280">(0)</span></h3>
+    <div class="btns" style="margin-bottom:16px">
+      <button class="btn btn-outline" onclick="selAll()">☑️ تحديد الكل</button>
+      <button class="btn btn-outline" onclick="desAll()">⬜ إلغاء التحديد</button>
+      <button class="btn btn-danger" id="delB" onclick="delSel()" style="display:none">🗑️ حذف المحدد</button>
+      <button class="btn btn-secondary" onclick="expJ()">📥 تصدير JSON</button>
+      <button class="btn btn-primary" id="pushB" onclick="pushGH()" style="display:none">🚀 رفع إلى GitHub</button>
+    </div>
+    <div id="qList">
+      <div class="loading"><div class="spinner"></div>جاري تحميل الأسئلة...</div>
+    </div>
+  </div>
+</main>
+
+<!-- Quick Push Button -->
+<button id="qPush" onclick="qPush()"><span>🚀</span><span>رفع التعديلات</span><span class="cnt" id="pCnt">0</span></button>
+
+<!-- Toast Container -->
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" id="delModal">
+  <div class="modal">
+    <h3>⚠️ تأكيد الحذف</h3>
+    <p id="delMsg">هل أنت متأكد من حذف هذا السؤال؟</p>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeDelModal()">إلغاء</button>
+      <button class="btn btn-danger" id="confirmDelBtn">🗑️ حذف</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const OWNER='ieashehata1965-netizen', REPO='fiqh-tafaqh', FILE='fiqh-questions.json', BRANCH='main';
+const GH_URL='https://ieashehata1965-netizen.github.io/fiqh-tafaqh/fiqh-questions.json';
+let qs=[], sel=new Set(), ghTok=localStorage.getItem('ghTok_fiqh')||'', editId=null, parsed=[], delTarget=null, uns=false, origHash='';
+
+/* =========================
+   LOGIN CHECK
+========================= */
+function checkLogin() {
+    if (sessionStorage.getItem('admin_access') !== 'granted') {
+        window.location.href = 'admin.html';
+    }
+}
+function logout() {
+    sessionStorage.removeItem('admin_access');
+    window.location.href = 'admin.html';
+}
+
+/* =========================
+   SIDEBAR TOGGLE
+========================= */
+function toggleSidebar() {
+    const side = document.getElementById('side');
+    const main = document.getElementById('main');
+    const btn = document.getElementById('toggleBtn');
+    if (side.classList.contains('collapsed')) {
+        side.classList.remove('collapsed');
+        main.classList.remove('expanded');
+        btn.classList.remove('collapsed');
+    } else {
+        side.classList.add('collapsed');
+        main.classList.add('expanded');
+        btn.classList.add('collapsed');
+    }
+}
+
+/* =========================
+   INIT
+========================= */
+function init(){
+    checkLogin();
+    let bak=localStorage.getItem('qs_bak_fiqh');
+    if(bak){try{qs=JSON.parse(bak);toast('📂 استعيد '+qs.length+' سؤال من النسخة المحلية','inf')}catch(e){qs=[]}}
+    fetchLatest();
+    if(ghTok){document.getElementById('ghTok').value='••••••••••••••••••••';updTok()}
+    updStats();updFil();render();initHash();
+}
+
+async function fetchLatest(){
+    try{
+        let r=await fetch(GH_URL+'?v='+Date.now());
+        if(r.ok){
+            let d=await r.json();
+            if(Array.isArray(d)&&d.length>0){
+                qs=d.filter(q=>q&&q.q&&q.a&&q.a.length===4);
+                localStorage.setItem('qs_bak_fiqh',JSON.stringify(qs));
+                updStats();updFil();render();initHash();
+                toast('✅ متزامن مع GitHub: '+qs.length+' سؤال','ok');
+            }
+        }
+    }catch(e){
+        toast('⚠️ يعمل بالنسخة المحلية ('+qs.length+' سؤال)','warn');
+    }
+}
+
+/* =========================
+   TOKEN
+========================= */
+function saveToken(){
+    let t=document.getElementById('ghTok').value.trim();
+    if(t&&t!=='••••••••••••••••••••'){ghTok=t;localStorage.setItem('ghTok_fiqh',t);}
+    updTok();updStats();
+    if(ghTok.length>10)testCon();
+}
+function updTok(){
+    let s=document.getElementById('tokSt');
+    if(ghTok&&ghTok.length>10){s.textContent='🟢 جاهز للرفع';s.className='token-status ok';}
+    else{s.textContent='⚪ غير متصل';s.className='token-status off';}
+}
+async function testCon(){
+    if(!ghTok||ghTok.length<10){toast('❌ أدخل Token أولاً','err');return;}
+    toast('🔄 جاري اختبار الاتصال...','inf');
+    try{
+        let r=await fetch('https://api.github.com/repos/'+OWNER+'/'+REPO,{
+            headers:{'Authorization':'token '+ghTok,'Accept':'application/vnd.github.v3+json'}
+        });
+        if(r.ok){
+            let d=await r.json();
+            toast('✅ متصل: '+d.name+' | '+(d.description||''),'ok');
+            document.getElementById('tokSt').textContent='🟢 متصل: '+d.name;
+            document.getElementById('tokSt').className='token-status ok';
+        }else{
+            let e=await r.json();
+            toast('❌ فشل: '+(e.message||'Token غير صالح'),'err');
+            document.getElementById('tokSt').textContent='🔴 Token غير صالح';
+            document.getElementById('tokSt').className='token-status off';
+        }
+    }catch(e){
+        toast('❌ خطأ في الاتصال: '+e.message,'err');
+    }
+}
+
+/* =========================
+   STATS & FILTERS
+========================= */
+function updStats(){
+    document.getElementById('stT').textContent=qs.length;
+    document.getElementById('stC').textContent=[...new Set(qs.map(q=>q.category).filter(Boolean))].size;
+    document.getElementById('stL').textContent=[...new Set(qs.map(q=>q.level).filter(Boolean))].size;
+    document.getElementById('stS').textContent=[...new Set(qs.map(q=>q.source).filter(Boolean))].size;
+    document.getElementById('stSel').textContent=sel.size;
+    document.getElementById('delB').style.display=sel.size>0?'inline-flex':'none';
+    document.getElementById('pushB').style.display=(qs.length>0&&ghTok.length>10)?'inline-flex':'none';
+    document.getElementById('pCnt').textContent=qs.length;
+}
+function updFil(){
+    let cats=[...new Set(qs.map(q=>q.category).filter(Boolean))].sort();
+    let srcs=[...new Set(qs.map(q=>q.source).filter(Boolean))].sort();
+    let catSel=document.getElementById('fCat');
+    let srcSel=document.getElementById('fSrc');
+    let curCat=catSel.value, curSrc=srcSel.value;
+    catSel.innerHTML='<option value="">كل الفئات</option>'+cats.map(c=>'<option value="'+esc(c)+'">'+esc(c)+'</option>').join('');
+    srcSel.innerHTML='<option value="">كل المصادر</option>'+srcs.map(s=>'<option value="'+esc(s)+'">'+esc(s)+'</option>').join('');
+    catSel.value=curCat;srcSel.value=curSrc;
+}
+
+/* =========================
+   ANSWER SELECTION
+========================= */
+function selectCorrect(idx){
+    document.querySelectorAll('.answer-item').forEach((el,i)=>{el.classList.toggle('correct',i===idx);});
+    document.getElementById('r'+idx).checked=true;
+}
+
+/* =========================
+   FORM
+========================= */
+function clrF(){
+    document.getElementById('addF').reset();
+    document.getElementById('editId').value='';
+    document.getElementById('formTitle').textContent='➕ إضافة سؤال جديد';
+    document.getElementById('subBtn').style.display='inline-flex';
+    document.getElementById('updBtn').style.display='none';
+    document.getElementById('cancelBtn').style.display='none';
+    document.querySelectorAll('.answer-item').forEach(el=>el.classList.remove('correct'));
+    document.getElementById('r0').checked=true;
+    editId=null;
+}
+
+function cancelEdit(){clrF();toast('❌ تم إلغاء التعديل','inf');}
+
+function getFormData(){
+    let q=document.getElementById('inQ').value.trim();
+    let category=document.getElementById('inCat').value;
+    let level=document.getElementById('inLvl').value;
+    let source=document.getElementById('inSrc').value.trim()||'غير محدد';
+    let a=[document.getElementById('a0').value.trim(),document.getElementById('a1').value.trim(),document.getElementById('a2').value.trim(),document.getElementById('a3').value.trim()];
+    let correctEl=document.querySelector('input[name="cor"]:checked');
+    let c=correctEl?parseInt(correctEl.value):0;
+    if(!q){toast('❌ أدخل نص السؤال','err');return null;}
+    if(a.some(x=>!x)){toast('❌ أكمل جميع الإجابات الأربعة','err');return null;}
+    return{q,category,level,source,a,c};
+}
+
+/* =========================
+   ADD QUESTION
+========================= */
+function addQ(){
+    let data=getFormData();
+    if(!data)return;
+    let newId=qs.length>0?Math.max(...qs.map(q=>q.id||0))+1:1;
+    let question={id:newId,...data};
+    qs.push(question);
+    saveLocal();
+    toast('✅ تم إضافة السؤال #'+newId,'ok');
+    clrF();updStats();updFil();render();chkUns();if(ghTok.length>10)showPush();
+}
+
+/* =========================
+   EDIT QUESTION
+========================= */
+function editQ(id){
+    let q=qs.find(x=>x.id===id);
+    if(!q){toast('❌ السؤال غير موجود','err');return;}
+    editId=id;
+    document.getElementById('editId').value=id;
+    document.getElementById('inQ').value=q.q;
+    document.getElementById('inCat').value=q.category||'فقه';
+    document.getElementById('inLvl').value=q.level||'سهل';
+    document.getElementById('inSrc').value=q.source||'';
+    document.getElementById('a0').value=q.a[0]||'';
+    document.getElementById('a1').value=q.a[1]||'';
+    document.getElementById('a2').value=q.a[2]||'';
+    document.getElementById('a3').value=q.a[3]||'';
+    selectCorrect(typeof q.c==='number'?q.c:0);
+    document.getElementById('formTitle').textContent='✏️ تعديل السؤال #'+id;
+    document.getElementById('subBtn').style.display='none';
+    document.getElementById('updBtn').style.display='inline-flex';
+    document.getElementById('cancelBtn').style.display='inline-flex';
+    window.scrollTo({top:0,behavior:'smooth'});
+    toast('✏️ جاري تعديل السؤال #'+id+' — اضغط "تحديث السؤال" لحفظ التغييرات','inf');
+}
+
+function updateQ(){
+    let data=getFormData();
+    if(!data||!editId){toast('❌ لا يوجد سؤال للتحديث','err');return;}
+    let idx=qs.findIndex(q=>q.id===editId);
+    if(idx===-1){toast('❌ السؤال غير موجود','err');return;}
+    qs[idx]={id:editId,...data};
+    saveLocal();
+    toast('✅ تم تحديث السؤال #'+editId+' بنجاح (نفس الرقم المحفوظ)','ok');
+    clrF();updStats();updFil();render();chkUns();if(ghTok.length>10)showPush();
+}
+
+/* =========================
+   DELETE
+========================= */
+function delQ(id){
+    delTarget=id;
+    document.getElementById('delMsg').textContent='هل أنت متأكد من حذف السؤال #'+id+'؟ لا يمكن التراجع.';
+    document.getElementById('delModal').classList.add('show');
+}
+function closeDelModal(){document.getElementById('delModal').classList.remove('show');delTarget=null;}
+
+document.getElementById('confirmDelBtn').onclick=function(){
+    if(!delTarget)return;
+    qs=qs.filter(q=>q.id!==delTarget);
+    sel.delete(delTarget);
+    saveLocal();
+    toast('🗑️ تم حذف السؤال #'+delTarget,'inf');
+    closeDelModal();updStats();updFil();render();chkUns();
+};
+
+function delSel(){
+    if(!sel.size){toast('❌ لم تحدد أي سؤال','err');return;}
+    if(!confirm('حذف '+sel.size+' سؤال محدد؟'))return;
+    qs=qs.filter(q=>!sel.has(q.id));
+    let cnt=sel.size;sel.clear();
+    saveLocal();
+    toast('🗑️ تم حذف '+cnt+' سؤال','inf');
+    updStats();updFil();render();chkUns();
+}
+
+/* =========================
+   SELECT ALL / DESELECT
+========================= */
+function selAll(){
+    let sch=document.getElementById('schQ').value.toLowerCase();
+    let cat=document.getElementById('fCat').value;
+    let lvl=document.getElementById('fLvl').value;
+    let src=document.getElementById('fSrc').value;
+    qs.forEach(q=>{
+        if(cat&&q.category!==cat)return;
+        if(lvl&&q.level!==lvl)return;
+        if(src&&q.source!==src)return;
+        if(sch){let t=(q.q+' '+q.category+' '+q.source+' '+q.a.join(' ')).toLowerCase();if(!t.includes(sch))return;}
+        sel.add(q.id);
+    });
+    render();updStats();
+}
+function desAll(){sel.clear();render();updStats();}
+function togSel(id){sel.has(id)?sel.delete(id):sel.add(id);updStats();}
+
+/* =========================
+   RENDER LIST
+========================= */
+function render(){
+    let sch=document.getElementById('schQ').value.toLowerCase();
+    let cat=document.getElementById('fCat').value;
+    let lvl=document.getElementById('fLvl').value;
+    let src=document.getElementById('fSrc').value;
+
+    let fil=qs.filter(q=>{
+        if(cat&&q.category!==cat)return false;
+        if(lvl&&q.level!==lvl)return false;
+        if(src&&q.source!==src)return false;
+        if(sch){let t=(q.q+' '+q.category+' '+q.source+' '+q.level+' '+q.a.join(' ')).toLowerCase();if(!t.includes(sch))return false;}
+        return true;
+    });
+
+    document.getElementById('lcnt').textContent='('+fil.length+' سؤال)';
+    let list=document.getElementById('qList');
+    if(!fil.length){list.innerHTML='<div class="empty"><div class="ic">📭</div><p>لا توجد أسئلة مطابقة</p></div>';return;}
+
+    let L=['أ','ب','ج','د'];
+    list.innerHTML='<div class="q-list">'+fil.map(q=>{
+        let lvlClass=q.level==='سهل'?'q-item-level-ez':q.level==='متوسط'?'q-item-level-md':'q-item-level-hd';
+        return '<div class="q-item">'+
+            '<div style="display:flex;gap:12px;align-items:flex-start">'+
+                '<input type="checkbox" class="q-chk" '+(sel.has(q.id)?'checked':'')+' onchange="togSel('+q.id+')">'+
+                '<div style="flex:1;min-width:0">'+
+                    '<div class="q-item-header">'+
+                        '<div class="q-item-badges">'+
+                            '<span class="q-item-id">#'+q.id+'</span>'+
+                            '<span class="q-item-cat">'+esc(q.category||'غير مصنف')+'</span>'+
+                            '<span class="'+lvlClass+'">'+esc(q.level||'غير محدد')+'</span>'+
+                            '<span class="q-item-source">'+esc(q.source||'غير محدد')+'</span>'+
+                        '</div>'+
+                        '<span class="q-item-correct">✅ '+L[q.c||0]+'</span>'+
+                    '</div>'+
+                    '<div class="q-item-text">'+esc(q.q)+'</div>'+
+                    '<div class="q-item-answers">'+(q.a||[]).map((a,i)=>'<div class="q-item-answer '+(i===q.c?'correct':'')+'">'+L[i]+'. '+esc(a)+(i===q.c?' ✓':'')+'</div>').join('')+'</div>'+
+                    '<div class="q-item-actions">'+
+                        '<button class="edit-btn" onclick="editQ('+q.id+')">✏️ تعديل</button>'+
+                        '<button class="del-btn" onclick="delQ('+q.id+')">🗑️ حذف</button>'+
+                    '</div>'+
+                '</div>'+
+            '</div>'+
+        '</div>';
+    }).join('')+'</div>';
+}
+
+/* =========================
+   BULK JSON
+========================= */
+function previewBulkJ(){
+    let text=document.getElementById('bulkJ').value.trim();
+    let preview=document.getElementById('jsonPreview');
+    if(!text){preview.classList.remove('show');return;}
+    try{
+        let data=JSON.parse(text);
+        if(!Array.isArray(data))data=[data];
+        let L=['أ','ب','ج','د'];
+        preview.innerHTML='<p style="color:#166534;font-weight:700;margin-bottom:10px">✅ صالح: '+data.length+' سؤال</p>'+
+            data.slice(0,3).map((q,i)=>'<div class="prev-item"><div class="t">#'+(i+1)+': '+esc((q.q||'').substring(0,50))+'...</div><div class="a">'+(q.a||[]).map((a,ai)=>'<div class="'+(ai===(q.c||0)?'ok':'')+'">'+L[ai]+'. '+esc(a)+'</div>').join('')+'</div></div>').join('')+
+            (data.length>3?'<p style="color:#6b7280;font-size:13px">... و '+(data.length-3)+' أخرى</p>':'');
+        preview.classList.add('show');
+    }catch(e){
+        preview.innerHTML='<p style="color:#991b1b;font-weight:700">❌ خطأ JSON: '+esc(e.message)+'</p>';
+        preview.classList.add('show');
+    }
+}
+function addBulkJ(){
+    let text=document.getElementById('bulkJ').value.trim();
+    if(!text){toast('❌ أدخل JSON أولاً','err');return;}
+    try{
+        let data=JSON.parse(text);
+        if(!Array.isArray(data))data=[data];
+        let mx=qs.length>0?Math.max(...qs.map(q=>q.id||0)):0,add=0;
+        data.forEach(q=>{
+            if(!q.q||!q.a||q.a.length!==4)return;
+            mx++;qs.push({id:mx,category:q.category||'عام',level:q.level||'متوسط',source:q.source||'غير محدد',q:q.q,a:q.a,c:typeof q.c==='number'?q.c:0});add++;
+        });
+        saveLocal();
+        toast('✅ استيراد '+add+' سؤال من JSON','ok');
+        document.getElementById('bulkJ').value='';
+        document.getElementById('jsonPreview').classList.remove('show');
+        updStats();updFil();render();chkUns();if(ghTok.length>10)showPush();
+    }catch(e){
+        toast('❌ خطأ: '+e.message,'err');
+    }
+}
+
+/* =========================
+   BULK TEXT
+========================= */
+function parseBulk(){
+    let inp=document.getElementById('bulkT').value.trim();
+    let res=document.getElementById('bulkRes');
+    let preview=document.getElementById('textPreview');
+    if(!inp){res.innerHTML='';preview.classList.remove('show');return;}
+
+    let blocks=inp.split(/---+/).map(b=>b.trim()).filter(b=>b.length>10);
+    parsed=[];let errs=[],warns=[];
+    blocks.forEach((block,idx)=>{
+        let r=parseBlock(block,idx+1);
+        if(r.err)errs.push('س'+(idx+1)+': '+r.err);
+        else{if(chkDup(r.data).found)warns.push('س'+(idx+1)+': مكرر مع سؤال موجود');parsed.push(r.data);}
+    });
+
+    let html='';
+    if(errs.length)html+='<div style="background:#fee2e2;color:#991b1b;padding:10px;border-radius:8px;margin-bottom:8px;font-size:13px"><b>❌ أخطاء ('+errs.length+'):</b><br>'+errs.slice(0,3).join('<br>')+(errs.length>3?'...':'')+'</div>';
+    if(warns.length)html+='<div style="background:#fef3c7;color:#92400e;padding:10px;border-radius:8px;margin-bottom:8px;font-size:13px"><b>⚠️ تحذيرات ('+warns.length+'):</b><br>'+warns.slice(0,3).join('<br>')+(warns.length>3?'...':'')+'</div>';
+    if(parsed.length){
+        html+='<div style="background:#dcfce7;color:#166534;padding:10px;border-radius:8px;margin-bottom:8px;font-size:13px"><b>✅ '+parsed.length+' سؤال صالح للاستيراد</b></div>';
+        showTextPrev();
+    }else{
+        html+='<div style="background:#fee2e2;color:#991b1b;padding:10px;border-radius:8px;font-size:13px"><b>❌ لا توجد أسئلة صالحة</b></div>';
+        preview.classList.remove('show');
+    }
+    res.innerHTML=html;
+}
+function parseBlock(txt,idx){
+    let lines=txt.split('\n').map(l=>l.trim()).filter(l=>l),q='',ans=['','','',''],c=-1,src='غير محدد',cat='عام',lvl='متوسط',ai=0;
+    for(let line of lines){
+        let m=line.match(/^(?:السؤال[:：]|س[:：]|سؤال[:：])?\s*(.+)/);
+        if(m&&m[1]&&m[1].length>5&&!q&&ai===0){q=m[1].trim();continue;}
+        if(!q&&line.length>10&&ai===0&&!line.match(/^[أاببتثججحخدذرزسشصضطظعغفقكلمنهوي]\s*[-.]/)){q=line;continue;}
+        let am=line.match(/^([أاببتثججحخدذرزسشصضطظعغفقكلمنهوي]|\d)\s*[-.)\s]+(.+)/);
+        if(am&&ai<4){ans[ai]=am[2].trim();ai++;continue;}
+        let cm=line.match(/^(?:الإجابة|الصحيحة|الجواب)[:：]?\s*([أ-د1-4])/i);
+        if(cm){let map={'أ':0,'ا':0,'1':0,'ب':1,'2':1,'ج':2,'3':2,'د':3,'4':3};c=map[cm[1]]!==undefined?map[cm[1]]:-1;continue;}
+        let sm=line.match(/^(?:المصدر|المرجع|من)[:：]?\s*(.+)/);if(sm){src=sm[1].trim();continue;}
+        let cam=line.match(/^(?:الفئة|التصنيف|القسم)[:：]?\s*(.+)/);if(cam){cat=cam[1].trim();continue;}
+        let lm=line.match(/^(?:المستوى|الصعوبة)[:：]?\s*(سهل|متوسط|صعب)/);if(lm){lvl=lm[1].trim();continue;}
+    }
+    if(!q||q.length<5)return{err:'نص السؤال مفقود أو قصير جداً'};
+    if(ans.some(a=>!a))return{err:'إجابات ناقصة (يجب 4 إجابات)'};
+    if(c===-1)return{err:'الإجابة الصحيحة غير محددة'};
+    q=q.replace(/^(?:السؤال[:：]|س[:：])\s*/,'').trim();
+    return{data:{q,a:ans,c,src,cat,lvl}};
+}
+function chkDup(nq){
+    let nqK=String(nq.q).toLowerCase().replace(/\s+/g,' ').trim();
+    for(let ex of qs){let eK=String(ex.q).toLowerCase().replace(/\s+/g,' ').trim();if(eK===nqK)return{found:true,id:ex.id};}
+    return{found:false};
+}
+function showTextPrev(){
+    let preview=document.getElementById('textPreview');
+    let L=['أ','ب','ج','د'];
+    preview.innerHTML='<p style="color:#166534;font-weight:700;margin-bottom:10px">📋 المعاينة:</p>'+
+        parsed.slice(0,5).map((q,i)=>'<div class="prev-item"><div class="t">#'+(i+1)+': '+esc(q.q.substring(0,50))+(q.q.length>50?'...':'')+'</div><div class="a">'+q.a.map((a,ai)=>'<div class="'+(ai===q.c?'ok':'')+'">'+L[ai]+'. '+esc(a)+(ai===q.c?' ✓':'')+'</div>').join('')+'</div></div>').join('')+
+        (parsed.length>5?'<p style="color:#6b7280;font-size:13px">... و '+(parsed.length-5)+' أخرى</p>':'')+
+        '<div class="btns" style="margin-top:12px"><button class="btn btn-outline" onclick="document.getElementById(\'textPreview\').classList.remove(\'show\');document.getElementById(\'bulkRes\').innerHTML=\'\'">❌ إلغاء</button><button class="btn btn-primary" onclick="confBulk()">✅ تأكيد الاستيراد</button></div>';
+    preview.classList.add('show');
+}
+function confBulk(){
+    if(!parsed.length){toast('❌ لا توجد أسئلة للاستيراد','err');return;}
+    let mx=qs.length>0?Math.max(...qs.map(q=>q.id||0)):0,add=0,skip=0;
+    parsed.forEach(q=>{if(chkDup(q).found){skip++;return;}mx++;qs.push({id:mx,category:q.cat,level:q.lvl,source:q.src,q:q.q,a:q.a,c:q.c});add++;});
+    saveLocal();
+    toast('✅ '+add+' سؤال مستورد | ⚠️ '+skip+' مكرر تم تخطيه','ok');
+    document.getElementById('bulkT').value='';
+    document.getElementById('textPreview').classList.remove('show');
+    document.getElementById('bulkRes').innerHTML='';
+    parsed=[];
+    updStats();updFil();render();chkUns();if(ghTok.length>10)showPush();
+}
+
+/* =========================
+   GITHUB PUSH
+========================= */
+async function pushGH(){
+    if(!ghTok||ghTok.length<10){toast('❌ أدخل GitHub Token أولاً','err');return;}
+    await doPush('Manual push - '+qs.length+' questions');
+}
+async function qPush(){if(!ghTok||ghTok.length<10){toast('❌ أدخل GitHub Token أولاً','err');document.getElementById('ghTok').focus();return;}await doPush('Auto-update - '+qs.length+' questions');}
+
+async function doPush(msg){
+    let bad=qs.filter(q=>!q||!q.q||!q.a||!Array.isArray(q.a)||q.a.length!==4||typeof q.c!=='number'||q.c<0||q.c>3);
+    if(bad.length){toast('❌ '+bad.length+' سؤال غير صالح — راجع الأسئلة','err');return;}
+    if(!confirm('رفع '+qs.length+' سؤال إلى GitHub؟\n\n⚠️ هذا سيحل محل الملف الحالي على GitHub.'))return;
+
+    toast('🔄 جاري الرفع إلى GitHub...','inf');
+    hidePush();
+
+    try{
+        let r=await fetch('https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+FILE+'?ref='+BRANCH,{
+            headers:{'Authorization':'token '+ghTok,'Accept':'application/vnd.github.v3+json'}
+        });
+
+        let sha='';
+        if(r.ok){
+            let fd=await r.json();
+            sha=fd.sha;
+        }else if(r.status===404){
+            toast('📄 الملف غير موجود — جاري الإنشاء...','inf');
+        }else{
+            let e=await r.json();
+            throw new Error(e.message||'فشل الوصول للمستودع');
+        }
+
+        let js=JSON.stringify(qs,null,2);
+        let ct=btoa(unescape(encodeURIComponent(js)));
+
+        let u=await fetch('https://api.github.com/repos/'+OWNER+'/'+REPO+'/contents/'+FILE,{
+            method:'PUT',
+            headers:{'Authorization':'token '+ghTok,'Content-Type':'application/json'},
+            body:JSON.stringify({
+                message:msg+' — '+new Date().toLocaleString('ar-SA'),
+                content:ct,
+                sha:sha||undefined,
+                branch:BRANCH
+            })
+        });
+
+        if(u.ok){
+            initHash();
+            document.getElementById('warnBar').classList.remove('show');
+            localStorage.setItem('qs_bak_fiqh',JSON.stringify(qs));
+            toast('✅ تم الرفع بنجاح! انتظر 1-2 دقيقة ثم اضغط تحديث في لوحة التحكم.','ok');
+        }else{
+            let e=await u.json();
+            throw new Error(e.message||'فشل الرفع');
+        }
+    }catch(err){
+        toast('❌ خطأ: '+err.message,'err');
+        showPush();
+    }
+}
+
+/* =========================
+   UNSAVED CHANGES
+========================= */
+function getHash(){return JSON.stringify(qs).length.toString();}
+function initHash(){origHash=getHash();}
+function chkUns(){
+    let cur=getHash();
+    uns=cur!==origHash;
+    if(uns){
+        document.getElementById('warnBar').classList.add('show');
+        if(ghTok.length>10)showPush();
+    }else{
+        document.getElementById('warnBar').classList.remove('show');
+        hidePush();
+    }
+}
+function showPush(){document.getElementById('qPush').style.display='flex';document.getElementById('pCnt').textContent=qs.length;}
+function hidePush(){document.getElementById('qPush').style.display='none';}
+
+/* =========================
+   EXPORT
+========================= */
+function expJ(){
+    let blob=new Blob([JSON.stringify(qs,null,2)],{type:'application/json'});
+    let url=URL.createObjectURL(blob);
+    let a=document.createElement('a');
+    a.href=url;a.download='fiqh-questions.json';
+    document.body.appendChild(a);a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    toast('📥 تم تصدير '+qs.length+' سؤال','ok');
+}
+
+/* =========================
+   SAVE LOCAL
+========================= */
+function saveLocal(){
+    localStorage.setItem('qs_bak_fiqh',JSON.stringify(qs));
+}
+
+/* =========================
+   UTILS
+========================= */
+function toast(msg,tp){
+    let c=document.getElementById('toastWrap');
+    let d=document.createElement('div');
+    d.className='toast '+(tp||'inf');
+    d.textContent=msg;
+    c.appendChild(d);
+    setTimeout(()=>d.remove(),4000);
+}
+function esc(t){let d=document.createElement('div');d.textContent=t||'';return d.innerHTML;}
+
+window.onbeforeunload=e=>{if(uns){e.preventDefault();e.returnValue='تعديلات غير محفوظة على GitHub!';return'تعديلات غير محفوظة';}};
+
+document.getElementById('delModal').onclick=function(e){if(e.target===this)closeDelModal();};
+
+init();
+</script>
+</body>
+</html>
