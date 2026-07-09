@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="أكاديمية الفقه والتفقه الإسلامي - منصة تعليمية شرعية غير ربحية">
+<meta name="theme-color" content="#123A6F">
+<title>أكاديمية الفقه والتفقه الإسلامي</title>
+
+<!-- Google Fonts: Cairo -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- Design System CSS Files -->
+<link rel="stylesheet" href="variables.css">
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="components.css">
+<link rel="stylesheet" href="layout.css">
+
+<base target="_blank">
+<base target="_blank">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     NAVIGATION
+     ═══════════════════════════════════════════ -->
+<nav class="nav" id="nav">
+  <div class="nav-in">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">📖</div>
+      <span>أكاديمية الفقه والتفقه</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="#feat" class="nav-link">المميزات</a>
+      <a href="#vis" class="nav-link">عن المنصة</a>
+      <a href="training.html" class="nav-btn">🎯 ابدأ التدريب</a>
+      <span id="navUserArea"></span>
+    </div>
+    <button class="mob-btn" onclick="document.getElementById('navLinks').classList.toggle('on')" aria-label="فتح القائمة">☰</button>
+  </div>
+</nav>
+
+<!-- ═══════════════════════════════════════════
+     HERO SECTION
+     ═══════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-in">
+    <div class="hero-badge">
+      <span>🌟</span>
+      <span>منصة تعليمية شرعية غير ربحية</span>
+    </div>
+    <h1>تعلم <span>الفقه</span> والتفقه<br>في الإسلام</h1>
+    <p>منصة علمية شرعية تهدف إلى تعليم المسلمين، المراجعة المستمرة، والتعلم بالممارسة من خلال اختبارات تفاعلية مع الشرح</p>
+    <div class="hero-btns">
+      <a href="training.html" class="btn btn-p" id="startBtn">🎯 ابدأ التدريب الآن</a>
+      <a href="#feat" class="btn btn-s">📚 استكشف المميزات</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     STATS SECTION
+     ═══════════════════════════════════════════ -->
+<section class="stats">
+  <div class="stats-in">
+    <div class="stat-item">
+      <h3 id="stQ">0</h3>
+      <p>سؤال شرعي</p>
+    </div>
+    <div class="stat-item">
+      <h3 id="stC">0</h3>
+      <p>تصنيف علمي</p>
+    </div>
+    <div class="stat-item">
+      <h3 id="stE">0</h3>
+      <p>اختبار منجز</p>
+    </div>
+    <div class="stat-item">
+      <h3 id="stR">0</h3>
+      <p>شهادة مصدقة</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     PROGRESS SECTION (Registered Users Only)
+     ═══════════════════════════════════════════ -->
+<section class="prog-sec" id="progSec" style="display:none">
+  <h2>📊 تقدمك التعليمي</h2>
+  <div class="prog-grid">
+    <div class="prog-card">
+      <div class="n" id="progAns">0</div>
+      <div class="l">سؤال أجبت عليه</div>
+    </div>
+    <div class="prog-card">
+      <div class="n" id="progCorrect">0</div>
+      <div class="l">إجابة صحيحة</div>
+    </div>
+    <div class="prog-card">
+      <div class="n" id="progRate">0%</div>
+      <div class="l">نسبة النجاح</div>
+    </div>
+    <div class="prog-card">
+      <div class="n" id="progCerts">0</div>
+      <div class="l">شهادات محصل عليها</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FEATURES SECTION
+     ═══════════════════════════════════════════ -->
+<section class="sec" id="feat">
+  <h2>🚀 مميزات المنصة</h2>
+  <p>كل ما تحتاجه للمراجعة والتعلم الشرعي في مكان واحد</p>
+  <div class="feat">
+    <div class="card">
+      <div class="ic">🎯</div>
+      <h3>التدريب التفاعلي</h3>
+      <p>اختبارات تفاعلية في الفقه والعقيدة والحديث والتفسير مع إظهار الإجابة الصحيحة</p>
+      <a href="training.html">ابدأ الآن ←</a>
+    </div>
+    <div class="card">
+      <div class="ic">🎓</div>
+      <h3>الشهادات الذكية</h3>
+      <p>احصل على شهادة PDF مصدقة عند حل 20+ سؤال بنسبة 60%+ مع QR للتحقق</p>
+      <a href="training.html">احصل على شهادتك ←</a>
+    </div>
+    <div class="card">
+      <div class="ic">🎧</div>
+      <h3>المكتبة الصوتية</h3>
+      <p>استمع للدروس الشرعية والمحاضرات الصوتية مباشرة من المتصفح</p>
+      <span style="color:var(--color-text-muted);font-size:var(--font-size-sm)">قريباً ←</span>
+    </div>
+    <div class="card">
+      <div class="ic">🎬</div>
+      <h3>الفيديوهات التعليمية</h3>
+      <p>شاهد دروساً مرئية في العلوم الشرعية من مصادر موثوقة</p>
+      <span style="color:var(--color-text-muted);font-size:var(--font-size-sm)">قريباً ←</span>
+    </div>
+    <div class="card">
+      <div class="ic">📊</div>
+      <h3>تحليل الأداء</h3>
+      <p>تعرف على نقاط قوتك وضعفك مع تقرير مفصل لكل اختبار</p>
+      <a href="training.html">اختبر نفسك ←</a>
+    </div>
+    <div class="card">
+      <div class="ic">🔄</div>
+      <h3>مراجعة مستمرة</h3>
+      <p>نظام ذكي يساعدك على عدم نسيان المعلومات الشرعية بالتكرار المناسب</p>
+      <a href="training.html">راجع الآن ←</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     VISION SECTION
+     ═══════════════════════════════════════════ -->
+<section class="vis" id="vis">
+  <div class="vis-in">
+    <div class="vis-box">
+      <h3>📜 رسالتنا</h3>
+      <p>منصة علمية شرعية إسلامية غير ربحية تهدف إلى:</p>
+      <ul>
+        <li>تعليم المسلمين علوم الشريعة</li>
+        <li>المراجعة المستمرة للعلوم الشرعية</li>
+        <li>عدم نسيان المعلومات الشرعية</li>
+        <li>التعلم بالممارسة والتدريب</li>
+        <li>إظهار الإجابة الصحيحة مع الشرح</li>
+      </ul>
+    </div>
+    <div class="vis-box">
+      <h3>👁️ رؤيتنا</h3>
+      <p>أن نكون المنصة التعليمية الشرعية الرائدة في تعليم الفقه والعلوم الإسلامية، وأن نسهم في إعداد جيل واعٍ بعلوم الشريعة، ملتزم بالكتاب والسنة على فهم السلف الصالح.</p>
+    </div>
+    <div class="vis-box">
+      <h3>🎯 أهدافنا</h3>
+      <ul>
+        <li>نشر العلوم الشرعية بطريقة عصرية</li>
+        <li>تسهيل المراجعة والحفظ للطلاب</li>
+        <li>ربط النظر بالتطبيق من خلال الاختبارات</li>
+        <li>تشجيع التنافس العلمي الشريف</li>
+        <li>بناء مجتمع تعليمي تفاعلي</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     SHARE SECTION
+     ═══════════════════════════════════════════ -->
+<section class="share">
+  <h3>📢 شارك المنصة مع الآخرين</h3>
+  <div class="share-btns">
+    <a href="#" class="share-btn share-wa" onclick="sh('wa');return false" title="WhatsApp" aria-label="مشاركة على واتساب">📱</a>
+    <a href="#" class="share-btn share-tg" onclick="sh('tg');return false" title="Telegram" aria-label="مشاركة على تلغرام">✈️</a>
+    <a href="#" class="share-btn share-fb" onclick="sh('fb');return false" title="Facebook" aria-label="مشاركة على فيسبوك">📘</a>
+    <a href="#" class="share-btn share-x" onclick="sh('x');return false" title="X" aria-label="مشاركة على X">𝕏</a>
+    <button class="share-btn share-link" onclick="cpLink()" title="نسخ الرابط" aria-label="نسخ رابط المنصة">🔗</button>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════
+     FOOTER
+     ═══════════════════════════════════════════ -->
+<footer class="foot">
+  <div class="foot-in">
+    <div>
+      <h4>📖 عن المنصة</h4>
+      <p>أكاديمية الفقه والتفقه الإسلامي منصة تعليمية شرعية غير ربحية</p>
+    </div>
+    <div>
+      <h4>🔗 روابط سريعة</h4>
+      <a href="training.html">🎯 التدريب</a>
+      <a href="admin.html" class="admin-link" style="display:none">⚙️ لوحة الإدارة</a>
+      <a href="add-question.html" class="admin-link" style="display:none">📝 إدارة الأسئلة</a>
+    </div>
+    <div>
+      <h4>📋 معلومات</h4>
+      <a href="#" onclick="alert('لا نقوم بجمع أي بيانات شخصية');return false">سياسة الخصوصية</a>
+      <a href="#" onclick="alert('المنصة مخصصة للتعليم الشرعي فقط');return false">سياسة الاستخدام</a>
+    </div>
+    <div>
+      <h4>📞 تواصل معنا</h4>
+      <a href="mailto:info@fiqh-academy.org">📧 البريد الإلكتروني</a>
+    </div>
+  </div>
+  <div class="foot-bot">© 2025 أكاديمية الفقه والتفقه الإسلامي</div>
+</footer>
+
+<!-- ═══════════════════════════════════════════
+     NAME MODAL (Quick Start)
+     ═══════════════════════════════════════════ -->
+<div class="modal" id="mod" onclick="if(event.target===this)closeMod()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeMod()" aria-label="إغلاق">✕</button>
+    <h3 class="modal-title">🎯 ابدأ التدريب</h3>
+    <p class="modal-subtitle">اكتب اسمك فقط للبدء — لا يحتاج تسجيل</p>
+    <input type="text" id="nm" class="form-input" placeholder="اسم المتدرب" maxlength="50" aria-label="اسم المتدرب">
+    <a href="training.html" class="btn btn-p btn-block" style="margin-top:var(--space-md)" onclick="return svNm()">🚀 ابدأ الاختبار</a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     REGISTRATION MODAL
+     ═══════════════════════════════════════════ -->
+<div class="modal" id="regMod" onclick="if(event.target===this)closeRegMod()">
+  <div class="modal-box modal-box-lg">
+    <button class="modal-close" onclick="closeRegMod()" aria-label="إغلاق">✕</button>
+    <h2 class="modal-title" style="font-size:var(--font-size-2xl)">👤 تسجيل كمتدرب</h2>
+    <p class="modal-subtitle">سجّل بياناتك لحفظ تقدمك وشهاداتك</p>
+
+    <div class="form-group" style="margin-bottom:var(--space-md);text-align:right">
+      <label class="form-label">الاسم الكريم <span class="req">*</span></label>
+      <input type="text" id="regName" class="form-input" placeholder="محمد أحمد" maxlength="50" aria-label="الاسم الكريم">
+    </div>
+
+    <div class="form-group" style="margin-bottom:var(--space-md);text-align:right">
+      <label class="form-label">البريد الإلكتروني <span class="req">*</span></label>
+      <input type="email" id="regEmail" class="form-input" placeholder="example@email.com" maxlength="100" aria-label="البريد الإلكتروني">
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:var(--space-md)">
+      <div class="form-group" style="text-align:right">
+        <label class="form-label">العمر</label>
+        <input type="number" id="regAge" class="form-input" placeholder="25" min="5" max="120" aria-label="العمر">
+      </div>
+      <div class="form-group" style="text-align:right">
+        <label class="form-label">الجنس</label>
+        <select id="regGender" class="form-select" aria-label="الجنس">
+          <option value="">اختر...</option>
+          <option value="ذكر">ذكر</option>
+          <option value="أنثى">أنثى</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-bottom:var(--space-md);text-align:right">
+      <label class="form-label">أعلى شهادة دراسية</label>
+      <select id="regEdu" class="form-select" aria-label="أعلى شهادة دراسية">
+        <option value="">اختر...</option>
+        <option value="ابتدائي">ابتدائي</option>
+        <option value="متوسط">متوسط</option>
+        <option value="ثانوي">ثانوي</option>
+        <option value="جامعي">جامعي</option>
+        <option value="ماجستير">ماجستير</option>
+        <option value="دكتوراه">دكتوراه</option>
+      </select>
+    </div>
+
+    <div class="form-error" id="regError">⚠️ يرجى ملء الاسم والبريد الإلكتروني بشكل صحيح</div>
+
+    <div style="display:flex;gap:10px;margin-top:var(--space-lg)">
+      <button class="btn btn-ghost" style="flex:1" onclick="closeRegMod()">إلغاء</button>
+      <button class="btn btn-p" style="flex:1" onclick="doRegister()">💾 تسجيل</button>
+    </div>
+
+    <div style="text-align:center;margin-top:var(--space-lg);padding-top:var(--space-lg);border-top:1px solid var(--color-border)">
+      <button style="background:none;border:none;color:var(--color-navy);font-size:var(--font-size-sm);font-weight:700;cursor:pointer;text-decoration:underline;text-decoration-color:var(--color-gold);text-underline-offset:3px;transition:all var(--transition-fast)" onclick="enterAsGuest()">👤 الدخول كزائر بدون تسجيل</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     ADMIN SECRET SHORTCUT
+     ═══════════════════════════════════════════ -->
+<div class="admin-secret" id="adminSecret" title="اضغط 5 مرات متتالية أو Ctrl+Shift+A" role="button" tabindex="0" aria-label="اختصار الإدارة"></div>
+<div class="admin-link-btn" id="adminLinks" role="menu" aria-label="روابط الإدارة">
+  <a href="admin.html" role="menuitem">⚙️ لوحة التحكم</a>
+  <a href="add-question.html" role="menuitem">📝 إدارة الأسئلة</a>
+</div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT (100% Preserved from Original)
+     ═══════════════════════════════════════════ -->
+<script>
+const SITE='https://ieashehata1965-netizen.github.io/fiqh-tafaqh/';
+const JSON_URL='https://ieashehata1965-netizen.github.io/fiqh-tafaqh/fiqh-questions.json';
+
+// ====== USER SYSTEM (100% preserved) ======
+let currentUser = null;
+
+function initUser(){
+  const saved = localStorage.getItem('fiqh_user');
+  if(saved){
+    try{ currentUser = JSON.parse(saved); }catch(e){ currentUser = null; }
+  }
+  updateNavUser();
+  updateProgress();
+}
+
+function updateNavUser(){
+  const area = document.getElementById('navUserArea');
+  if(!area) return;
+
+  if(currentUser && currentUser.name){
+    area.innerHTML = `
+      <div style="position:relative;display:inline-block">
+        <div class="user-badge" onclick="toggleUserMenu()">
+          <div class="avatar">${currentUser.name.charAt(0)}</div>
+          <span>${currentUser.name}</span>
+          <span style="font-size:10px">▼</span>
+        </div>
+        <div class="user-menu" id="userMenu">
+          <div class="user-menu-item" onclick="openRegMod()">✏️ تعديل بياناتي</div>
+          <div class="user-menu-item" onclick="goToTraining()">🎯 ابدأ التدريب</div>
+          <div class="user-menu-hr"></div>
+          <div class="user-menu-item" onclick="logoutUser()" style="color:var(--color-danger)">🚪 تسجيل الخروج</div>
+        </div>
+      </div>
+    `;
+  } else {
+    area.innerHTML = `<a href="#" class="nav-btn" style="padding:8px 20px!important;font-size:13px" onclick="openRegMod();return false">👤 تسجيل الدخول</a>`;
+  }
+}
+
+function toggleUserMenu(){
+  const menu = document.getElementById('userMenu');
+  if(menu) menu.classList.toggle('on');
+}
+
+document.addEventListener('click', function(e){
+  const menu = document.getElementById('userMenu');
+  const badge = document.querySelector('.user-badge');
+  if(menu && badge && !badge.contains(e.target) && !menu.contains(e.target)){
+    menu.classList.remove('on');
+  }
+});
+
+function openRegMod(){
+  document.getElementById('regMod').classList.add('on');
+  document.getElementById('regError').style.display = 'none';
+  if(currentUser){
+    document.getElementById('regName').value = currentUser.name || '';
+    document.getElementById('regEmail').value = currentUser.email || '';
+    document.getElementById('regAge').value = currentUser.age || '';
+    document.getElementById('regGender').value = currentUser.gender || '';
+    document.getElementById('regEdu').value = currentUser.education || '';
+  }
+  setTimeout(()=>document.getElementById('regName').focus(),100);
+}
+
+function closeRegMod(){ document.getElementById('regMod').classList.remove('on'); }
+
+function doRegister(){
+  const name = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const age = document.getElementById('regAge').value;
+  const gender = document.getElementById('regGender').value;
+  const education = document.getElementById('regEdu').value;
+  const errorEl = document.getElementById('regError');
+
+  if(!name || name.length < 2){
+    errorEl.textContent = '⚠️ الاسم مطلوب (حرفين على الأقل)';
+    errorEl.style.display = 'block';
+    return;
+  }
+  if(!email || !email.includes('@') || !email.includes('.')){
+    errorEl.textContent = '⚠️ أدخل بريد إلكتروني صحيح';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  currentUser = { name, email, age: age || null, gender: gender || null, education: education || null, registeredAt: new Date().toISOString() };
+  localStorage.setItem('fiqh_user', JSON.stringify(currentUser));
+  localStorage.setItem('trainee_name', name);
+
+  errorEl.style.display = 'none';
+  closeRegMod();
+  updateNavUser();
+  updateProgress();
+  setTimeout(()=>{ alert('✅ مرحباً ' + name + '! تم تسجيلك بنجاح. تقدمك سيُحفظ تلقائياً.'); }, 300);
+}
+
+function enterAsGuest(){ closeRegMod(); }
+
+function logoutUser(){
+  if(!confirm('هل تريد تسجيل الخروج؟ سيتم حفظ تقدمك.')) return;
+  currentUser = null;
+  localStorage.removeItem('fiqh_user');
+  localStorage.removeItem('trainee_name');
+  updateNavUser();
+  updateProgress();
+  document.getElementById('userMenu')?.classList.remove('on');
+}
+
+function goToTraining(){ window.location.href = 'training.html'; }
+
+function updateProgress(){
+  const sec = document.getElementById('progSec');
+  if(!sec) return;
+  if(!currentUser){ sec.style.display = 'none'; return; }
+  const progress = JSON.parse(localStorage.getItem('fiqh_progress_' + currentUser.email) || '{}');
+  const totalAnswered = progress.totalAnswered || 0;
+  const totalCorrect = progress.totalCorrect || 0;
+  const totalCerts = progress.totalCerts || 0;
+  const rate = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+  document.getElementById('progAns').textContent = totalAnswered;
+  document.getElementById('progCorrect').textContent = totalCorrect;
+  document.getElementById('progRate').textContent = rate + '%';
+  document.getElementById('progCerts').textContent = totalCerts;
+  sec.style.display = 'block';
+}
+
+// ====== NAVBAR SCROLL EFFECT ======
+window.onscroll = () => {
+  const nav = document.getElementById('nav');
+  if(window.scrollY > 50) nav.classList.add('scrolled');
+  else nav.classList.remove('scrolled');
+};
+
+// ====== STATS (preserved) ======
+fetch(JSON_URL+'?v='+Date.now()).then(r=>r.json()).then(d=>{
+  if(Array.isArray(d)){
+    anim('stQ',d.length);
+    anim('stC',[...new Set(d.map(q=>q.category).filter(Boolean))].length);
+  }
+}).catch(()=>{anim('stQ',124);anim('stC',10)});
+anim('stE',+(localStorage.getItem('total_exams')||0));
+anim('stR',+(localStorage.getItem('total_certs')||0));
+
+function anim(id,tgt){
+  let el=document.getElementById(id);
+  if(!el)return;
+  let c=0,step=Math.ceil(tgt/25);
+  let iv=setInterval(()=>{c+=step;if(c>=tgt){c=tgt;clearInterval(iv)}el.textContent=c.toLocaleString('ar-SA')},40);
+}
+
+// ====== MODAL (preserved) ======
+function openMod(){document.getElementById('mod').classList.add('on');setTimeout(()=>document.getElementById('nm').focus(),100)}
+function closeMod(){document.getElementById('mod').classList.remove('on')}
+function svNm(){let n=document.getElementById('nm').value.trim();if(!n){alert('⚠️ أدخل اسمك');return false}localStorage.setItem('trainee_name',n);return true}
+document.getElementById('nm').onkeypress=e=>{if(e.key==='Enter'&&svNm())document.querySelector('.modal-box .btn').click()};
+
+// ====== SHARE (preserved) ======
+function sh(p){
+  let t='أكاديمية الفقه والتفقه الإسلامي - منصة تعليمية شرعية غير ربحية';
+  let u=encodeURIComponent(SITE),txt=encodeURIComponent(t);
+  let urls={wa:'https://wa.me/?text='+txt+'%20'+u,tg:'https://t.me/share/url?url='+u+'&text='+txt,fb:'https://www.facebook.com/sharer/sharer.php?u='+u,x:'https://twitter.com/intent/tweet?text='+txt+'&url='+u};
+  window.open(urls[p],'_blank','width=600,height=400');
+}
+function cpLink(){navigator.clipboard.writeText(SITE).then(()=>alert('✅ تم النسخ')).catch(()=>{let i=document.createElement('input');i.value=SITE;document.body.appendChild(i);i.select();document.execCommand('copy');document.body.removeChild(i);alert('✅ تم النسخ')})}
+
+// ====== INTERSECTION OBSERVER (preserved) ======
+let obs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.opacity=1;e.target.style.transform='translateY(0)'}}),{threshold:.1});
+document.querySelectorAll('.card,.vis-box').forEach(el=>{el.style.opacity=0;el.style.transition='opacity .6s,transform .6s';el.style.transform='translateY(20px)';obs.observe(el)});
+
+// ====== ADMIN SECRET SHORTCUT ======
+let adminClicks = 0;
+let adminTimer = null;
+function toggleAdminLinks(){
+  document.getElementById('adminLinks').classList.toggle('on');
+  document.getElementById('adminSecret').classList.toggle('on');
+}
+
+document.getElementById('adminSecret').onclick = function(){
+  adminClicks++;
+  if(adminClicks >= 5){
+    toggleAdminLinks();
+    adminClicks = 0;
+  }
+  clearTimeout(adminTimer);
+  adminTimer = setTimeout(()=>adminClicks=0, 2000);
+};
+
+document.addEventListener('keydown', function(e){
+  if(e.ctrlKey && e.shiftKey && e.key === 'A'){
+    e.preventDefault();
+    toggleAdminLinks();
+  }
+});
+
+// Init
+initUser();
+</script>
+
+</body>
+</html>
