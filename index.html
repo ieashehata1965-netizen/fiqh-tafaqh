@@ -623,5 +623,31 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 </script>
+
+  <script>
+let adminClickCount = 0;
+let adminFirstClickTime = 0;
+
+document.getElementById("secretAdminTrigger").addEventListener("click", function (e) {
+
+    e.preventDefault();
+
+    const now = Date.now();
+
+    if (adminFirstClickTime === 0 || (now - adminFirstClickTime) > 5000) {
+        adminClickCount = 1;
+        adminFirstClickTime = now;
+    } else {
+        adminClickCount++;
+    }
+
+    if (adminClickCount >= 7) {
+        adminClickCount = 0;
+        adminFirstClickTime = 0;
+
+        alert("تم اكتشاف وضع الإدارة");
+    }
+});
+</script>
 </body>
 </html>
