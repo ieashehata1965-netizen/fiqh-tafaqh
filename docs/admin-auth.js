@@ -4,6 +4,7 @@
 // ======================================
 
 console.log("admin-auth.js loaded");
+const trigger = document.getElementById("secretAdminTrigger");
 
 document.addEventListener("DOMContentLoaded", function () {
 
