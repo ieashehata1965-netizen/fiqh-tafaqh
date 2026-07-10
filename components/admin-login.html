@@ -1,1 +1,42 @@
 <!-- Admin Login Component -->
+<!-- نافذة تسجيل دخول الإدارة -->
+
+<div id="adminLoginOverlay" class="admin-overlay" style="display:none;">
+
+    <div class="admin-modal">
+
+        <div class="admin-header">
+            🔐 إدارة منصة الفقه والتفقه
+        </div>
+
+        <div class="admin-body">
+
+            <label for="adminPassword">
+                كلمة المرور
+            </label>
+
+            <input
+                type="password"
+                id="adminPassword"
+                placeholder="أدخل كلمة المرور"
+                autocomplete="off">
+
+            <div id="adminError" class="admin-error"></div>
+
+        </div>
+
+        <div class="admin-footer">
+
+            <button id="adminLoginBtn">
+                دخول
+            </button>
+
+            <button id="adminCancelBtn">
+                إلغاء
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
