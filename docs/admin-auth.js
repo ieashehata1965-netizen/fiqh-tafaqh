@@ -3,6 +3,8 @@
 // الضغط 7 مرات على شعار المنصة
 // ======================================
 
+console.log("admin-auth.js loaded");
+
 document.addEventListener("DOMContentLoaded", function () {
 
     const trigger = document.getElementById("secretAdminTrigger");
