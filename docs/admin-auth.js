@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     let clickCount = 0;
     let firstClickTime = 0;
-
+console.log("clickCount initialized");
    trigger.addEventListener("click", function (e) {
     console.log("Click");
 
