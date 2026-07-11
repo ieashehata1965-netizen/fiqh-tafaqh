@@ -491,19 +491,20 @@ function doRegister(){
     return;
   }
 
-  // Save user
-  currentUser = {
-    name,
-    email,
-    age: age || null,
-    gender: gender || null,
-    education: education || null,
-    registeredAt: new Date().toISOString()
-  };
+// Save user
+currentUser = {
+  name,
+  email,
+  age: age || null,
+  gender: gender || null,
+  education: education || null
+};
 
-  localStorage.setItem('fiqh_user', JSON.stringify(currentUser));
-  localStorage.setItem('trainee_name', name); // for backward compatibility
+// الحفظ باستخدام مدير بيانات المستخدم الجديد
+saveUser(currentUser);
 
+// للتوافق مع الإصدارات السابقة
+localStorage.setItem('trainee_name', name);
   errorEl.style.display = 'none';
   closeRegMod();
   updateNavUser();
