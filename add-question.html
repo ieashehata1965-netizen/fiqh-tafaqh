@@ -418,12 +418,12 @@ let qs=[], sel=new Set(), ghTok=localStorage.getItem('ghTok_fiqh')||'', editId=n
 ========================= */
 function checkLogin() {
     if (sessionStorage.getItem('admin_access') !== 'granted') {
-        window.location.href = 'raseen-fiqh-admin-2026-X8M4.html';
+        window.location.href = 'index.html';
     }
 }
 function logout() {
     sessionStorage.removeItem('admin_access');
-    window.location.href = 'raseen-fiqh-admin-2026-X8M4.html';
+    window.location.href = 'index.html';
 }
 
 /* =========================
