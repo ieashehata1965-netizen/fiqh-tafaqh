@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             sessionStorage.removeItem("adminClickCount");
             sessionStorage.removeItem("adminFirstClick");
 
-            window.location.href = "admin.html";
+            window.location.href = "raseen-fiqh-admin-2026-X8M4.html";
         }
 
     });

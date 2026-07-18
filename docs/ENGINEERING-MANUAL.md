@@ -7,7 +7,7 @@ Fiqh Training Platform Architecture Guide
 الملف / المجلد	File / Folder	الوظيفة الرئيسية	Main Purpose	متى أعدل فيه؟
 index.html	Home Page	الصفحة الرئيسية للمنصة	Main Landing Page	عند تعديل الصفحة الرئيسية
 training.html	Training Engine	تشغيل الاختبارات والأسئلة	Runs quizzes and exams	عند تطوير الاختبارات
-admin.html	Admin Dashboard	لوحة الإدارة	Administration Panel	عند إضافة أدوات إدارية
+raseen-fiqh-admin-2026-X8M4.html	Admin Dashboard	لوحة الإدارة	Administration Panel	عند إضافة أدوات إدارية
 add-question.html	Question Editor	إدخال الأسئلة الجديدة	Add/Edit Questions	عند إضافة أسئلة
 certificate.html	Certificate Generator	إنشاء الإفادة	Generates Certificate	عند تعديل تصميم الإفادة
 verify.html	Certificate Verification	التحقق من الإفادات	Verify Certificate	عند تطوير نظام التحقق
@@ -126,7 +126,7 @@ training.html
 
 Transaction Processing
 
-admin.html
+raseen-fiqh-admin-2026-X8M4.html
 
 مركز التحكم.
 

@@ -8,7 +8,7 @@ index.html
 training.html
 - Training and quiz page
 
-admin.html
+raseen-fiqh-admin-2026-X8M4.html
 - Question management dashboard
 
 add-question.html

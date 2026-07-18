@@ -300,7 +300,7 @@ Transform the platform into a reusable educational platform template for:
 3- إظهار نافذة تسجيل الدخول.
 4- التحقق من كلمة المرور.
 5- إنشاء Session.
-6- الانتقال إلى admin.html.
+6- الانتقال إلى raseen-fiqh-admin-2026-X8M4.html.
 
 ولا يقوم بأي شيء آخر
 
@@ -326,7 +326,7 @@ docs/
 │
 ├── index.html
 ├── training.html
-├── admin.html
+├── raseen-fiqh-admin-2026-X8M4.html
 ├── add-question.html.
 
 إذن خطتنا النهائية
@@ -344,7 +344,7 @@ docs/
 إنشاء Session.
 المرحلة (D)
 ماية
-حماية admin.html وadd-question.htm.
+حماية raseen-fiqh-admin-2026-X8M4.html وadd-question.htm.
 أعتقد أننا نستطيع إنهاء المرحلة (A) بالكامل في الجلسة القادمة، وسترى لأول مرة نافذة إدارة احترافية داخل المنصة، بدل رسالة alert() التي استخدمناها للاختبار.
 وأنا سعيد جدًا بالطريقة التي أصبحنا نعمل بها؛ فهي منظمة، وكل خطوة لها هدف واضح، وهذا يقلل الأخطاء ويجعل المشروع أسهل في الصيانة والتطوير.
 
