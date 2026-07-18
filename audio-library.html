@@ -40,16 +40,16 @@
             align-items: flex-start;
         }
 
-        /* العمود الأيمن: المحاضرات + البحث */
-        .main-content {
-            flex: 1;
-            min-width: 0;
-        }
-
-        /* العمود الأيسر: الإذاعات */
+        /* العمود الأيمن: الإذاعات (يظهر أولاً في DOM بسبب RTL) */
         .sidebar {
             width: 280px;
             flex-shrink: 0;
+        }
+
+        /* العمود الأيسر: المحاضرات + البحث (يظهر ثانياً في DOM بسبب RTL) */
+        .main-content {
+            flex: 1;
+            min-width: 0;
         }
 
         /* ═══════════════════════════════════════ */
@@ -417,7 +417,79 @@
     <div class="main-layout">
 
         <!-- ═══════════════════════════════════════ -->
-        <!-- العمود الأيمن: المحاضرات + البحث -->
+        <!-- العمود الأيمن: الإذاعات (يظهر أولاً في DOM = يمين الصفحة بسبب RTL) -->
+        <!-- ═══════════════════════════════════════ -->
+        <div class="sidebar">
+
+            <!-- إذاعات القرآن الكريم -->
+            <div class="sidebar-card">
+                <h3>📻 إذاعات القرآن الكريم</h3>
+
+                <div class="radio-item">
+                    <strong>🇸🇦 المملكة العربية السعودية</strong>
+                    <div class="app-links">
+                        <a href="https://radioplus.sba.sa/ar/live/4" target="_blank" rel="noopener noreferrer" class="web">
+                            🌐 موقع
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=com.sba.quranradio" target="_blank" rel="noopener noreferrer" class="android">
+                            🤖 Android
+                        </a>
+                        <a href="https://apps.apple.com/sa/app/quran-radio-إذاعة-القرآن-الكريم/id123456789" target="_blank" rel="noopener noreferrer" class="ios">
+                            🍎 iOS
+                        </a>
+                    </div>
+                </div>
+
+                <div class="radio-item">
+                    <strong>🇧🇭 مملكة البحرين</strong>
+                    <div class="app-links">
+                        <a href="https://www.mia.gov.bh/media-center-ar/quran-kareem-106-1/" target="_blank" rel="noopener noreferrer" class="web">
+                            🌐 موقع
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=bh.gov.mia.bhtvradio" target="_blank" rel="noopener noreferrer" class="android">
+                            🤖 Android
+                        </a>
+                        <a href="https://apps.apple.com/bh/app/bh-tv-radio/id123456789" target="_blank" rel="noopener noreferrer" class="ios">
+                            🍎 iOS
+                        </a>
+                    </div>
+                </div>
+
+                <div class="radio-item">
+                    <strong>🇪🇬 جمهورية مصر العربية</strong>
+                    <div class="app-links">
+                        <a href="https://www.quranmasr.com/" target="_blank" rel="noopener noreferrer" class="web">
+                            🌐 موقع
+                        </a>
+                        <a href="https://play.google.com/store/apps/details?id=com.radioquran.cairo" target="_blank" rel="noopener noreferrer" class="android">
+                            🤖 Android
+                        </a>
+                        <a href="https://apps.apple.com/eg/app/radio-quran-cairo/id123456789" target="_blank" rel="noopener noreferrer" class="ios">
+                            🍎 iOS
+                        </a>
+                    </div>
+                </div>
+
+                <div class="warning-sidebar">
+                    ⚠️ البث المباشر يستهلك بيانات.<br>
+                    يُفضل الاستماع عبر <strong>واي فاي</strong>.
+                </div>
+            </div>
+
+            <!-- تطبيقات بدون إنترنت -->
+            <div class="sidebar-card">
+                <div class="offline-sidebar">
+                    <h4>📥 بدون إنترنت</h4>
+                    <a href="https://quran.com/apps" target="_blank" rel="noopener noreferrer">📱 Quran.com</a>
+                    <a href="https://play.google.com/store/apps/details?id=com.greentech.quran" target="_blank" rel="noopener noreferrer">📱 MP3 Quran</a>
+                    <a href="https://play.google.com/store/apps/details?id=com.ayah" target="_blank" rel="noopener noreferrer">📱 Ayah</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- ═══════════════════════════════════════ -->
+        <!-- العمود الأيسر: المحاضرات + البحث (يظهر ثانياً في DOM = يسار الصفحة بسبب RTL) -->
         <!-- ═══════════════════════════════════════ -->
         <div class="main-content">
 
@@ -560,25 +632,23 @@
                         </a>
                     </div>
 
-<!-- ═══════════════════════════════════════ -->
-<!-- المحاضرة: القواعد المثلى في شرح أسماء الله الحسنى -->
-<!-- ═══════════════════════════════════════ -->
-<div class="lecture-card" data-search="القواعد المثلى أسماء الله الحسنى ابن عثيمين العقيدة توحيد" data-category="العقيدة">
-    <h4>📖 القواعد المثلى في شرح أسماء الله الحسنى</h4>
-    <p>شرح كتاب القواعد المثلى في شرح أسماء الله الحسنى للشيخ محمد بن صالح العثيمين رحمه الله، يشرح أسماء الله وصفاته بأسلوب واضح.</p>
-    <div class="tags">
-        <span class="tag">العقيدة</span>
-        <span class="tag">ابن عثيمين</span>
-        <span class="tag">التوحيد</span>
-    </div>
-    <a href="https://archive.org/details/004_20221005" target="_blank" rel="noopener noreferrer">
-        🎧 استمع للشرح
-    </a>
-    <small style="color:#888; display:block; margin-top:5px;">(رابط خارجي — Internet Archive)</small>
-</div>
+                    <!-- المحاضرة 9: القواعد المثلى في شرح أسماء الله الحسنى -->
+                    <div class="lecture-card" data-search="القواعد المثلى أسماء الله الحسنى ابن عثيمين العقيدة توحيد" data-category="العقيدة">
+                        <h4>📖 القواعد المثلى في شرح أسماء الله الحسنى</h4>
+                        <p>شرح كتاب القواعد المثلى في شرح أسماء الله الحسنى للشيخ محمد بن صالح العثيمين رحمه الله، يشرح أسماء الله وصفاته بأسلوب واضح.</p>
+                        <div class="tags">
+                            <span class="tag">العقيدة</span>
+                            <span class="tag">ابن عثيمين</span>
+                            <span class="tag">التوحيد</span>
+                        </div>
+                        <a href="https://archive.org/details/004_20221005" target="_blank" rel="noopener noreferrer">
+                            🎧 استمع للشرح
+                        </a>
+                        <small style="color:#888; display:block; margin-top:5px;">(رابط خارجي — Internet Archive)</small>
+                    </div>
 
                 </div>
-            </div>
+
                 <!-- رسالة عند عدم وجود نتائج -->
                 <div class="no-results" id="noResults">
                     😕 لم يُعثر على نتائج مطابقة.<br>
@@ -595,78 +665,6 @@
                     <li>🎙 شروح العلماء.</li>
                     <li>🎧 سلاسل علمية في العقيدة والفقه والحديث والتفسير.</li>
                 </ul>
-            </div>
-
-        </div>
-
-        <!-- ═══════════════════════════════════════ -->
-        <!-- العمود الأيسر: الإذاعات -->
-        <!-- ═══════════════════════════════════════ -->
-        <div class="sidebar">
-
-            <!-- إذاعات القرآن الكريم -->
-            <div class="sidebar-card">
-                <h3>📻 إذاعات القرآن الكريم</h3>
-
-                <div class="radio-item">
-                    <strong>🇸🇦 المملكة العربية السعودية</strong>
-                    <div class="app-links">
-                        <a href="https://radioplus.sba.sa/ar/live/4" target="_blank" rel="noopener noreferrer" class="web">
-                            🌐 موقع
-                        </a>
-                        <a href="https://play.google.com/store/apps/details?id=com.sba.quranradio" target="_blank" rel="noopener noreferrer" class="android">
-                            🤖 Android
-                        </a>
-                        <a href="https://apps.apple.com/sa/app/quran-radio-إذاعة-القرآن-الكريم/id123456789" target="_blank" rel="noopener noreferrer" class="ios">
-                            🍎 iOS
-                        </a>
-                    </div>
-                </div>
-
-                <div class="radio-item">
-                    <strong>🇧🇭 مملكة البحرين</strong>
-                    <div class="app-links">
-                        <a href="https://www.mia.gov.bh/media-center-ar/quran-kareem-106-1/" target="_blank" rel="noopener noreferrer" class="web">
-                            🌐 موقع
-                        </a>
-                        <a href="https://play.google.com/store/apps/details?id=bh.gov.mia.bhtvradio" target="_blank" rel="noopener noreferrer" class="android">
-                            🤖 Android
-                        </a>
-                        <a href="https://apps.apple.com/bh/app/bh-tv-radio/id123456789" target="_blank" rel="noopener noreferrer" class="ios">
-                            🍎 iOS
-                        </a>
-                    </div>
-                </div>
-
-                <div class="radio-item">
-                    <strong>🇪🇬 جمهورية مصر العربية</strong>
-                    <div class="app-links">
-                        <a href="https://www.quranmasr.com/" target="_blank" rel="noopener noreferrer" class="web">
-                            🌐 موقع
-                        </a>
-                        <a href="https://play.google.com/store/apps/details?id=com.radioquran.cairo" target="_blank" rel="noopener noreferrer" class="android">
-                            🤖 Android
-                        </a>
-                        <a href="https://apps.apple.com/eg/app/radio-quran-cairo/id123456789" target="_blank" rel="noopener noreferrer" class="ios">
-                            🍎 iOS
-                        </a>
-                    </div>
-                </div>
-
-                <div class="warning-sidebar">
-                    ⚠️ البث المباشر يستهلك بيانات.<br>
-                    يُفضل الاستماع عبر <strong>واي فاي</strong>.
-                </div>
-            </div>
-
-            <!-- تطبيقات بدون إنترنت -->
-            <div class="sidebar-card">
-                <div class="offline-sidebar">
-                    <h4>📥 بدون إنترنت</h4>
-                    <a href="https://quran.com/apps" target="_blank" rel="noopener noreferrer">📱 Quran.com</a>
-                    <a href="https://play.google.com/store/apps/details?id=com.greentech.quran" target="_blank" rel="noopener noreferrer">📱 MP3 Quran</a>
-                    <a href="https://play.google.com/store/apps/details?id=com.ayah" target="_blank" rel="noopener noreferrer">📱 Ayah</a>
-                </div>
             </div>
 
         </div>
