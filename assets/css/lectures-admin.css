@@ -1,0 +1,620 @@
+/* ====== Fiqh Platform Design System - Emerald Green Theme ====== */
+  :root {
+    --fiqh-primary: #065f46;
+    --fiqh-primary-light: #16a34a;
+    --fiqh-primary-lighter: #22c55e;
+    --fiqh-bg: #d1fae5;
+    --fiqh-bg-light: #ecfdf5;
+    --fiqh-bg-card: #ffffff;
+    --fiqh-text: #064e3b;
+    --fiqh-text-secondary: #374151;
+    --fiqh-text-muted: #4b5563;
+    --fiqh-border: #bbf7d0;
+    --fiqh-border-light: #d1fae5;
+    --fiqh-shadow: rgba(6, 95, 70, 0.12);
+    --fiqh-danger: #991b1b;
+    --fiqh-danger-bg: #fee2e2;
+    --fiqh-danger-border: #ef4444;
+    --fiqh-warning: #92400e;
+    --fiqh-warning-bg: #fef3c7;
+    --fiqh-warning-border: #f59e0b;
+    --fiqh-info: #1e40af;
+    --fiqh-info-bg: #dbeafe;
+    --fiqh-info-border: #3b82f6;
+    --fiqh-success: #166534;
+    --fiqh-success-bg: #dcfce7;
+    --fiqh-success-border: #16a34a;
+    --fiqh-radius-sm: 10px;
+    --fiqh-radius-md: 14px;
+    --fiqh-radius-lg: 16px;
+    --fiqh-radius-xl: 20px;
+    --fiqh-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, 'Noto Sans Arabic', sans-serif;
+    background: var(--fiqh-bg);
+    min-height: 100vh;
+    color: var(--fiqh-text);
+    font-size: 15px;
+    line-height: 1.7;
+    direction: rtl;
+  }
+
+  /* ====== Sidebar ====== */
+  .side {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 260px;
+    height: 100vh;
+    background: linear-gradient(180deg, #065f46, #16a34a);
+    color: #fff;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 1000;
+    transition: transform .3s ease;
+  }
+  .side h1 {
+    font-size: 18px;
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255,255,255,.2);
+    margin-bottom: 15px;
+  }
+  .side h1 p {
+    font-size: 13px;
+    opacity: .85;
+    margin-top: 6px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 4px;
+    cursor: pointer;
+    transition: .2s;
+    color: rgba(255,255,255,.9);
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .nav-item:hover, .nav-item.on {
+    background: rgba(255,255,255,.15);
+    color: #fff;
+  }
+  .nav-item .icon { font-size: 20px; width: 24px; text-align: center; }
+  .nav-sec {
+    font-size: 11px;
+    text-transform: uppercase;
+    opacity: .6;
+    margin: 18px 0 10px;
+    padding-right: 12px;
+    font-weight: 700;
+  }
+  .side.collapsed { transform: translateX(100%); }
+  .main { margin-right: 260px; padding: 24px; transition: margin-right .3s ease; }
+  .main.expanded { margin-right: 0; }
+  .toggle-btn {
+    position: fixed;
+    top: 16px;
+    right: 270px;
+    z-index: 1101;
+    background: #16a34a;
+    color: #fff;
+    border: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,.15);
+    transition: .3s;
+  }
+  .toggle-btn:hover { background: #15803d; }
+  .toggle-btn.collapsed { right: 16px; }
+
+  /* ====== Lecture Manager ====== */
+  .lecture-manager {
+    padding: 0;
+  }
+
+  /* ====== Header ====== */
+  .lm-header {
+    background: linear-gradient(135deg, var(--fiqh-primary), var(--fiqh-primary-light));
+    color: #fff;
+    padding: 24px 28px;
+    border-radius: var(--fiqh-radius-lg);
+    margin-bottom: 20px;
+    box-shadow: 0 8px 32px rgba(6, 95, 70, 0.25);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .lm-header h1 { font-size: 22px; font-weight: 800; }
+  .lm-header h1 span { font-size: 14px; font-weight: 600; opacity: 0.85; display: block; margin-top: 4px; }
+  .lm-badge {
+    background: rgba(255,255,255,0.2);
+    padding: 6px 16px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 700;
+    backdrop-filter: blur(4px);
+  }
+
+  /* ====== Stats Bar ====== */
+  .lm-stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .lm-stat {
+    background: var(--fiqh-bg-card);
+    padding: 16px 20px;
+    border-radius: var(--fiqh-radius-md);
+    box-shadow: 0 4px 16px var(--fiqh-shadow);
+    text-align: center;
+    flex: 1;
+    min-width: 110px;
+    transition: var(--fiqh-transition);
+    border: 2px solid transparent;
+  }
+  .lm-stat:hover { transform: translateY(-3px); border-color: var(--fiqh-border); box-shadow: 0 8px 24px var(--fiqh-shadow); }
+  .lm-stat .n { font-size: 26px; font-weight: 800; color: var(--fiqh-primary); }
+  .lm-stat .l { font-size: 12px; color: var(--fiqh-text-muted); font-weight: 600; margin-top: 2px; }
+
+  /* ====== Search & Filter Bar ====== */
+  .lm-search-bar {
+    background: var(--fiqh-bg-card);
+    padding: 18px 22px;
+    border-radius: var(--fiqh-radius-lg);
+    box-shadow: 0 4px 16px var(--fiqh-shadow);
+    margin-bottom: 20px;
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .lm-search-input {
+    flex: 1;
+    min-width: 220px;
+    padding: 12px 18px;
+    border: 2px solid var(--fiqh-border-light);
+    border-radius: var(--fiqh-radius-sm);
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--fiqh-text);
+    background: var(--fiqh-bg-light);
+    transition: var(--fiqh-transition);
+  }
+  .lm-search-input:focus { outline: none; border-color: var(--fiqh-primary-light); box-shadow: 0 0 0 4px rgba(22,163,74,0.1); }
+  .lm-search-input::placeholder { color: #9ca3af; }
+  .lm-filter-select {
+    min-width: 160px;
+    padding: 12px 16px;
+    border: 2px solid var(--fiqh-border-light);
+    border-radius: var(--fiqh-radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--fiqh-text);
+    background: var(--fiqh-bg-light);
+    cursor: pointer;
+    transition: var(--fiqh-transition);
+  }
+  .lm-filter-select:focus { outline: none; border-color: var(--fiqh-primary-light); }
+  .lm-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    border-radius: var(--fiqh-radius-sm);
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: var(--fiqh-transition);
+    white-space: nowrap;
+  }
+  .lm-btn:hover { transform: translateY(-2px); }
+  .lm-btn-primary {
+    background: linear-gradient(135deg, var(--fiqh-primary-light), #15803d);
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(22,163,74,0.35);
+  }
+  .lm-btn-primary:hover { box-shadow: 0 6px 20px rgba(22,163,74,0.45); }
+  .lm-btn-secondary {
+    background: var(--fiqh-bg-light);
+    color: var(--fiqh-primary);
+    border: 2px solid var(--fiqh-primary-light);
+  }
+  .lm-btn-secondary:hover { background: var(--fiqh-primary-light); color: #fff; }
+  .lm-btn-danger {
+    background: var(--fiqh-danger-bg);
+    color: var(--fiqh-danger);
+    border: 2px solid var(--fiqh-danger-border);
+  }
+  .lm-btn-danger:hover { background: var(--fiqh-danger-border); color: #fff; }
+  .lm-btn-warning {
+    background: var(--fiqh-warning-bg);
+    color: var(--fiqh-warning);
+    border: 2px solid var(--fiqh-warning-border);
+  }
+  .lm-btn-warning:hover { background: var(--fiqh-warning-border); color: #fff; }
+  .lm-btn-info {
+    background: var(--fiqh-info-bg);
+    color: var(--fiqh-info);
+    border: 2px solid var(--fiqh-info-border);
+  }
+  .lm-btn-info:hover { background: var(--fiqh-info-border); color: #fff; }
+  .lm-btn-outline {
+    background: #fff;
+    color: var(--fiqh-text-muted);
+    border: 2px solid var(--fiqh-border-light);
+  }
+  .lm-btn-outline:hover { border-color: var(--fiqh-primary-light); color: var(--fiqh-primary); }
+
+  /* ====== Add/Edit Form Card ====== */
+  .lm-form-card {
+    background: var(--fiqh-bg-card);
+    border-radius: var(--fiqh-radius-lg);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 20px var(--fiqh-shadow);
+    display: none;
+    border: 2px solid transparent;
+    transition: var(--fiqh-transition);
+  }
+  .lm-form-card.show { display: block; animation: slideDown 0.3s ease; }
+  @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  .lm-form-card h3 {
+    font-size: 18px;
+    color: var(--fiqh-primary);
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--fiqh-border-light);
+    font-weight: 800;
+  }
+  .lm-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+  }
+  .lm-form-group { margin-bottom: 4px; }
+  .lm-form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--fiqh-text);
+  }
+  .lm-form-group input,
+  .lm-form-group select,
+  .lm-form-group textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 2px solid var(--fiqh-border-light);
+    border-radius: var(--fiqh-radius-sm);
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--fiqh-text);
+    background: var(--fiqh-bg-light);
+    transition: var(--fiqh-transition);
+  }
+  .lm-form-group input:focus,
+  .lm-form-group select:focus,
+  .lm-form-group textarea:focus {
+    outline: none;
+    border-color: var(--fiqh-primary-light);
+    box-shadow: 0 0 0 4px rgba(22,163,74,0.1);
+  }
+  .lm-form-group textarea { min-height: 100px; resize: vertical; }
+  .lm-form-group input::placeholder,
+  .lm-form-group textarea::placeholder { color: #9ca3af; }
+  .lm-form-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
+
+  /* ====== Lecture List ====== */
+  .lm-list-card {
+    background: var(--fiqh-bg-card);
+    border-radius: var(--fiqh-radius-lg);
+    padding: 24px;
+    box-shadow: 0 4px 20px var(--fiqh-shadow);
+  }
+  .lm-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .lm-list-header h3 { font-size: 18px; color: var(--fiqh-primary); font-weight: 800; }
+  .lm-list-header .count { font-size: 14px; color: var(--fiqh-text-muted); font-weight: 600; }
+  .lm-lecture-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding-left: 4px;
+  }
+  .lm-lecture-list::-webkit-scrollbar { width: 6px; }
+  .lm-lecture-list::-webkit-scrollbar-track { background: var(--fiqh-bg-light); border-radius: 10px; }
+  .lm-lecture-list::-webkit-scrollbar-thumb { background: var(--fiqh-primary-light); border-radius: 10px; }
+
+  /* ====== Lecture Item ====== */
+  .lm-lecture-item {
+    background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+    border: 2px solid var(--fiqh-border);
+    border-radius: var(--fiqh-radius-md);
+    padding: 18px;
+    transition: var(--fiqh-transition);
+    position: relative;
+  }
+  .lm-lecture-item:hover {
+    border-color: var(--fiqh-primary-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(22,163,74,0.12);
+  }
+  .lm-lecture-item.editing {
+    border-color: var(--fiqh-warning-border);
+    background: linear-gradient(135deg, #fffbeb, #fef3c7);
+    box-shadow: 0 4px 20px rgba(245,158,11,0.15);
+  }
+  .lm-lecture-item .item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .lm-lecture-item .badges { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .lm-badge-cat {
+    background: var(--fiqh-info-bg);
+    color: var(--fiqh-info);
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .lm-badge-speaker {
+    background: var(--fiqh-success-bg);
+    color: var(--fiqh-success);
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .lm-badge-id {
+    background: var(--fiqh-primary);
+    color: #fff;
+    padding: 4px 12px;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .lm-lecture-item .title {
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--fiqh-text);
+    margin-bottom: 6px;
+    line-height: 1.6;
+  }
+  .lm-lecture-item .desc {
+    font-size: 14px;
+    color: var(--fiqh-text-secondary);
+    margin-bottom: 12px;
+    line-height: 1.7;
+  }
+  .lm-lecture-item .links {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .lm-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: var(--fiqh-transition);
+  }
+  .lm-link-audio {
+    background: var(--fiqh-success-bg);
+    color: var(--fiqh-success);
+    border: 1px solid var(--fiqh-success-border);
+  }
+  .lm-link-audio:hover { background: var(--fiqh-success-border); color: #fff; }
+  .lm-link-youtube {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #ef4444;
+  }
+  .lm-link-youtube:hover { background: #ef4444; color: #fff; }
+  .lm-lecture-item .actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .lm-lecture-item .actions button {
+    padding: 8px 16px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    font-family: inherit;
+    transition: var(--fiqh-transition);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .lm-lecture-item .actions .edit-btn {
+    background: var(--fiqh-info-bg);
+    color: var(--fiqh-info);
+  }
+  .lm-lecture-item .actions .edit-btn:hover { background: var(--fiqh-info-border); color: #fff; transform: translateY(-1px); }
+  .lm-lecture-item .actions .del-btn {
+    background: var(--fiqh-danger-bg);
+    color: var(--fiqh-danger);
+  }
+  .lm-lecture-item .actions .del-btn:hover { background: var(--fiqh-danger-border); color: #fff; transform: translateY(-1px); }
+  .lm-lecture-item .actions .play-btn {
+    background: var(--fiqh-success-bg);
+    color: var(--fiqh-success);
+  }
+  .lm-lecture-item .actions .play-btn:hover { background: var(--fiqh-success-border); color: #fff; transform: translateY(-1px); }
+
+  /* ====== Inline Edit Form (inside item) ====== */
+  .lm-inline-edit {
+    background: #fff;
+    border: 2px dashed var(--fiqh-warning-border);
+    border-radius: var(--fiqh-radius-sm);
+    padding: 16px;
+    margin-top: 12px;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  .lm-inline-edit .edit-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+  }
+  .lm-inline-edit input,
+  .lm-inline-edit select,
+  .lm-inline-edit textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid var(--fiqh-border-light);
+    border-radius: var(--fiqh-radius-sm);
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--fiqh-text);
+    background: var(--fiqh-bg-light);
+  }
+  .lm-inline-edit input:focus,
+  .lm-inline-edit select:focus,
+  .lm-inline-edit textarea:focus {
+    outline: none;
+    border-color: var(--fiqh-warning-border);
+    box-shadow: 0 0 0 3px rgba(245,158,11,0.1);
+  }
+  .lm-inline-edit textarea { min-height: 70px; resize: vertical; }
+  .lm-inline-edit .edit-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  /* ====== Empty State ====== */
+  .lm-empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--fiqh-text-muted);
+  }
+  .lm-empty .icon { font-size: 52px; margin-bottom: 14px; opacity: 0.35; }
+  .lm-empty p { font-size: 16px; font-weight: 600; }
+
+  /* ====== Toast ====== */
+  .lm-toast-wrap {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .lm-toast {
+    padding: 12px 20px;
+    border-radius: 12px;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    animation: toastIn 0.3s ease;
+    max-width: 380px;
+  }
+  @keyframes toastIn { from { opacity: 0; transform: translateX(-20px); } to { opacity: 1; transform: translateX(0); } }
+  .lm-toast.ok { background: var(--fiqh-primary-light); }
+  .lm-toast.err { background: var(--fiqh-danger-border); }
+  .lm-toast.inf { background: var(--fiqh-primary); }
+  .lm-toast.warn { background: var(--fiqh-warning-border); }
+
+  /* ====== Modal ====== */
+  .lm-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 6000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .lm-modal-overlay.show { display: flex; }
+  .lm-modal {
+    background: #fff;
+    border-radius: var(--fiqh-radius-xl);
+    padding: 28px;
+    max-width: 420px;
+    width: 100%;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+    text-align: center;
+  }
+  .lm-modal h3 { font-size: 20px; color: var(--fiqh-primary); margin-bottom: 12px; font-weight: 800; }
+  .lm-modal p { color: var(--fiqh-text-muted); margin-bottom: 20px; font-size: 15px; line-height: 1.7; }
+  .lm-modal .modal-actions { display: flex; gap: 10px; justify-content: center; }
+
+  /* ====== Mobile Optimizations ====== */
+  @media (max-width: 768px) {
+    .side { transform: translateX(100%); width: 280px; }
+    .side.open { transform: translateX(0); }
+    .main { margin-right: 0; padding: 16px; padding-top: 70px; }
+    .toggle-btn { right: 16px; }
+    .toggle-btn.collapsed { right: 16px; }
+    .lecture-manager { padding: 0; }
+    .lm-header { padding: 18px 20px; }
+    .lm-header h1 { font-size: 18px; }
+    .lm-search-bar { padding: 14px 16px; }
+    .lm-search-input { min-width: 100%; }
+    .lm-form-grid { grid-template-columns: 1fr; }
+    .lm-lecture-item { padding: 14px; }
+    .lm-lecture-item .item-header { flex-direction: column; gap: 8px; }
+    .lm-lecture-item .actions { width: 100%; }
+    .lm-lecture-item .actions button { flex: 1; justify-content: center; }
+    .lm-form-actions { flex-direction: column; }
+    .lm-form-actions .lm-btn { width: 100%; justify-content: center; }
+    .lm-inline-edit .edit-grid { grid-template-columns: 1fr; }
+    .lm-inline-edit .edit-actions { flex-direction: column; }
+    .lm-inline-edit .edit-actions .lm-btn { width: 100%; justify-content: center; }
+    .lm-modal { padding: 22px; }
+    .lm-modal .modal-actions { flex-direction: column; }
+    .lm-modal .modal-actions .lm-btn { width: 100%; justify-content: center; }
+  }
+
+  @media (max-width: 480px) {
+    .lm-header h1 { font-size: 16px; }
+    .lm-stat { min-width: 80px; padding: 12px 14px; }
+    .lm-stat .n { font-size: 22px; }
+    .lm-stat .l { font-size: 11px; }
+    .lm-lecture-item .title { font-size: 15px; }
+    .lm-lecture-item .desc { font-size: 13px; }
+  }
