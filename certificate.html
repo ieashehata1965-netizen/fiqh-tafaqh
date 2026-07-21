@@ -583,8 +583,8 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
 
     const params = new URLSearchParams(window.location.search);
     const name  = params.get("name")  || "أحمد محمد عبدالله";
-    const score = parseInt(params.get("score") || "5", 10);
-    const total = parseInt(params.get("total") || "5", 10);
+    const score = parseInt(params.get("score") || "95", 10);
+    const total = parseInt(params.get("total") || "100", 10);
     const id    = params.get("id")    || "IFA-73548767";
 
     const percent = Math.round((score / total) * 100);
@@ -598,7 +598,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     else { level = "يحتاج تطوير"; levelEn = "Needs Improvement"; }
 
     // CEO name from URL or fallback
-    const ceoName = params.get("ceo") || " إبراهيم السيد الشرقاوي";
+    const ceoName = params.get("ceo") || "ابراهيم الشرقاوي";
     const ceoTitle = params.get("ceoTitle") || "Chief Executive Officer";
 
     // Fill data
@@ -616,7 +616,7 @@ var QRCode;!function(){function a(a){this.mode=c.MODE_8BIT_BYTE,this.data=a,this
     }
 
     // Generate QR
-    const verifyUrl = "https://ifa-academy.example.com/verify?id=" + encodeURIComponent(id);
+    const verifyUrl = "https://raseencloud.github.io/fiqh-tafaqh/certificate.html?id=" + encodeURIComponent(id);
     new QRCode(document.getElementById("qr"), {
         text: verifyUrl,
         width: 100,
