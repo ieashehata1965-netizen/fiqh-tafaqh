@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>إدارة المحاضرات الصوتية - أكاديمية الفقه</title>
+
+  <link rel="stylesheet" href="assets/css/lectures-admin.css">
+<base target="_blank">
+</head>
+<body>
+
+<!-- Toggle Sidebar Button -->
+<button class="toggle-btn" id="toggleBtn" onclick="toggleSidebar()">☰</button>
+
+<!-- Sidebar -->
+<nav class="side" id="side">
+  <h1>⚙️ لوحة الإدارة<p>أكاديمية الفقه والتفقه</p></h1>
+  <div class="nav-sec">الرئيسية</div>
+  <a href="raseen-fiqh-admin-2026-X8M4.html" class="nav-item"><span class="icon">📊</span>لوحة التحكم</a>
+  <a href="fiqh-questions-admin.html" class="nav-item"><span class="icon">📝</span>إدارة بنك الأسئلة</a>
+  <a href="index.html" class="nav-item" onclick="sessionStorage.removeItem('admin_access');"><span class="icon">🎓</span>معاينة المنصة</a>
+  <div class="nav-sec">المحتوى</div>
+  <a href="fiqh-lectures-admin.html" class="nav-item on"><span class="icon">🎙️</span>إدارة المحاضرات</a>
+  <div class="nav-sec">النظام</div>
+  <a href="raseen-fiqh-admin-2026-X8M4.html" class="nav-item"><span class="icon">📋</span>سجل العمليات</a>
+  <a href="raseen-fiqh-admin-2026-X8M4.html" class="nav-item"><span class="icon">⚙️</span>الإعدادات</a>
+  <div style="margin-top:auto;padding-top:18px;border-top:1px solid rgba(255,255,255,.15)">
+    <a href="#" class="nav-item" style="color:#fecaca" onclick="logout();return false"><span class="icon">🚪</span>خروج</a>
+  </div>
+</nav>
+
+<main class="main" id="main">
+
+<div class="lecture-manager" id="lectureManager">
+  <!-- Header -->
+  <div class="lm-header">
+    <div>
+      <h1>🎙️ إدارة المحاضرات الصوتية<span>أكاديمية الفقه والتفقه</span></h1>
+    </div>
+    <div class="lm-badge" id="totalBadge">0 محاضرة</div>
+  </div>
+
+  <!-- Stats -->
+  <div class="lm-stats">
+    <div class="lm-stat"><div class="n" id="statTotal">0</div><div class="l">إجمالي المحاضرات</div></div>
+    <div class="lm-stat"><div class="n" id="statCats">0</div><div class="l">التصنيفات</div></div>
+    <div class="lm-stat"><div class="n" id="statSpeakers">0</div><div class="l">الشيوخ</div></div>
+    <div class="lm-stat"><div class="n" id="statWithAudio">0</div><div class="l">بروابط صوتية</div></div>
+  </div>
+
+  <!-- Search & Filter -->
+  <div class="lm-search-bar">
+    <input type="text" class="lm-search-input" id="searchInput" placeholder="🔍 ابحث بعنوان المحاضرة أو اسم الشيخ أو الوصف..." oninput="filterLectures()">
+    <select class="lm-filter-select" id="filterCategory" onchange="filterLectures()">
+      <option value="">كل التصنيفات</option>
+      <option value="العقيدة">العقيدة</option>
+      <option value="الفقه">الفقه</option>
+      <option value="التفسير">التفسير</option>
+      <option value="الحديث">الحديث</option>
+      <option value="السيرة">السيرة</option>
+      <option value="الأخلاق">الأخلاق</option>
+      <option value="المنهج">المنهج</option>
+      <option value="الدعوة">الدعوة</option>
+    </select>
+    <select class="lm-filter-select" id="filterSpeaker" onchange="filterLectures()">
+      <option value="">كل الشيوخ</option>
+    </select>
+    <button class="lm-btn lm-btn-primary" onclick="toggleForm()" id="toggleFormBtn">
+      <span>➕</span><span>إضافة محاضرة</span>
+    </button>
+  </div>
+
+  <!-- Add/Edit Form -->
+  <div class="lm-form-card" id="formCard">
+    <h3 id="formTitle">➕ إضافة محاضرة جديدة</h3>
+    <form id="lectureForm" onsubmit="return false">
+      <input type="hidden" id="editId" value="">
+      <div class="lm-form-grid">
+        <div class="lm-form-group">
+          <label>عنوان المحاضرة *</label>
+          <input type="text" id="inTitle" placeholder="مثال: أحكام الصيام في رمضان">
+        </div>
+        <div class="lm-form-group">
+          <label>اسم الشيخ *</label>
+          <input type="text" id="inSpeaker" placeholder="مثال: الشيخ عبدالرحمن السديس">
+        </div>
+        <div class="lm-form-group">
+          <label>التصنيف *</label>
+          <select id="inCategory">
+            <option value="">اختر التصنيف</option>
+            <option value="العقيدة">العقيدة</option>
+            <option value="الفقه">الفقه</option>
+            <option value="التفسير">التفسير</option>
+            <option value="الحديث">الحديث</option>
+            <option value="السيرة">السيرة</option>
+            <option value="الأخلاق">الأخلاق</option>
+            <option value="المنهج">المنهج</option>
+            <option value="الدعوة">الدعوة</option>
+            <option value="منوعات">منوعات</option>
+          </select>
+        </div>
+        <div class="lm-form-group">
+          <label>رابط الصوت (MP3/M4A)</label>
+          <input type="url" id="inAudio" placeholder="https://example.com/audio.mp3">
+        </div>
+        <div class="lm-form-group">
+          <label>رابط يوتيوب (اختياري)</label>
+          <input type="url" id="inYoutube" placeholder="https://youtube.com/watch?v=...">
+        </div>
+        <div class="lm-form-group" style="grid-column: 1 / -1;">
+          <label>وصف المحاضرة</label>
+          <textarea id="inDescription" placeholder="اكتب وصفاً مختصراً للمحاضرة..."></textarea>
+        </div>
+      </div>
+      <div class="lm-form-actions">
+        <button type="button" class="lm-btn lm-btn-primary" id="saveBtn" onclick="saveLecture()">
+          <span>💾</span><span>حفظ المحاضرة</span>
+        </button>
+        <button type="button" class="lm-btn lm-btn-warning" id="updateBtn" onclick="updateLecture()" style="display:none">
+          <span>🔄</span><span>تحديث المحاضرة</span>
+        </button>
+        <button type="button" class="lm-btn lm-btn-outline" id="cancelBtn" onclick="cancelEdit()" style="display:none">
+          <span>❌</span><span>إلغاء</span>
+        </button>
+        <button type="button" class="lm-btn lm-btn-outline" onclick="clearForm()">
+          <span>🗑️</span><span>مسح النموذج</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Lecture List -->
+  <div class="lm-list-card">
+    <div class="lm-list-header">
+      <h3>📋 قائمة المحاضرات <span class="count" id="listCount">(0)</span></h3>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="lm-btn lm-btn-secondary" onclick="exportJSON()">
+          <span>📥</span><span>تصدير JSON</span>
+        </button>
+        <button class="lm-btn lm-btn-danger" id="delAllBtn" onclick="deleteAll()" style="display:none">
+          <span>🗑️</span><span>حذف الكل</span>
+        </button>
+      </div>
+    </div>
+    <div class="lm-lecture-list" id="lectureList">
+      <div class="lm-empty">
+        <div class="icon">🎙️</div>
+        <p>لا توجد محاضرات مسجلة بعد</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<!-- Toast Container -->
+<div class="lm-toast-wrap" id="toastWrap"></div>
+
+<!-- Delete Confirmation Modal -->
+<div class="lm-modal-overlay" id="delModal">
+  <div class="lm-modal">
+    <h3>⚠️ تأكيد الحذف</h3>
+    <p id="delMsg">هل أنت متأكد من حذف هذه المحاضرة؟ لا يمكن التراجع.</p>
+    <div class="modal-actions">
+      <button class="lm-btn lm-btn-outline" onclick="closeDelModal()">إلغاء</button>
+      <button class="lm-btn lm-btn-danger" id="confirmDelBtn">🗑️ حذف</button>
+    </div>
+  </div>
+</div>
+
+  <script src="assets/js/lectures-admin.js"></script>
+</body>
+</html>
