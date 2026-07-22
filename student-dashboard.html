@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحليل الأداء | منصة الفقه</title>
+  <link rel="stylesheet" href="assets/css/student-dashboard.css">
+<base target="_blank">
+</head>
+<body>
+  <div class="dashboard-container">
+
+    <!-- الهيدر -->
+    <header class="dash-header">
+      <a href="index.html" class="back-link">← العودة للرئيسية</a>
+      <h1>📊 لوحة تحليل الأداء</h1>
+      <p id="studentName">جارٍ التحميل...</p>
+    </header>
+
+    <!-- بطاقة التحليل الرئيسية -->
+    <section class="performance-card">
+      <div class="card-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="3" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="3" width="7" height="7" rx="1"/>
+          <rect x="14" y="14" width="7" height="7" rx="1"/>
+          <rect x="3" y="14" width="7" height="7" rx="1" fill="#e74c3c" stroke="none"/>
+        </svg>
+      </div>
+
+      <h2>تحليل الأداء</h2>
+      <p class="card-desc">تعرَّف على نقاط قوتك وضعفك مع تقرير مفصَّل لكل اختبار</p>
+
+      <!-- حلقة التقدم -->
+      <div class="progress-ring-wrap">
+        <svg class="progress-ring" width="140" height="140" viewBox="0 0 140 140">
+          <circle class="ring-bg" cx="70" cy="70" r="60"/>
+          <circle class="ring-fill" id="progressCircle" cx="70" cy="70" r="60"/>
+        </svg>
+        <div class="ring-text">
+          <span id="progressPercent">0%</span>
+          <small>من الخطة</small>
+        </div>
+      </div>
+
+      <!-- شبكة الإحصائيات -->
+      <div class="stats-grid">
+        <div class="stat-box">
+          <span class="stat-num" id="totalExams">0</span>
+          <span class="stat-label">اختبار</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="totalCerts">0</span>
+          <span class="stat-label">شهادة</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num" id="accuracyRate">0%</span>
+          <span class="stat-label">الدقة</span>
+        </div>
+      </div>
+
+      <!-- الرسالة التحفيزية -->
+      <div class="motivation-banner" id="motivationMsg">
+        استمر في سيرك... "من سار على الدرب وصل"
+      </div>
+
+      <!-- زر الاختبار -->
+      <a href="training.html" class="cta-btn">← اختبر نفسك</a>
+    </section>
+
+    <!-- سجل الاختبارات والشهادات -->
+    <section class="exams-section">
+      <h3>📋 سجل الاختبارات والشهادات</h3>
+      <div class="exams-table-wrap">
+        <table class="exams-table" id="examsTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>التاريخ</th>
+              <th>الأسئلة</th>
+              <th>الصحيحة</th>
+              <th>النسبة</th>
+              <th>الحالة</th>
+              <th>الشهادة</th>
+            </tr>
+          </thead>
+          <tbody id="examsBody">
+            <tr><td colspan="7" class="empty-msg">لم تُجرِ أي اختبار بعد</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ملخص الإجابات -->
+    <section class="answers-summary">
+      <h3>📈 ملخص الإجابات</h3>
+      <div class="summary-bars">
+        <div class="bar-row">
+          <span>إجمالي الأسئلة</span>
+          <div class="bar-wrap"><div class="bar total" id="barTotal"></div></div>
+          <strong id="totalAnswered">0</strong>
+        </div>
+        <div class="bar-row">
+          <span>الإجابات الصحيحة</span>
+          <div class="bar-wrap"><div class="bar correct" id="barCorrect"></div></div>
+          <strong id="totalCorrect">0</strong>
+        </div>
+        <div class="bar-row">
+          <span>الإجابات الخاطئة</span>
+          <div class="bar-wrap"><div class="bar wrong" id="barWrong"></div></div>
+          <strong id="totalWrong">0</strong>
+        </div>
+      </div>
+    </section>
+
+    <!-- رسالة تحفيزية ثابتة -->
+    <footer class="dash-footer">
+      <blockquote>
+        "استمر أشد من أصرك، اصبر وصابر... العلم عظيم يرفع قيمة الإنسان ويُحسِّن عبادته وقُربه من ربِّه"
+      </blockquote>
+    </footer>
+
+  </div>
+
+  <script src="assets/js/student-dashboard.js"></script>
+</body>
+</html>

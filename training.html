@@ -354,6 +354,7 @@ button:disabled{
 </style>
 <base target="_self">
 <base target="_blank">
+<base target="_blank">
 </head>
 
 <body>
@@ -923,6 +924,28 @@ function showResult(){
             </div>
 
             ${certHtml}
+
+            <!-- 📊 رابط لوحة تحليل الأداء -->
+            <div style="text-align:center;margin:24px 0;">
+                <a href="student-dashboard.html" style="
+                    display:inline-flex;
+                    align-items:center;
+                    gap:10px;
+                    background:linear-gradient(135deg,#667eea,#764ba2);
+                    color:#fff;
+                    padding:14px 36px;
+                    border-radius:50px;
+                    text-decoration:none;
+                    font-weight:700;
+                    font-size:1.05rem;
+                    box-shadow:0 6px 20px rgba(102,126,234,0.35);
+                    transition:all 0.3s ease;
+                " onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 10px 30px rgba(102,126,234,0.45)'" 
+                onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 6px 20px rgba(102,126,234,0.35)'">
+                    <span>📊</span>
+                    <span>عرض تحليل الأداء الكامل</span>
+                </a>
+            </div>
 
             <hr style="margin:24px 0;border:none;border-top:2px solid #e5e7eb">
 
